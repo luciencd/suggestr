@@ -8,6 +8,7 @@ $class_id = $_POST["courseId"];
 //print($_POST);
 
 
+
 $sql2 = "SELECT * FROM `Session` WHERE `id` = ".$id;
 $result2 = mysqli_query($conn,$sql2);
 
@@ -25,7 +26,25 @@ $result = $conn->query($sql);
 
 $current_user = new user($conn,$_COOKIE["user"]);
 
+
+
+
+///RECORD MODEL HERE.
+$courses_taken = implode(",",$current_user->courses_taken);
+$courses_no = implode(",",$current_user->courses_no);
+$courses_yes = implode(",",$current_user->courses_yes);
+$course_chosen = $current_user->$class_id;
+//$course_chosen = $current_user->request_course_name($conn,$class_id);
+
+$sql = "INSERT into Model SET `session_id`='".$id."',`major`='".$major."',`year` = '".$year."',`courses_taken` ='".$courses_taken."',`courses_no` ='".$courses_no."', `courses_yes` = '".$courses_yes."', `course_chosen` = '".$course_chosen."'";
+$result = $conn->query($sql);
+
+/////
+
 $new_course_id = $current_user->request_course_id($conn);
+///////CALL MODEL HERE TO GET NEW COURSE NUMBER.
+
+
 //$current_user->addCourse($new_course_id);
 $new_course_name = $current_user->request_course_name($conn,$new_course_id);
 $new_course_number = $current_user->request_course_number($conn,$new_course_id);

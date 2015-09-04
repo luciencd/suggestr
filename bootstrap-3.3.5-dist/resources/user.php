@@ -14,6 +14,13 @@ class user
     private $priorityQueue = array();
 
 
+    //All data for model
+    public $courses_taken = array();
+    public $courses_no = array();
+    public $courses_yes = array();
+
+
+
 
     // method declaration
 
@@ -29,6 +36,26 @@ class user
 		$this->major = $row[1];
 		$this->year = $row[2];
 		$this->department_id = $row[6];
+
+
+		$this->courses_no = array();
+		$this->courses_yes = array();
+		$this->courses_taken = array();
+
+		$sql = "SELECT * FROM `Action` WHERE `session_id` = ".$this->id;
+		$result = mysqli_query($conn,$sql);
+		while($current_row = mysqli_fetch_row($result)){
+			if($current_row[4]==0){
+				array_push($this->courses_yes,$current_row[3]);
+			}
+			if($current_row[4]==1){
+				array_push($this->courses_taken,$current_row[3]);
+			}
+			if($current_row[4]==2){
+				array_push($this->courses_no,$current_row[3]);
+			}
+		}
+
 		//echo "<h1>".$row[1].",".$row[2].",".$row[6].",".$this->department_id."</h1>";
 		
 		//$this->priorityQueue = $this->get_array_similar($conn);
@@ -39,6 +66,7 @@ class user
 		//echo "</ul>";
     	//Sql all the variables.
     }
+
     //public function onDeck($courseId){//Checking if the course is already on the page.
     	//echo "<h1>Course ID:".$courseId."</h1>";
 
@@ -280,10 +308,37 @@ class user
 
 	}
 
-	public function print_this(){
+	public function print_this($conn){
 
-		echo "<h1>".$this->sql."current_user: ".$this->id.",".$this->major.",".$this->year.",".$this->department_id."</h1>";
+		//echo "<h1>".$this->sql."current_user: ".$this->id.",".$this->major.",".$this->year.",".$this->department_id."</h1>";
+        
+        echo "<h2>NO:";
+        foreach($this->courses_no as $id){
+        	echo "<h3>".$this->request_course_name($conn,$id)."</h3>";
+        }
+        echo "</h2>";
+
+        echo "<h2>YES:";
+        foreach($this->courses_yes as $id){
+        	echo "<h3>".$this->request_course_name($conn,$id)."</h3>";
+        }
+        echo "</h2>";
+
+        echo "<h2>TAKEN:";
+        foreach($this->courses_taken as $id){
+        	echo "<h3>".$this->request_course_name($conn,$id)."</h3>";
+        }
+        echo "</h2>";
         //DEBUGGER!!!
+	}
+	public function get_courses_yes(){
+		return $this->courses_yes;
+	}
+	public function get_courses_took(){
+		return $this->courses_took;
+	}
+	public function get_courses_no(){
+		return $this->courses_no;
 	}
 }
 ?>

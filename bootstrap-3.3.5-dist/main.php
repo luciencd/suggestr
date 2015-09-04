@@ -96,6 +96,7 @@
         //echo "<h1>course".$current_user->request_course_name($conn,$current_user->request_course_id($conn))."</h1>";
         //echo "<h1>DAWW AW".$current_user->request_course_id($conn)."</h1>";
         $current_user->get_array_similar($conn);
+        $current_user->print_this($conn);
         /*
         $selected_courses = $current_user->get_array_similar($conn);
         echo "<ul>";
@@ -106,14 +107,14 @@
       ?>
     </div>
 
-      <footer class = "footer">
+      <!--<footer class = "footer">
         <div class = "container" >
 
             <p class = "text-muted">Machine Learning driven app for students who don't know what classes to take.
             Developed by Lucien Christie-Dervaux.</p>
 
         </div>
-      </footer>
+      </footer>-->
 
     <script type = "text/javascript" src = "js/jquery-2.1.4.js"></script>    
     
