@@ -33,7 +33,7 @@ $current_user = new user($conn,$_COOKIE["user"]);
 $courses_taken = implode(",",$current_user->courses_taken);
 $courses_no = implode(",",$current_user->courses_no);
 $courses_yes = implode(",",$current_user->courses_yes);
-$course_chosen = $current_user->$class_id;
+$course_chosen = $class_id;
 //$course_chosen = $current_user->request_course_name($conn,$class_id);
 
 $sql = "INSERT into Model SET `session_id`='".$id."',`major`='".$major."',`year` = '".$year."',`courses_taken` ='".$courses_taken."',`courses_no` ='".$courses_no."', `courses_yes` = '".$courses_yes."', `course_chosen` = '".$course_chosen."'";

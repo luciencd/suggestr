@@ -16,6 +16,8 @@ $id = $conn->insert_id;*/
 
 setcookie("user", $id, time() + (86400 * 30), "/");
 
+//setcookie("stop", $stop, time() + (86400 * 30), "/");
+
 
 //SQL prepared statement.
 //$find_department_id = $conn->prepare("SELECT * FROM Departments WHERE name ='".$major."'");

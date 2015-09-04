@@ -201,17 +201,18 @@ class user
 		$result = $conn->query($sql);
 		
 		$user_id = $_COOKIE['user'];
+		$stop = $_COOKIE['stop'];
 
 		$sql2 = "SELECT * FROM `Session` WHERE `id` = ".$user_id;
 		$user_query = mysqli_query($conn,$sql2);
 
 		$user_row = mysqli_fetch_row($user_query);
 
-		$major = $user_row[1];
+		$major = $user_row[1];// session_id < user_id doesnt work because of lexicographics
 		$year = $user_row[2];
 
 		//echo "Users who are: ".$major.$year." Chose to take these classes:";
-		$yesql = "SELECT course_id,count(*) FROM `Action` WHERE `major` = '$major' AND `year` = '$year' AND `choice` = '0' GROUP by course_id ORDER BY count(*) DESC";
+		$yesql = "SELECT course_id,count(*) FROM `Action` WHERE `major` = '$major' AND `year` = '$year' AND `choice` = '0' AND `session_id` < '$user_id' GROUP by course_id ORDER BY count(*) DESC";
 		$yes_courses = $conn->query($yesql);
 		$yesary = array();
 		while ($row = $yes_courses->fetch_assoc()) {
@@ -219,26 +220,27 @@ class user
 		}
 
 		// Count people in major and year who chose not to take that course.
-		$nosql = "SELECT course_id,count(*) FROM `Action` WHERE `major` = '$major' AND `year` = '$year' AND `choice` = '2' GROUP by course_id ORDER BY count(*) DESC";
+		$nosql = "SELECT course_id,count(*) FROM `Action` WHERE `major` = '$major' AND `year` = '$year' AND `choice` = '2'  AND `session_id` < '$user_id' GROUP by course_id ORDER BY count(*) DESC";
 		$no_courses = $conn->query($nosql);
 		$noary = array();
 		while ($row = $no_courses->fetch_assoc()) {
     		$noary[$row['course_id']] = $row["count(*)"];
 		}
 
-		$yesql_all = "SELECT course_id,count(*) FROM `Action` WHERE `year` = '$year' AND `choice` = '0' GROUP by course_id ORDER BY count(*) DESC";
+		$yesql_all = "SELECT course_id,count(*) FROM `Action` WHERE `year` = '$year' AND `choice` = '0'  AND `session_id` < '$user_id' GROUP by course_id ORDER BY count(*) DESC";
 		$yes_courses_all = $conn->query($yesql_all);
 		$yesary_all = array();
 		while ($row = $yes_courses_all->fetch_assoc()) {
     		$yesary[$row['course_id']] = $row["count(*)"];
 		}
 
-		$nosql_all = "SELECT course_id,count(*) FROM `Action` WHERE `year` = '$year' AND `choice` = '2' GROUP by course_id ORDER BY count(*) DESC";
+		$nosql_all = "SELECT course_id,count(*) FROM `Action` WHERE `year` = '$year' AND `choice` = '2'  AND `session_id` < '$user_id' GROUP by course_id ORDER BY count(*) DESC";
 		$no_courses_all = $conn->query($nosql_all);
 		$noary_all = array();
 		while ($row = $no_courses_all->fetch_assoc()) {
     		$noary_all[$row['course_id']] = $row["count(*)"];
 		}
+		//echo '<h4>'.$nosql_all.'<h4>';
 
 		$allsql = "SELECT * FROM `Courses`";
 		$allCourses = $conn->query($allsql);
@@ -269,7 +271,9 @@ class user
     		if($row['number'][0] == 9){
     			$ary[$row['id']] -=1000;
     		}
-    		//$ary[$row['id']]+=$row['number'][0]%15;
+    		$ary[$row['id']]+=$row['number']%100/10;
+
+    		//echo "<h2>".(($row['number']%100)/10)."</h2>";
 
 
     		//echo "<h5>".$this->id.",".$this->department_id."(".$row['id'].",".$row['name'].",".$row['department_id'].",".$ary[$row['id']].")</h5>";
@@ -283,14 +287,14 @@ class user
 			$ary[$course] += $score*5; 
 		}
 		foreach($yesary_all as $course => $score){
-			$ary[$course] += $score; 
+			$ary[$course] += 2*$score; 
 		}
 
 		foreach($noary as $course => $score){
 			$ary[$course] -= $score*5; 
 		}
 		foreach($noary_all as $course => $score){
-			$ary[$course] += $score; 
+			$ary[$course] -= 2*$score; 
 		}
 
 
