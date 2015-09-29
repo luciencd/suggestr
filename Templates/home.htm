@@ -1,0 +1,10 @@
+<script type="text/javascript">
+	$.post('/a.php?=AlterName', {id:100}, function(d){
+		if(getAjaxStatus(d)){
+			// Everything went well
+			alert(getAjaxData(d));
+		}else{
+			alert(getAjaxFailureReason(d));
+		}
+	});
+</script>

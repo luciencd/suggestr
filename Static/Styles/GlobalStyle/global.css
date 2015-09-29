@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+/* GENERAL */
+
+*{
+	padding: 0px;
+	margin: 0px;
+}
+
+.clear{
+	clear: both;
+	float: none!important;
+	border: none!important;
+	height: 0px!important;
+}
