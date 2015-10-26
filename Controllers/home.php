@@ -2,42 +2,27 @@
 // Page Controller for the Index Page
 
 class HomeController extends PageController {
-	public $pageTemplate = "home";
+	public $pageTemplate = "Home";
 	
 	public function process($get, $post) {
 		$this->pageData["Title"] = "Home";
-		
-		$this->pageData["myMath"] = 24*180;
-		$this->pageData["name"] = $get['i'];
-		
-		$this->pageData['arr'] = array(
-									array('elem' => 1, 'lucien' => 100), 
-									array('elem' => 2), 
-									array('elem' => 3)
-								);
-		$user = new User();
-		$user->findById(69);
-		$user->set('name', 'Bob');
-		$user->save();
 
-		//if(!isset($_GET['i'])) // No event id given
-		//	header('Location: /error');
-		
-		/*
-		// Create GROUP ORM
-		try{
-			$event = new Event();
-			$event->findById($_GET['i']);
-		}catch(Exception $e){
-			header($_GET["SUGGESTR_PAGE"]." 404 Not Found");
-			$_SYSTEM["SUGGESTR_PAGE"] = "404 - Page Not Found";
-			$controller = GetController("error");
-			$controller->process($get,$post,$_FILES,$_SYSTEM);
-			die($controller->render(!$_GET['AJAX']));	
+		// Generate all of the courses (for testing)
+		$allCourses = array();
+		$query = new Query('courses');
+		$result = $query->select('*', '', '', '', false);
+		while($row=mysqli_fetch_array($result)){
+			$course = new Course();
+			$course->findById($row['id']);
+			array_push($allCourses, array('id' => $course->get('id'),
+										  'name' => ucwords(strtolower($course->get('name'))),
+										  'department_id' => $course->get('department_id'),
+										  'number' => $course->get('number')));
 		}
-		*/
+		$this->pageData['allCourses'] = $allCourses;
 
-		//Left TIME
+		// Get all of the courses in this user's session
+		
 
 	}
 }

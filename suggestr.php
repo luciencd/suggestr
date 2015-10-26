@@ -21,13 +21,13 @@ if(!isset($_GET['AJAX']))
 // The keys in the router array are page URLs
 // The values in the router array are controller names
 $router = array();
-$router["/home"] = "home"; // This is an example
+$router["/home"] = "Home";
 
 // API Router
 // The keys in the router array are page URLs
 // The values in the router array are controller names
 $Ajaxrouter = array();
-//$Ajaxrouter["Global_MakeDay/"] = "Global_MakeDay"; // This is an example
+$Ajaxrouter["Search/"] = "Search"; // This is an example
 
 // Is this an API method?
 $isAjax = (isset($_GET['SUGGESTR_PAGE']) && (strpos($_GET['SUGGESTR_PAGE'],'ajax/') === 0));

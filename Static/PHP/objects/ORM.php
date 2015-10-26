@@ -9,56 +9,13 @@ class ORM{ /* Object-relational mapping class */
 	
 	public function __construct($table){
 		/* Creates Query object */
-		if(!in_array($table, array(
-'eventcomponents',
-'freetimes',
-'groupfollows',
-'groupcommits',
-'hostfollows',
-'hostcommits',
-'recurringcomponents',
-'recurringdaypattern',
-'recurringmonthlydate',
-'recurringmonthlyday',
-'recurringweekly',
-'recurringpatternsets',
-'recurringpatterns',
-'recurringyearlydate',
-'recurringyearlyday',
-'schedulecollects',
-'scheduletocalendar',
-'setstopattern',
-'tagwithevent',
-'tagwithgroup',
-'tagwithhost',
-'tagwithtag',
-'useradminsgroup',
-'useradminshost',
-'addresses',
-'calendar',
-'comments',
-'conversations',
-'conversationtouser',
-'events',
-'feed',
-'friends',
-'groups',
-'holidayinholidayset',
-'holidaysets',
-'holidays',
-'hosts',
-'messages',
-'notifications',
-'posts',
-'recurring',
-'schedules',
-'tags',
-'taskeventrelationships',
-'tasktime',
-'tasks',
-'usercommitsevent',
-'userhastask',
-'users')))
+		if(!in_array(strtolower($table), array(
+'action',
+'courses',
+'departments',
+'model',
+'sessions',
+'year')))
 			throw new Exception('Table name invalid!');
 		$this->table = $table;
 		$this->query = new Query($this->table);
@@ -201,331 +158,85 @@ class ORM{ /* Object-relational mapping class */
 	}
 }
 
-class User extends ORM{
+// class User extends ORM{
 
-	public function __construct(){
-		parent::__construct('users');
-	}
+// 	public function __construct(){
+// 		parent::__construct('users');
+// 	}
 
-	public function findByEmail($email){
-		/* Finds an email from table and sets that row's data to this object. */
-		$email = trim($email);
-		if(!filter_var($email, FILTER_VALIDATE_EMAIL))
-			throw new Exception("You must pass an email address to ".__FUNCTION__."()");
-		if($this->data = $this->query->select('*', array(array('email', '=', $email)), '', 1, false)){
-			$this->data = mysqli_fetch_array($this->data);
-			if(isset($this->data['id'])){
-				$this->id = $this->data['id'];
-				$this->virgin = false;
-			}else
-				throw new Exception("Query failed: no `id` returned!");
-		}else
-			throw new Exception("Query failed: no such row!");
-	}
-}
+// 	public function findByEmail($email){
+// 		/* Finds an email from table and sets that row's data to this object. */
+// 		$email = trim($email);
+// 		if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+// 			throw new Exception("You must pass an email address to ".__FUNCTION__."()");
+// 		if($this->data = $this->query->select('*', array(array('email', '=', $email)), '', 1, false)){
+// 			$this->data = mysqli_fetch_array($this->data);
+// 			if(isset($this->data['id'])){
+// 				$this->id = $this->data['id'];
+// 				$this->virgin = false;
+// 			}else
+// 				throw new Exception("Query failed: no `id` returned!");
+// 		}else
+// 			throw new Exception("Query failed: no such row!");
+// 	}
+// }
 
-class Tag extends ORM{
+// class Tag extends ORM{
 	
-	public function __construct(){
-		parent::__construct('tags');
-	}
+// 	public function __construct(){
+// 		parent::__construct('tags');
+// 	}
 	
-	public function findByName($name){
-		/* Finds an name from table and sets that row's data to this object. */
-		$name = trim($name);
-		if(strlen($name)<0||strlen($name)>50)
-			throw new Exception("You must pass a name to ".__FUNCTION__."() that is between 1 and 50 characters.");
-		if($this->data = $this->query->select('*', array(array('name', '=', $name)), '', 1, false)){
-			$this->data = mysqli_fetch_array($this->data);
-			if(isset($this->data[id]))
-				$this->id = $this->data[id];
-			else
-				throw new Exception("Query failed: no `id` returned!");
-		}else
-			throw new Exception("Query failed: no such row!");
-	}
+// 	public function findByName($name){
+// 		/* Finds an name from table and sets that row's data to this object. */
+// 		$name = trim($name);
+// 		if(strlen($name)<0||strlen($name)>50)
+// 			throw new Exception("You must pass a name to ".__FUNCTION__."() that is between 1 and 50 characters.");
+// 		if($this->data = $this->query->select('*', array(array('name', '=', $name)), '', 1, false)){
+// 			$this->data = mysqli_fetch_array($this->data);
+// 			if(isset($this->data[id]))
+// 				$this->id = $this->data[id];
+// 			else
+// 				throw new Exception("Query failed: no `id` returned!");
+// 		}else
+// 			throw new Exception("Query failed: no such row!");
+// 	}
 	
-}
+// }
 
-class EventComponent extends ORM{
+class Action extends ORM{
 	public function __construct(){
-		parent::__construct('eventcomponents');
+		parent::__construct('action');
 	}
 }
 
-class FreeTime extends ORM{
+class Course extends ORM{
 	public function __construct(){
-		parent::__construct('freetimes');
+		parent::__construct('courses');
 	}
 }
 
-class GroupFollows extends ORM{
+class Department extends ORM{
 	public function __construct(){
-		parent::__construct('groupfollows');
+		parent::__construct('departments');
 	}
 }
 
-class GroupCommits extends ORM{
+class Model extends ORM{
 	public function __construct(){
-		parent::__construct('groupcommits');
+		parent::__construct('model');
 	}
 }
 
-class HostFollows extends ORM{
+class Session extends ORM{
 	public function __construct(){
-		parent::__construct('hostfollows');
+		parent::__construct('sessions');
 	}
 }
 
-class HostCommits extends ORM{
+class Year extends ORM{
 	public function __construct(){
-		parent::__construct('hostcommits');
-	}
-}
-
-class RecurringComponent extends ORM{
-	public function __construct(){
-		parent::__construct('recurringcomponents');
-	}
-}
-
-class RecurringDayPattern extends ORM{
-	public function __construct(){
-		parent::__construct('recurringdaypattern');
-	}
-}
-
-class RecurringMonthlyDate extends ORM{
-	public function __construct(){
-		parent::__construct('recurringmonthlydate');
-	}
-}
-
-class RecurringMonthlyDay extends ORM{
-	public function __construct(){
-		parent::__construct('recurringmonthlyday');
-	}
-}
-
-class RecurringWeekly extends ORM{
-	public function __construct(){
-		parent::__construct('recurringweekly');
-	}
-}
-
-class RecurringPatternSet extends ORM{
-	public function __construct(){
-		parent::__construct('recurringpatternsets');
-	}
-}
-
-class RecurringPattern extends ORM{
-	public function __construct(){
-		parent::__construct('recurringpatterns');
-	}
-}
-
-class RecurringYearlyDate extends ORM{
-	public function __construct(){
-		parent::__construct('recurringyearlydate');
-	}
-}
-
-class RecurringYearlyDay extends ORM{
-	public function __construct(){
-		parent::__construct('recurringyearlyday');
-	}
-}
-
-class ScheduleCollects extends ORM{
-	public function __construct(){
-		parent::__construct('schedulecollects');
-	}
-}
-
-class ScheduleToCalendar extends ORM{
-	public function __construct(){
-		parent::__construct('scheduletocalendar');
-	}
-}
-
-class SetsToPattern extends ORM{
-	public function __construct(){
-		parent::__construct('setstopattern');
-	}
-}
-
-class TagWithEvent extends ORM{
-	public function __construct(){
-		parent::__construct('tagwithevent');
-	}
-}
-
-class TagWithGroup extends ORM{
-	public function __construct(){
-		parent::__construct('tagwithgroup');
-	}
-}
-
-class TagWithHost extends ORM{
-	public function __construct(){
-		parent::__construct('tagwithhost');
-	}
-}
-
-class TagWithTag extends ORM{
-	public function __construct(){
-		parent::__construct('tagwithtag');
-	}
-}
-
-class UserAdminsGroup extends ORM{
-	public function __construct(){
-		parent::__construct('useradminsgroup');
-	}
-}
-
-class UserAdminsHost extends ORM{
-	public function __construct(){
-		parent::__construct('useradminshost');
-	}
-}
-
-class Address extends ORM{
-	public function __construct(){
-		parent::__construct('addresses');
-	}
-}
-
-class Calendar extends ORM{
-	public function __construct(){
-		parent::__construct('calendar');
-	}
-}
-
-class Comment extends ORM{
-	public function __construct(){
-		parent::__construct('comments');
-	}
-}
-
-class Conversation extends ORM{
-	public function __construct(){
-		parent::__construct('conversations');
-	}
-}
-
-class Conversationtouser extends ORM{
-	public function __construct(){
-		parent::__construct('conversationtouser');
-	}
-}
-
-class Event extends ORM{
-	public function __construct(){
-		parent::__construct('events');
-	}
-}
-
-class Feed extends ORM{
-	public function __construct(){
-		parent::__construct('feed');
-	}
-}
-
-class Friends extends ORM{
-	public function __construct(){
-		parent::__construct('friends');
-	}
-}
-
-class Group extends ORM{
-	public function __construct(){
-		parent::__construct('groups');
-	}
-}
-
-class HolidayInHolidaySet extends ORM{
-	public function __construct(){
-		parent::__construct('holidayinholidayset');
-	}
-}
-
-class HolidaySet extends ORM{
-	public function __construct(){
-		parent::__construct('holidaysets');
-	}
-}
-
-class Holiday extends ORM{
-	public function __construct(){
-		parent::__construct('holidays');
-	}
-}
-
-class Host extends ORM{
-	public function __construct(){
-		parent::__construct('hosts');
-	}
-}
-
-class Message extends ORM{
-	public function __construct(){
-		parent::__construct('messages');
-	}
-}
-
-class Notification extends ORM{
-	public function __construct(){
-		parent::__construct('notifications');
-	}
-}
-
-class Post extends ORM{
-	public function __construct(){
-		parent::__construct('posts');
-	}
-}
-
-class Recurring extends ORM{
-	public function __construct(){
-		parent::__construct('recurring');
-	}
-}
-
-class Schedule extends ORM{
-	public function __construct(){
-		parent::__construct('schedules');
-	}
-}
-
-class TaskEventRelationship extends ORM{
-	public function __construct(){
-		parent::__construct('taskeventrelationships');
-	}
-}
-
-class TaskTime extends ORM{
-	public function __construct(){
-		parent::__construct('tasktime');
-	}
-}
-
-class Task extends ORM{
-	public function __construct(){
-		parent::__construct('tasks');
-	}
-}
-
-class UserCommitsEvent extends ORM{
-	public function __construct(){
-		parent::__construct('usercommitsevent');
-	}
-}
-
-class UserHasTask extends ORM{
-	public function __construct(){
-		parent::__construct('userhastask');
+		parent::__construct('year');
 	}
 }
 

@@ -1,10 +1,58 @@
 <script type="text/javascript">
-	$.post('/a.php?=AlterName', {id:100}, function(d){
-		if(getAjaxStatus(d)){
-			// Everything went well
-			alert(getAjaxData(d));
-		}else{
-			alert(getAjaxFailureReason(d));
+	$(function(){
+		//setup before functions
+		var typingTimer;                //timer identifier
+		var doneTypingInterval = 2000;  //time in ms, 5 second for example
+		var $input = $('input#classSearchField');
+
+		//on keyup, start the countdown
+		$input.on('keyup', function () {
+			clearTimeout(typingTimer);
+			typingTimer = setTimeout(doneTyping, doneTypingInterval);
+		});
+
+		//on keydown, clear the countdown 
+		$input.on('keydown', function () {
+		  clearTimeout(typingTimer);
+		});
+
+		//user is "finished typing," do something
+		function doneTyping (){
+			$.post('/a.php?p=Search', {q: $input.val()}, function(d){
+				if(getAjaxStatus(d)){
+					// Everything went well
+					$("div#courseResultsArea").html(getAjaxData(d));
+				}else{
+					alert(getAjaxFailureReason(d));
+				}
+			});
 		}
 	});
 </script>
+
+<div class="col-md-5" id="sidebar">
+	<ul class="list-group">
+		{{#allCourses}}
+			<li class="list-group-item">
+				<span class="badge">{{number}}</span>
+				{{name}}
+			</li>
+		{{/allCourses}}
+	</ul>
+</div> <!-- /Sidebar -->
+
+
+
+<div class="col-md-7">
+	<div class="container">
+		<div id="content">
+			<div class="input-group" id="classSearch">
+				<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title">
+				<span class="input-group-addon">Search</span>
+			</div>
+			<div class="panel panel-default" id="courseResultsArea">
+				
+			</div>
+		</div>
+	</div>
+</div> <!-- /col-md-7 -->

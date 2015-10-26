@@ -20,12 +20,21 @@ function Render($templ, $objects, $useMain=true) {
 	global $template;
 	$objects["BaseURL"] = $GLOBALS['CONFIG']['app-path'];
 	$inner = $template->render($templ, $objects);
-	$objects["BaseContent"] = $inner;	
-	$objects["UserExists"] = isset($_COOKIE['userid']); // Checks if user id exists at all
-	if($objects["UserExists"]){
-		// Setup Mustache variables that need to be accessible on every page..
+	$objects["BaseContent"] = $inner;
+	if(!isset($_COOKIE['sessionId'])){ // Check if this user already has a session
+		// Generate the next user id from the table
+		$query = new Query('sessions');
+		$id = $query->nextId();
+		if(is_numeric($id)){
+			$session = new Session();
+			$session->set('amount', 0); // Just so that the ORM class thinks something's dirty and allows entry of an empty row
+			$session->save(); // Add an empty row to the Sessions table with the next session ID
+			setcookie('sessionId', $id, time()+315360000, '/'); // Shouldn't expire for 10 years
+			header('Location: /'); // Needs to reload since a cookie must be set at the start of the request.
+		}else
+			throw new Exception("Error Processing New Session.", 1);
 	}
-	//$objects["Validated"] = isset($_GET['validated']); // User was newly validated
+	$objects["sessionId"] = $_COOKIE['sessionId']; // Make the session ID avaliable to all controllers.
 	if($useMain){
 		// This is the place to make other ajax calls that don't use main and need to be loaded in..
 		// Tasks

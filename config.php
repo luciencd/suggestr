@@ -38,10 +38,3 @@ ini_set("SMTP",$CONFIG['smtp-host']);
 require_once(ROOT.'templating.php');
 require_once(ROOT.'ajax.php');
 require_once(ROOT.'database.php');
-
-// Static (but universal) functions/classes
-require_once(ROOT.'Static/PHP/functions.php');
-require_once(ROOT.'Static/PHP/dateFunctions.php');
-
-// Support (3rd party) Scripts
-require_once(ROOT.'Vendor/ResizeImage/resize.php');
