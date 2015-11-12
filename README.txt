@@ -1,22 +1,18 @@
-SUGGESTR
+SUGGESTR - suggestr.co
+Suggestr is a stress-free, web-based course suggester app centered around simplicity.
 
-Stress-Free Course Suggester.
-
-Suggestr is a web-based course suggester app centered around simplicity.
-
-Questions & Comments: chrisl2@rpi.edu
-
-Give it a go: sugggestr.com
+Contributors: Lucien Christie-Dervaux, Ben Espey, & Leopold Joy
+Questions & Comments: chrisl2@rpi.edu, espeyb@rpi.edu, or joyl@rpi.edu
 
 TECHNOLOGIES USED:
 
-PHP, MYSQL, BOOTSTRAP, JAVASCRIPT+JQUERY.
+PHP, SQL, Bootstrap, HTML, CSS, Javascript+jQuery, Mustache.
 
 
 SPECIAL THANKS TO:
 
-Lou Yufan, Jeff Hui, Leo Joy. For help and advice. YACS for the course data.
+Lou Yufan & Jeff Hui for help and advice. YACS for the course data.
 
 HELP & FEEDBACK:
 
-Go to Github issues page to list your bugs and concerns.
+Go to GitHub issues page to list your bugs and concerns.
