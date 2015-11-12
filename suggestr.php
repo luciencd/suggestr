@@ -27,7 +27,10 @@ $router["/home"] = "Home";
 // The keys in the router array are page URLs
 // The values in the router array are controller names
 $Ajaxrouter = array();
-$Ajaxrouter["Search/"] = "Search"; // This is an example
+$Ajaxrouter["Search/"] = "Search";
+$Ajaxrouter["IgnoreCourse/"] = "IgnoreCourse";
+$Ajaxrouter["AddCourse/"] = "AddCourse";
+$Ajaxrouter["RemoveCourse/"] = "RemoveCourse";
 
 // Is this an API method?
 $isAjax = (isset($_GET['SUGGESTR_PAGE']) && (strpos($_GET['SUGGESTR_PAGE'],'ajax/') === 0));
