@@ -3,12 +3,12 @@
 $GLOBALS['CONFIG'] = array();
 
 $CONFIG['development'] = true; // Flag for development mode
-$CONFIG['app-path'] = "http://suggestr.me/";
+$CONFIG['app-path'] = "http://suggestr.co/";
 $CONFIG['db-address'] = "";
 $CONFIG['db-database'] = "";
 $CONFIG['db-username'] = "";
 $CONFIG['db-password'] = "";
-$CONFIG['smtp-host'] = "mail.suggestr.me";
+$CONFIG['smtp-host'] = "mail.suggestr.co";
 
 // Development mode overrides
 if($CONFIG['development']) {
