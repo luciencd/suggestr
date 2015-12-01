@@ -16,7 +16,7 @@
 			// Mark course as ignored in the model
 			$.post('/a.php?p=IgnoreCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
 				if(!getAjaxStatus(d)){
-					alert('Sorry, there was an error.');
+					//alert('Sorry, there was an error.');
 				}else{
 					// Hide/remove elements
 					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').next('div.panel-body').slideUp(400, function(){
@@ -27,6 +27,9 @@
 					});
 				}
 			});
+			// Clear search box
+			$("div#content div#classSearch input#classSearchField").val("");
+			doneTyping();
 		});
 		// **************** ADD COURSE TO SESSION ****************
 		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
@@ -34,7 +37,7 @@
 			// Mark course as ignored in the model
 			$.post('/a.php?p=AddCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
 				if(!getAjaxStatus(d)){
-					alert('Sorry, there was an error.');
+					//alert('Sorry, there was an error.');
 				}else{
 					// Hide/remove elements
 					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').next('div.panel-body').slideUp(400, function(){
@@ -52,6 +55,9 @@
 					$("div#sidebar ul.list-group li.list-group-item:last").slideDown(400);
 				}
 			});
+			// Clear search box
+			$("div#content div#classSearch input#classSearchField").val("");
+			doneTyping();
 		});
 		// **************** REMOVE COURSE FROM SESSION ****************
 		$(document).on('click', 'div#sidebar ul.list-group li.list-group-item span.XButton', function(){
@@ -59,7 +65,7 @@
 			// Mark course as ignored in the model
 			$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
 				if(!getAjaxStatus(d)){
-					alert('Sorry, there was an error.');
+					//alert('Sorry, there was an error.');
 				}else{
 					// Hide/remove elements
 					$elem.parent('li.list-group-item').slideUp(400, function(){
@@ -72,7 +78,7 @@
 		// **************** SEARCH ****************
 		//setup before functions
 		var typingTimer;                //timer identifier
-		var doneTypingInterval = 1000;  //time in ms, 5 second for example
+		var doneTypingInterval = 100;  //time in ms, 5 second for example
 		var $input = $('input#classSearchField');
 
 		//on keyup, start the countdown
@@ -93,7 +99,7 @@
 					// Everything went well
 					$("div#courseResultsArea").html(getAjaxData(d));
 				}else{
-					alert(getAjaxFailureReason(d));
+					//alert(getAjaxFailureReason(d));
 				}
 			});
 		}
@@ -119,7 +125,7 @@
 	<div class="container">
 		<div id="content">
 			<div class="input-group" id="classSearch">
-				<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title">
+				<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
 				<span class="input-group-addon" style="cursor: pointer;">Search</span>
 			</div>
 			<div class="panel panel-default" id="courseResultsArea">

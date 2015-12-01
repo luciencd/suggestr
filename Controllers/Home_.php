@@ -3,12 +3,7 @@
 
 class HomeController extends PageController {
 	public $pageTemplate = "Home";
-	public function predictClasses(){//Take in session_id
-
-		$command = 'python schedule.py';// . json_encode($classes)
-		$result = json_decode(shell_exec('python "schedule.py"'),true);
-		return $result;
-	}
+	
 	public function process($get, $post) {
 		$this->pageData["Title"] = "Home";
 
@@ -21,28 +16,15 @@ class HomeController extends PageController {
 		}
 
 		// Generate all of the courses (for testing)
-
-		//Get list of predicted courses from Python.
-		$predClasses = $this->predictClasses();
-
 		$allCourses = array();
 		$query = new Query('courses');
-
-		//Adding predicted courses to the $allCourses array.
-		foreach($predClasses as $class){
-			$result = new Course();
-			$result->findById($class['id']);
-			array_push($allCourses,$result);
-		}
-		//$allcourses only contains the course id's
-
-		
-		//Create new array containing all the course details based on what is in Allcourses.
-		$allNewCourses = array();
-		foreach($allCourses as $course){
+		$result = $query->select('*', '', array('number', 'ASC'), 20, false);
+		while($row=mysqli_fetch_array($result)){
 			try{
+				$course = new Course();
+				$course->findById($row['id']);
 				if(!in_array($course->get('id'), $idsAlreadyAdded)){ // Check that this course has not been added by the user yet
-					array_push($allNewCourses, array('id' => $course->get('id'),
+					array_push($allCourses, array('id' => $course->get('id'),
 												  'name' => ucwords(strtolower($course->get('name'))),
 												  'department_id' => $course->get('department_id'),
 												  'number' => $course->get('number'),
@@ -50,12 +32,8 @@ class HomeController extends PageController {
 				}
 			}catch(Exception $e){}
 		}
+		$this->pageData['allCourses'] = $allCourses;
 
-		//Populate webpage with all the different courses that were predicted.
-		$this->pageData['allCourses'] = $allNewCourses;
-		
-
-		//////////
 		// Select all of the courses that this user is already added
 		$query = new Query('action');
 		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']),
@@ -64,7 +42,7 @@ class HomeController extends PageController {
 		foreach($result as $action){
 			array_push($idsAlreadyAdded, $action->get('course_id'));
 		}
-		
+
 		// Get all of the courses in this user's session
 		$usersCourses = array();
 		foreach($idsAlreadyAdded as $courseId){
@@ -77,10 +55,8 @@ class HomeController extends PageController {
 											  'number' => $course->get('number')));
 			}catch(Exception $e){}
 		}
-
 		$this->pageData['usersCourses'] = $usersCourses;
 
-		
 	}
 }
 
