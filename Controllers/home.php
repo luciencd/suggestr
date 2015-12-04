@@ -79,7 +79,7 @@ class HomeController extends PageController {
 		}
 
 		$this->pageData['usersCourses'] = $usersCourses;
-
+		//Pushes all the new courses to the view.
 		
 	}
 }
