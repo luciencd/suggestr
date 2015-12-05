@@ -1,0 +1,156 @@
+<script type="text/javascript">
+	$(function(){
+		// **************** POSTPONE COURSE FROM SESSION ****************
+		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-primary', function(){
+			// Hide/remove elements
+			$(this).parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').next('div.panel-body').slideUp(400, function(){
+				$(this).remove();
+			});
+			$(this).parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').slideUp(400, function(){
+				$(this).remove();
+			});
+		});
+		// **************** IGNORE COURSE FROM SESSION ****************
+		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
+			$elem = $(this);
+			// Mark course as ignored in the model
+			$.post('/a.php?p=IgnoreCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
+				if(!getAjaxStatus(d)){
+					//alert('Sorry, there was an error.');
+				}else{
+					// Hide/remove elements
+					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').next('div.panel-body').slideUp(400, function(){
+						$(this).remove();
+					});
+					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').slideUp(400, function(){
+						$(this).remove();
+					});
+				}
+			});
+			// Clear search box
+			$("div#content div#classSearch input#classSearchField").val("");
+			doneTyping();
+		});
+		// **************** ADD COURSE TO SESSION ****************
+		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
+			$elem = $(this);
+			// Mark course as ignored in the model
+			$.post('/a.php?p=AddCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
+				if(!getAjaxStatus(d)){
+					//alert('Sorry, there was an error.');
+				}else{
+					// Hide/remove elements
+					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').next('div.panel-body').slideUp(400, function(){
+						$(this).remove();
+					});
+					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').slideUp(400, function(){
+						$(this).remove();
+					});
+					// Add course to left-hand list of courses
+					var id = $elem.siblings('input#course_id').val().trim();
+					var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
+					var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
+					$("div#sidebar ul.list-group")
+						.append('<li class="list-group-item" style="display: none;"><input type="hidden" id="course_id" value="'+id+'" /><span class="badge">'+number+'</span><span class="badge XButton">X</span>'+name+'</li>');
+					$("div#sidebar ul.list-group li.list-group-item:last").slideDown(400);
+				}
+			});
+			// Clear search box
+			$("div#content div#classSearch input#classSearchField").val("");
+			doneTyping();
+		});
+		// **************** REMOVE COURSE FROM SESSION ****************
+		$(document).on('click', 'div#sidebar ul.list-group li.list-group-item span.XButton', function(){
+			$elem = $(this);
+			// Mark course as ignored in the model
+			$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
+				if(!getAjaxStatus(d)){
+					//alert('Sorry, there was an error.');
+				}else{
+					// Hide/remove elements
+					$elem.parent('li.list-group-item').slideUp(400, function(){
+						$(this).remove();
+						//doneTyping(); // Rerun the search in case new options are now avaliable...
+					});
+				}
+			});
+		});
+		// **************** SEARCH ****************
+		//setup before functions
+		var typingTimer;                //timer identifier
+		var doneTypingInterval = 100;  //time in ms, 5 second for example
+		var $input = $('input#classSearchField');
+
+		//on keyup, start the countdown
+		$input.on('keyup', function () {
+			clearTimeout(typingTimer);
+			typingTimer = setTimeout(doneTyping, doneTypingInterval);
+		});
+
+		//on keydown, clear the countdown 
+		$input.on('keydown', function () {
+		  clearTimeout(typingTimer);
+		});
+
+		//user is "finished typing," do something
+		function doneTyping (){
+			$.post('/a.php?p=Search', {q: $input.val()}, function(d){
+				if(getAjaxStatus(d)){
+					// Everything went well
+					$("div#courseResultsArea").html(getAjaxData(d));
+				}else{
+					//alert(getAjaxFailureReason(d));
+				}
+			});
+		}
+	});
+</script>
+
+<div class="col-md-5" id="sidebar">
+	<ul class="list-group">
+		{{#usersCourses}}
+			<li class="list-group-item">
+				<input type="hidden" id="course_id" value="{{id}}" />
+				<span class="badge">{{number}}</span>
+				<span class="badge XButton">X</span>
+				{{name}}
+			</li>
+		{{/usersCourses}}
+	</ul>
+</div> <!-- /Sidebar -->
+
+
+
+<div class="col-md-7">
+	<div class="container">
+		<div id="content">
+			<div class="input-group" id="classSearch">
+				<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
+				<span class="input-group-addon" style="cursor: pointer;">Search</span>
+			</div>
+			<div class="panel panel-default" id="courseResultsArea">
+				{{#allCourses}}
+					<div class="panel-heading">
+						<input type="hidden" id="course_id" value="{{id}}" />
+						<div class="row">
+							<div class="col-md-7">
+								<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
+							</div>
+							<div class="col-md-5">
+								<div class="btn-group" role="group">
+									<input type="hidden" id="course_id" value="{{id}}" />
+									<button type="button" class="btn btn-success">Add</button>
+									<button type="button" class="btn btn-primary">Postpone</button>
+									<button type="button" class="btn btn-danger">Ignore</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="row">{{description}}</div>
+					</div>
+				{{/allCourses}}
+			</div>
+		</div>
+	</div>
+</div> <!-- /col-md-7 -->
