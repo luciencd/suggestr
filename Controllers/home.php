@@ -1,5 +1,6 @@
 <?php
 // Page Controller for the Index Page
+require_once(ROOT.'Controllers/suggestions.php');
 
 class HomeController extends PageController {
 	public $pageTemplate = "Home";
@@ -10,6 +11,12 @@ class HomeController extends PageController {
 		return $result;
 	}
 	public function process($get, $post) {
+		$Data = new Database();
+		//echo "<h4> getStudent:".$Data->getStudent(536)."</h4>";
+		echo "<h4> studentExists:".$Data->studentExists(536)."</h4>";
+		echo "<h4> numStudents:".$Data->numStudents()."</h4>";
+		//echo "<h4> array".$Data->getStudentsTakenCourses(536)."</h4>";
+		var_dump($Data->getStudentsTakenCourses(536));
 		$this->pageData["Title"] = "Home";
 
 		// Select all of the courses that this user is already added or ignored
