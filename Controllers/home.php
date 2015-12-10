@@ -1,7 +1,7 @@
 <?php
 // Page Controller for the Index Page
 require_once(ROOT.'Controllers/suggestions.php');
-error_reporting(0);
+///error_reporting(0);
 class HomeController extends PageController {
 	public $pageTemplate = "Home";
 	public function predictClasses(){//Take in session_id
@@ -11,13 +11,18 @@ class HomeController extends PageController {
 		return $result;
 	}
 	public function process($get, $post) {
+
+		$this->pageData["Title"] = "Home";
 		//Generate the data from mysql.
 
+		var_dump($_COOKIE['sessionId']);
+		var_dump($objects["sessionId"]);
 		$Data = new Database();
 
 		//Setting up student
 		//Replace with $session_id. The cookie doesn't work for me(Lucien) though...
-		$session = 912;
+		$session = 912;//intval($_COOKIE['sessionId']);
+		echo "num: ".$session;
 		$student = $Data->getStudent($session);
 		$studentCourses = $student->getTaken();
 		echo " Session: ".$student->getId()." major: ".$student->getMajor()." year: ".$student->getYear();
@@ -27,7 +32,7 @@ class HomeController extends PageController {
 		
 
 
-		$this->pageData["Title"] = "Home";
+		
 
 		// Select all of the courses that this user is already added or ignored
 		$query = new Query('action');
