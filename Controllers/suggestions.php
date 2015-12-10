@@ -4,9 +4,9 @@ class Student {
     public $id = "";
     public $major = "";
     public $year = "";
-    public $taken;
-    public $no;
-    public $yes;
+    public $taken = array();
+    public $no = array();
+    public $yes = array();
     function __construct($id_){
         $this->id = $id_;
         ##Rep invariant:
@@ -19,9 +19,7 @@ class Student {
         ## taken = [] chronological list of courses this student has taken
         ## no = [] list of courses student does not want to take next semester
         ## yes = [] list of courses student would like to take next semester.
-        $this->taken = array();
-        $this->no = array();
-        $this->yes = array();
+        
     }
     function getId(){
         return $this->id;
@@ -30,16 +28,37 @@ class Student {
         return $this->taken;
     }
     
+    
+    function setMajor($_major){
+        $this->major = $_major;
+    }
+    function setYear($_year){
+        $this->year = $_year;
+    }
+
+    function getMajor(){
+        return $this->major;
+    }
+    function getYear(){
+        return $this->year;
+    }
 
     function addCourse($course_id,$type){
-        if($type == 0){
+
+        //echo "type push size before: ",count($this->taken);
+        if($type == "0"){
+            //$this->yes[$course_id] = true;
             array_push($this->yes,$course_id);
-        }else if($type == 1){
+        }else if($type == "1"){
+            //$this->no[$course_id] = true;
             array_push($this->no,$course_id);
-        }else if($type == 2){
-            array_push($this->taken,$course_id);
+        }else if($type == "2"){
+            //$this->taken[$course_id] = true;
+            array_push($this->taken,$course_id);  
         }
+        //echo "type push size after: ",count($this->taken);
     }
+
 
 }
 
@@ -60,7 +79,7 @@ class Database {
         $queryActions = $query->select('*',true,'ASC');//Need to return ordered by session_id
         
 
-        echo "size Query:",count($queryActions);
+       
         //$newStudent = new Student();
         //In order, add each student to the list, adding each course that they took, no, or yes.
         foreach($queryActions as $action){
@@ -68,17 +87,25 @@ class Database {
 
             $id = $action->get('session_id');
             $course = $action->get('course_id');
-            //echo "<br>".$id." ".$course;
-            if (isset($this->studentList[$id])) {
+            $major = $action->get('major');
+            $year = $action->get('year');
+            
+            if (isset($this->StudentList[$id])) {
                 //echo "set";
 
                 $CurrentStudent = $this->StudentList[$id];
-                $CurrentStudent->addCourse($action->get('course_id'),$action->get('type'));
+
+
+                //echo "<h3>test</h3>";
+                $CurrentStudent->addCourse($action->get('course_id'),$action->get('choice'));
             }else{
                 
                 //echo "not set yet";
                 $CurrentStudent = new Student($id);
-                $CurrentStudent->addCourse($action->get('course_id'),$action->get('type'));
+                $CurrentStudent->setMajor($major);
+                $CurrentStudent->setYear($year);
+                //echo "<br>".$CurrentStudent->getId()." ".$CurrentStudent->getMajor()." ".$CurrentStudent->getYear();
+                $CurrentStudent->addCourse($action->get('course_id'),$action->get('choice'));
                 
                 //echo $this->StudentList[$id]->getId();
             }
@@ -116,9 +143,47 @@ class Database {
     function getStudentsTakenCourses($id){
         return $this->getStudent($id)->getTaken();
     }
-    //function jaccardIndex(s1,s2){
-        //return float(len(list(set(s1) & set(s2))))/float(len(list(set(s1) | set(s2))))
-    //}
+    function jaccardIndex($s1,$s2){
+        $Union = array_unique(array_merge($s1, $s2));
+        $Intersection = array_intersect($s1,$s2);
+        //echo "<br>".Count($Intersection);
+        //echo "<br>".Count($Union);
+        return Count($Intersection)/Count($Union);
+    }
+
+    function getSuggestedCourses($coursesTaken){
+        $scores = array();
+        foreach($this->StudentList as $otherStudent){
+            $otherStudentTaken = $otherStudent->getTaken();
+            $score = $this->jaccardIndex($coursesTaken,$otherStudentTaken);
+            $scores[$otherStudent->getId()] = array($score,$otherStudentTaken);
+            //array_push(array($score,$otherStudentTaken),$scores);
+        }
+        arsort($scores);
+
+        $likelyClasses = array();
+        foreach($scores as $first => $second){
+            $score = $second[0];
+            $classes = $second[1];
+            if($score > .2){
+                foreach($classes as $class){
+                    if(!in_array($class,$coursesTaken)){
+                        if(isset($likelyClasses[$class])){
+                            $likelyClasses[$class] += $score;//Multiply by classification modifier
+                            //The more common a class is, the less it matters.
+                        }else{
+                            $likelyClasses[$class] = $score;
+                            
+                        }
+                    }
+                }
+            }
+        }
+        arsort($likelyClasses);
+        return $likelyClasses;
+
+
+    }
 }
 
 ?>
