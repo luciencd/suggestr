@@ -5,7 +5,7 @@
 // Load our config and initialization
 require_once('config.php');
 
-header('Content-Type: text/html; charset=utf-8');
+//header('Content-Type: text/html; charset=utf-8');
 
 // Make sure we have a page to load.
 // IIS should handle this for us through URL Rewriting.
