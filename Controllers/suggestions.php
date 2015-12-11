@@ -49,10 +49,10 @@ class Student {
         if($type == "0"){
             //$this->yes[$course_id] = true;
             array_push($this->yes,$course_id);
-        }else if($type == "1"){
+        }else if($type == "2"){
             //$this->no[$course_id] = true;
             array_push($this->no,$course_id);
-        }else if($type == "2"){
+        }else if($type == "1"){
             //$this->taken[$course_id] = true;
             array_push($this->taken,$course_id);  
         }
@@ -65,13 +65,26 @@ class Student {
 ##ADT {id  => Student()}
 class Database {
     public $StudentList = array();
+    public $ClassList = array();
 
     function __construct(){
         
 
         $this->loadAllStudents();
+        //$this->loadAllClasses();
     }
+    /*
+    function loadAllClasses(){
+        $query = new Query('courses');
+        $queryActions = $query->select('*',true,'ASC');//Need to return ordered by session_id
+        
+        foreach($queryActions as $action){
+            $id = $action->get('id');
+            $courseName = $action->get('name');
+            $this->ClassList[$id] = $courseName;
+        }
 
+    }*/
     ##requires: id is a session id in the database.
     ##returns: 
     function loadAllStudents(){
@@ -133,8 +146,15 @@ class Database {
         if(isset($this->StudentList[$id])){
             return $this->StudentList[$id];
         }else{
-            return "no";
+            return array();
         }
+    }
+    function getClassNameById($id){
+
+        $result = new Course();
+        $result->findById($id);
+        return $result->get('name');
+        
     }
     function numStudents(){
         return count($this->StudentList);
@@ -148,7 +168,8 @@ class Database {
         $Intersection = array_intersect($s1,$s2);
         //echo "<br>".Count($Intersection);
         //echo "<br>".Count($Union);
-        return Count($Intersection)/Count($Union);
+
+        return (1+Count($Intersection))/(1+Count($Union));
     }
 
     function getSuggestedCourses($coursesTaken){
@@ -165,14 +186,16 @@ class Database {
         foreach($scores as $first => $second){
             $score = $second[0];
             $classes = $second[1];
-            if($score > .2){
+            //echo $score.'<br>';
+            if($score > .2 and (abs(Count($classes) - Count($otherStudentTaken)) < 3)){
                 foreach($classes as $class){
                     if(!in_array($class,$coursesTaken)){
                         if(isset($likelyClasses[$class])){
-                            $likelyClasses[$class] += $score;//Multiply by classification modifier
+                            //Weird function need to analyse this.
+                            $likelyClasses[$class] += $score*(1/log($this->courseFrequency($class)+5));//Multiply by classification modifier
                             //The more common a class is, the less it matters.
                         }else{
-                            $likelyClasses[$class] = $score;
+                            $likelyClasses[$class] = $score*(1/log($this->courseFrequency($class)+5));
                             
                         }
                     }
@@ -183,6 +206,15 @@ class Database {
         return $likelyClasses;
 
 
+    }
+
+    function courseFrequency($id){
+        //echo $id;
+        $statement = "SELECT Count FROM courseFrequency WHERE course_id =".$id;
+        $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
+        //echo "<h4>".$result."</h4>";
+        //return $result->get('Count');
+        return mysqli_fetch_array($result)[0];
     }
 }
 
