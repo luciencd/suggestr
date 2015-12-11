@@ -187,7 +187,7 @@ class Database {
             $score = $second[0];
             $classes = $second[1];
             //echo $score.'<br>';
-            if($score > .2 and (abs(Count($classes) - Count($otherStudentTaken)) < 3)){
+            if($score > .2 and (abs(Count($classes) - Count($otherStudentTaken)) < 10)){
                 foreach($classes as $class){
                     if(!in_array($class,$coursesTaken)){
                         if(isset($likelyClasses[$class])){

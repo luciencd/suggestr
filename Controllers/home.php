@@ -14,9 +14,12 @@ class HomeController extends PageController {
 
 		$this->pageData["Title"] = "Home";
 		//Generate the data from mysql.
-		$_COOKIE['sessionId'] = 919;
-		//var_dump($_COOKIE['sessionId']);
-		
+
+		//NEED TO FIGURE OUT WHY COOKIE IS NOT WORKING. HERE I SET IT manually.
+		$_COOKIE['sessionId'] = 886;
+		//Something wrong when no classes are taken by a given session.
+		//I'll try to fix that someday.
+	
 
 
 		$Data = new Database();
@@ -27,6 +30,7 @@ class HomeController extends PageController {
 		//echo "num: ".$session;
 		$student = $Data->getStudent($_COOKIE['sessionId']);
 		$studentCourses = $student->getTaken();
+
 		//echo " Session: ".$student->getId()." major: ".$student->getMajor()." year: ".$student->getYear();
 		
 		foreach($studentCourses as $course){
@@ -91,12 +95,16 @@ class HomeController extends PageController {
 		//Populate webpage with all the different courses that were predicted.
 		$this->pageData['allCourses'] = $allNewCourses;
 		
+		/*
+		IMPORTANT NODE
 
+
+		*/
 		//////////
 		// Select all of the courses that this user is already added
 		$query = new Query('action');
 		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']),
-											array('choice', '=', 1)));
+											array('choice', '=', 1)));///is 0 in leo's version, 1 in my old database. we need to sort that shit.
 
 		$idsAlreadyAdded = array();
 		foreach($result as $action){
