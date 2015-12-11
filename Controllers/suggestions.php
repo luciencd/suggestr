@@ -146,7 +146,7 @@ class Database {
         if(isset($this->StudentList[$id])){
             return $this->StudentList[$id];
         }else{
-            return array();
+            return new Student($id);
         }
     }
     function getClassNameById($id){
