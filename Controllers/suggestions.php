@@ -87,8 +87,14 @@ class Database {
     ##returns: 
     function loadAllStudents(){
         $start = microtime(true);
+        $statement = "SELECT * FROM Action";
+        $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
+
+        /*if(mysqli_fetch_array($result)==null){
+            return 1;
+        }
         $query = new Query('action');
-        $queryActions = $query->select('*',true,'ASC');//Need to return ordered by session_id
+        $queryActions = $query->select('*',true);*///Need to return ordered by session_id
         //This takes quite a bit of time. Need to shorten it.
 
         $end = microtime(true);
@@ -97,47 +103,41 @@ class Database {
        
         //$newStudent = new Student();
         //In order, add each student to the list, adding each course that they took, no, or yes.
-        foreach($queryActions as $action){
-
-
+        //foreach($queryActions as $action){
+        while($row = mysqli_fetch_row($result)){
+            /*
             $id = $action->get('session_id');
             $course = $action->get('course_id');
             $major = $action->get('major');
             $year = $action->get('year');
+            $choice = $action->get('choice');*/
+            $id = $row[6];
+            $course = $row[3];
+            $major = $row[1];
+            $year = $row[2];
+            $choice = $row[4];
             
             if (isset($this->StudentList[$id])) {
-                //echo "set";
 
                 $CurrentStudent = $this->StudentList[$id];
+                $CurrentStudent->addCourse($course,$choice);
 
-
-                //echo "<h3>test</h3>";
-                $CurrentStudent->addCourse($action->get('course_id'),$action->get('choice'));
             }else{
-                
-                //echo "not set yet";
+
                 $CurrentStudent = new Student($id);
                 $CurrentStudent->setMajor($major);
                 $CurrentStudent->setYear($year);
-                //echo "<br>".$CurrentStudent->getId()." ".$CurrentStudent->getMajor()." ".$CurrentStudent->getYear();
-                $CurrentStudent->addCourse($action->get('course_id'),$action->get('choice'));
-                
-                //echo $this->StudentList[$id]->getId();
+                $CurrentStudent->addCourse($course,$choice);
+
             }
             $this->StudentList[$id] = $CurrentStudent;
-            
 
-            //Now that we know $CurrentStudent is the Student we are working with, 
-            //we need to modify the object.
-
-            
-            
-            
-            //array_push($ListActions, $newStudent);
         }
         $end = microtime(true);
         echo 'PHP database class creation took ' . ($end-$start) . ' seconds!<br>';
     }
+
+
     //GET FUNCTIONS.
     
     //Checks whether a student exists or not.
@@ -154,7 +154,7 @@ class Database {
         if(isset($this->StudentList[$id])){
             return $this->StudentList[$id];
         }else{
-            return array();
+            return new Student($id);
         }
     }
 
