@@ -9,8 +9,6 @@ class Student {
     public $yes = array();
     function __construct($id_){
         $this->id = $id_;
-        ##Rep invariant:
-        ## 
         ##Abstraction Function:
         ## unique id of given model in mysql
         ## session_id can be shared among many Student objects as it is same student.
@@ -44,19 +42,14 @@ class Student {
     }
 
     function addCourse($course_id,$type){
-
-        //echo "type push size before: ",count($this->taken);
-        if($type == "0"){
-            //$this->yes[$course_id] = true;
+        //ENSURE THAT THESE ARE THE PROPER TYPE LABELS.
+        if($type == "0"){//Yes
             array_push($this->yes,$course_id);
-        }else if($type == "2"){
-            //$this->no[$course_id] = true;
-            array_push($this->no,$course_id);
-        }else if($type == "1"){
-            //$this->taken[$course_id] = true;
-            array_push($this->taken,$course_id);  
+        }else if($type == "1"){//Taken
+            array_push($this->taken,$course_id);
+        }else if($type == "2"){//No
+            array_push($this->no,$course_id);  
         }
-        //echo "type push size after: ",count($this->taken);
     }
 
 
@@ -88,96 +81,132 @@ class Database {
     ##requires: id is a session id in the database.
     ##returns: 
     function loadAllStudents(){
-        $query = new Query('action');
-        $queryActions = $query->select('*',true,'ASC');//Need to return ordered by session_id
-        
+        $start = microtime(true);
+        $statement = "SELECT * FROM Action";
+        $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
 
+        /*if(mysqli_fetch_array($result)==null){
+            return 1;
+        }
+        $query = new Query('action');
+        $queryActions = $query->select('*',true);*///Need to return ordered by session_id
+        //This takes quite a bit of time. Need to shorten it.
+
+        $end = microtime(true);
+        echo 'MYSQL * action query took ' . ($end-$start) . ' seconds!<br>';
+        $start = microtime(true);
        
         //$newStudent = new Student();
         //In order, add each student to the list, adding each course that they took, no, or yes.
-        foreach($queryActions as $action){
-
-
+        //foreach($queryActions as $action){
+        while($row = mysqli_fetch_row($result)){
+            /*
             $id = $action->get('session_id');
             $course = $action->get('course_id');
             $major = $action->get('major');
             $year = $action->get('year');
+            $choice = $action->get('choice');*/
+            $id = $row[6];
+            $course = $row[3];
+            $major = $row[1];
+            $year = $row[2];
+            $choice = $row[4];
             
             if (isset($this->StudentList[$id])) {
-                //echo "set";
 
                 $CurrentStudent = $this->StudentList[$id];
+                $CurrentStudent->addCourse($course,$choice);
 
-
-                //echo "<h3>test</h3>";
-                $CurrentStudent->addCourse($action->get('course_id'),$action->get('choice'));
             }else{
-                
-                //echo "not set yet";
+
                 $CurrentStudent = new Student($id);
                 $CurrentStudent->setMajor($major);
                 $CurrentStudent->setYear($year);
-                //echo "<br>".$CurrentStudent->getId()." ".$CurrentStudent->getMajor()." ".$CurrentStudent->getYear();
-                $CurrentStudent->addCourse($action->get('course_id'),$action->get('choice'));
-                
-                //echo $this->StudentList[$id]->getId();
+                $CurrentStudent->addCourse($course,$choice);
+
             }
             $this->StudentList[$id] = $CurrentStudent;
-            
 
-            //Now that we know $CurrentStudent is the Student we are working with, 
-            //we need to modify the object.
-
-            
-            
-            
-            //array_push($ListActions, $newStudent);
         }
+        $end = microtime(true);
+        echo 'PHP database class creation took ' . ($end-$start) . ' seconds!<br>';
     }
-    //Takes session id of a student, and returns the classes the guy took.
+
+
+    //GET FUNCTIONS.
+    
+    //Checks whether a student exists or not.
     function studentExists($id){
         if(isset($this->StudentList[$id])){
-            return "Yes";
+            return true;
         }else{
-            return "No";
+            return false;
         }
     }
+    
+    //Takes session id of a student, and returns the classes the guy took as an array.
     function getStudent($id){
         if(isset($this->StudentList[$id])){
             return $this->StudentList[$id];
         }else{
-            return array();
+            return new Student($id);
         }
     }
-    function getClassNameById($id){
 
+    //Returns the name of a course from it's id.
+    function getClassNameById($id){
         $result = new Course();
         $result->findById($id);
         return $result->get('name');
         
     }
+
+    //returns the amount of students currently in the database.
     function numStudents(){
         return count($this->StudentList);
     }
 
+    //returns the courses of a given student by their id.
+    //returns array.
     function getStudentsTakenCourses($id){
         return $this->getStudent($id)->getTaken();
     }
+    /* Gives you the Jaccard index between two arrays, that is 
+    The cardinality of the Intersection over the cardinality of the Union
+    @params: $s1, $s2, two arrays of classes(course id's)
+    @returns: float.
+    */
     function jaccardIndex($s1,$s2){
         $Union = array_unique(array_merge($s1, $s2));
         $Intersection = array_intersect($s1,$s2);
-        //echo "<br>".Count($Intersection);
-        //echo "<br>".Count($Union);
-
-        return (1+Count($Intersection))/(1+Count($Union));
+        if(Count($s1) == 0 || Count($s2) == 0){
+            return 1;
+        }else{
+            return (Count($Intersection))/(Count($Union));
+        }
+        
     }
 
+    /* Gives you a list of suggested courses based on a list of courses 
+    coming into the function.
+    
+    @params: $coursesTaken : an array of courseId's
+
+    @returns: $likelyClasses : an associative Array of courses to suggestion score
+    map[course] => score.
+    */
     function getSuggestedCourses($coursesTaken){
+        $start = microtime(true);
+
+
         $scores = array();
         foreach($this->StudentList as $otherStudent){
+
             $otherStudentTaken = $otherStudent->getTaken();
-            $score = $this->jaccardIndex($coursesTaken,$otherStudentTaken);
-            $scores[$otherStudent->getId()] = array($score,$otherStudentTaken);
+            if((abs(Count($coursesTaken) - Count($otherStudentTaken)) < 6)){
+                $score = $this->jaccardIndex($coursesTaken,$otherStudentTaken);
+                $scores[$otherStudent->getId()] = array($score,$otherStudentTaken);
+            }
             //array_push(array($score,$otherStudentTaken),$scores);
         }
         arsort($scores);
@@ -187,9 +216,9 @@ class Database {
             $score = $second[0];
             $classes = $second[1];
             //echo $score.'<br>';
-            if($score > .2 and (abs(Count($classes) - Count($otherStudentTaken)) < 3)){
+            if($score > .2){
                 foreach($classes as $class){
-                    if(!in_array($class,$coursesTaken)){
+                    if(!in_array($class,$coursesTaken)){//If this is a hashtable, don't think this matters
                         if(isset($likelyClasses[$class])){
                             //Weird function need to analyse this.
                             $likelyClasses[$class] += $score*(1/log($this->courseFrequency($class)+5));//Multiply by classification modifier
@@ -202,18 +231,40 @@ class Database {
                 }
             }
         }
+
         arsort($likelyClasses);
+        /*array_filter($likelyClasses,function($k, $v){
+            return !in_array($v,$coursesTaken);
+
+        },ARRAY_FILTER_USE_BOTH);*/
+        /*
+        foreach($classes as $class){
+            if(in_array($class,$coursesTaken)){
+                unset($class);
+            }
+        }*/
+        $end = microtime(true);
+        echo 'Generating course Suggestions took ' . ($end-$start) . ' seconds!<br>';
+        
         return $likelyClasses;
 
 
     }
+    /* Gives you frequency of a particular class. 
+    The amount of times students have taken a course.
+    @param: $id : int, the session id of a given student
+    @return: int, the amount of times a class has been taken.
 
+    Perhaps this needs to be cached in some way.
+    */
     function courseFrequency($id){
-        //echo $id;
+
         $statement = "SELECT Count FROM courseFrequency WHERE course_id =".$id;
         $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
-        //echo "<h4>".$result."</h4>";
-        //return $result->get('Count');
+
+        if(mysqli_fetch_array($result)==null){
+            return 1;
+        }
         return mysqli_fetch_array($result)[0];
     }
 }
