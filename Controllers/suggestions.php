@@ -42,19 +42,14 @@ class Student {
     }
 
     function addCourse($course_id,$type){
-
-        //echo "type push size before: ",count($this->taken);
-        if($type == "0"){
-            //$this->yes[$course_id] = true;
+        //ENSURE THAT THESE ARE THE PROPER TYPE LABELS.
+        if($type == "0"){//Yes
             array_push($this->yes,$course_id);
-        }else if($type == "2"){
-            //$this->no[$course_id] = true;
-            array_push($this->no,$course_id);
-        }else if($type == "1"){
-            //$this->taken[$course_id] = true;
-            array_push($this->taken,$course_id);  
+        }else if($type == "1"){//Taken
+            array_push($this->taken,$course_id);
+        }else if($type == "2"){//No
+            array_push($this->no,$course_id);  
         }
-        //echo "type push size after: ",count($this->taken);
     }
 
 

@@ -10,7 +10,7 @@ class IgnoreCourseController extends AjaxController {
 		$query = new Query('action');
 		// Select all the courses that are in this user's session and have this course id
 		$result = $query->select('*', array(array('course_id', '=', $post['course_id']), 
-											array('session_id', '=', $_COOKIE['sessionId'])), '', 1);
+											array('session_id', '=', $_COOKIE['sessionId'])), '', 2);
 		if(count($result)!=0){
 			// Abort because this course is already in the user's model
 			$this->failureReason = 'Sorry, there was an error.';
