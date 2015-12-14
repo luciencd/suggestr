@@ -9,8 +9,6 @@ class Student {
     public $yes = array();
     function __construct($id_){
         $this->id = $id_;
-        ##Rep invariant:
-        ## 
         ##Abstraction Function:
         ## unique id of given model in mysql
         ## session_id can be shared among many Student objects as it is same student.
@@ -134,14 +132,18 @@ class Database {
             //array_push($ListActions, $newStudent);
         }
     }
-    //Takes session id of a student, and returns the classes the guy took.
+    //GET FUNCTIONS.
+    
+    //Checks whether a student exists or not.
     function studentExists($id){
         if(isset($this->StudentList[$id])){
-            return "Yes";
+            return true;
         }else{
-            return "No";
+            return false;
         }
     }
+    
+    //Takes session id of a student, and returns the classes the guy took as an array.
     function getStudent($id){
         if(isset($this->StudentList[$id])){
             return $this->StudentList[$id];
@@ -149,30 +151,49 @@ class Database {
             return array();
         }
     }
-    function getClassNameById($id){
 
+    //Returns the name of a course from it's id.
+    function getClassNameById($id){
         $result = new Course();
         $result->findById($id);
         return $result->get('name');
         
     }
+
+    //returns the amount of students currently in the database.
     function numStudents(){
         return count($this->StudentList);
     }
 
+    //returns the courses of a given student by their id.
+    //returns array.
     function getStudentsTakenCourses($id){
         return $this->getStudent($id)->getTaken();
     }
+    /* Gives you the Jaccard index between two arrays, that is 
+    The cardinality of the Intersection over the cardinality of the Union
+    @params: $s1, $s2, two arrays of classes(course id's)
+    @returns: float.
+    */
     function jaccardIndex($s1,$s2){
         $Union = array_unique(array_merge($s1, $s2));
         $Intersection = array_intersect($s1,$s2);
-        //echo "<br>".Count($Intersection);
-        //echo "<br>".Count($Union);
 
         return (1+Count($Intersection))/(1+Count($Union));
     }
 
+    /* Gives you a list of suggested courses based on a list of courses 
+    coming into the function.
+    
+    @params: $coursesTaken : an array of courseId's
+
+    @returns: $likelyClasses : an associative Array of courses to suggestion score
+    map[course] => score.
+    */
     function getSuggestedCourses($coursesTaken){
+        $start = microtime(true);
+
+
         $scores = array();
         foreach($this->StudentList as $otherStudent){
             $otherStudentTaken = $otherStudent->getTaken();
@@ -189,7 +210,7 @@ class Database {
             //echo $score.'<br>';
             if($score > .2 and (abs(Count($classes) - Count($otherStudentTaken)) < 10)){
                 foreach($classes as $class){
-                    if(!in_array($class,$coursesTaken)){
+                    if(!in_array($class,$coursesTaken)){//If this is a hashtable, don't think this matters
                         if(isset($likelyClasses[$class])){
                             //Weird function need to analyse this.
                             $likelyClasses[$class] += $score*(1/log($this->courseFrequency($class)+5));//Multiply by classification modifier
@@ -202,18 +223,40 @@ class Database {
                 }
             }
         }
+
         arsort($likelyClasses);
+        /*array_filter($likelyClasses,function($k, $v){
+            return !in_array($v,$coursesTaken);
+
+        },ARRAY_FILTER_USE_BOTH);*/
+        /*
+        foreach($classes as $class){
+            if(in_array($class,$coursesTaken)){
+                unset($class);
+            }
+        }*/
+        $end = microtime(true);
+        echo 'It took ' . ($end-$start) . ' seconds!';
+        
         return $likelyClasses;
 
 
     }
+    /* Gives you frequency of a particular class. 
+    The amount of times students have taken a course.
+    @param: $id : int, the session id of a given student
+    @return: int, the amount of times a class has been taken.
 
+    Perhaps this needs to be cached in some way.
+    */
     function courseFrequency($id){
-        //echo $id;
+
         $statement = "SELECT Count FROM courseFrequency WHERE course_id =".$id;
         $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
-        //echo "<h4>".$result."</h4>";
-        //return $result->get('Count');
+
+        if(mysqli_fetch_array($result)==null){
+            return 1;
+        }
         return mysqli_fetch_array($result)[0];
     }
 }
