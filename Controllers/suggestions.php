@@ -86,10 +86,14 @@ class Database {
     ##requires: id is a session id in the database.
     ##returns: 
     function loadAllStudents(){
+        $start = microtime(true);
         $query = new Query('action');
         $queryActions = $query->select('*',true,'ASC');//Need to return ordered by session_id
-        
+        //This takes quite a bit of time. Need to shorten it.
 
+        $end = microtime(true);
+        echo 'MYSQL * action query took ' . ($end-$start) . ' seconds!<br>';
+        $start = microtime(true);
        
         //$newStudent = new Student();
         //In order, add each student to the list, adding each course that they took, no, or yes.
@@ -131,6 +135,8 @@ class Database {
             
             //array_push($ListActions, $newStudent);
         }
+        $end = microtime(true);
+        echo 'PHP database class creation took ' . ($end-$start) . ' seconds!<br>';
     }
     //GET FUNCTIONS.
     
@@ -178,8 +184,12 @@ class Database {
     function jaccardIndex($s1,$s2){
         $Union = array_unique(array_merge($s1, $s2));
         $Intersection = array_intersect($s1,$s2);
-
-        return (1+Count($Intersection))/(1+Count($Union));
+        if(Count($s1) == 0 || Count($s2) == 0){
+            return 1;
+        }else{
+            return (Count($Intersection))/(Count($Union));
+        }
+        
     }
 
     /* Gives you a list of suggested courses based on a list of courses 
@@ -196,9 +206,12 @@ class Database {
 
         $scores = array();
         foreach($this->StudentList as $otherStudent){
+
             $otherStudentTaken = $otherStudent->getTaken();
-            $score = $this->jaccardIndex($coursesTaken,$otherStudentTaken);
-            $scores[$otherStudent->getId()] = array($score,$otherStudentTaken);
+            if((abs(Count($coursesTaken) - Count($otherStudentTaken)) < 6)){
+                $score = $this->jaccardIndex($coursesTaken,$otherStudentTaken);
+                $scores[$otherStudent->getId()] = array($score,$otherStudentTaken);
+            }
             //array_push(array($score,$otherStudentTaken),$scores);
         }
         arsort($scores);
@@ -208,7 +221,7 @@ class Database {
             $score = $second[0];
             $classes = $second[1];
             //echo $score.'<br>';
-            if($score > .2 and (abs(Count($classes) - Count($otherStudentTaken)) < 10)){
+            if($score > .2){
                 foreach($classes as $class){
                     if(!in_array($class,$coursesTaken)){//If this is a hashtable, don't think this matters
                         if(isset($likelyClasses[$class])){
@@ -236,7 +249,7 @@ class Database {
             }
         }*/
         $end = microtime(true);
-        echo 'It took ' . ($end-$start) . ' seconds!';
+        echo 'Generating course Suggestions took ' . ($end-$start) . ' seconds!<br>';
         
         return $likelyClasses;
 
