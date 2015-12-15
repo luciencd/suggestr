@@ -82,14 +82,9 @@ class Database {
     ##returns: 
     function loadAllStudents(){
         $start = microtime(true);
-        $statement = "SELECT * FROM Action";
-        $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
 
-        /*if(mysqli_fetch_array($result)==null){
-            return 1;
-        }
         $query = new Query('action');
-        $queryActions = $query->select('*',true);*///Need to return ordered by session_id
+        $result = $query->select('*',true,'','',false);///Need to return ordered by session_id
         //This takes quite a bit of time. Need to shorten it.
 
         $end = microtime(true);
@@ -98,19 +93,15 @@ class Database {
        
         //$newStudent = new Student();
         //In order, add each student to the list, adding each course that they took, no, or yes.
-        //foreach($queryActions as $action){
-        while($row = mysqli_fetch_row($result)){
-            /*
-            $id = $action->get('session_id');
-            $course = $action->get('course_id');
-            $major = $action->get('major');
-            $year = $action->get('year');
-            $choice = $action->get('choice');*/
-            $id = $row[6];
-            $course = $row[3];
-            $major = $row[1];
-            $year = $row[2];
-            $choice = $row[4];
+        //foreach($result as $action){
+        while($row = mysqli_fetch_array($result)){
+            
+
+            $id = $row['session_id'];
+            $course = $row['course_id'];
+            $major = $row['major'];
+            $year = $row['year'];
+            $choice = $row['choice'];
             
             if (isset($this->StudentList[$id])) {
 
@@ -207,7 +198,7 @@ class Database {
                 $score = $this->jaccardIndex($coursesTaken,$otherStudentTaken);
                 $scores[$otherStudent->getId()] = array($score,$otherStudentTaken);
             }
-            //array_push(array($score,$otherStudentTaken),$scores);
+            
         }
         arsort($scores);
 
