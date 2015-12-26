@@ -18,6 +18,8 @@ class Query{
 'departments',
 'model',
 'sessions',
+'tagaction',
+'tags',
 'year')))
 			$this->table = ucfirst($table);
 		else
@@ -171,6 +173,8 @@ class Query{
 'departments',
 'model',
 'sessions',
+'tagaction',
+'tags',
 'year'))){
 					return false;
 				}

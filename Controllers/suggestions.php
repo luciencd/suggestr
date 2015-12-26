@@ -88,7 +88,7 @@ class Database {
         //This takes quite a bit of time. Need to shorten it.
 
         $end = microtime(true);
-        echo 'MYSQL * action query took ' . ($end-$start) . ' seconds!<br>';
+        //echo 'MYSQL * action query took ' . ($end-$start) . ' seconds!<br>';
         $start = microtime(true);
        
         //$newStudent = new Student();
@@ -120,15 +120,15 @@ class Database {
 
         }
         $end = microtime(true);
-        echo 'PHP database class creation took ' . ($end-$start) . ' seconds!<br>';
+        //echo 'PHP database class creation took ' . ($end-$start) . ' seconds!<br>';
     }
 
 
     //GET FUNCTIONS.
     
     //Checks whether a student exists or not.
-    function studentExists($id){
-        if(isset($this->StudentList[$id])){
+    function studentExists($student_id){
+        if(isset($this->StudentList[$student_id])){
             return true;
         }else{
             return false;
@@ -136,18 +136,18 @@ class Database {
     }
     
     //Takes session id of a student, and returns the classes the guy took as an array.
-    function getStudent($id){
-        if(isset($this->StudentList[$id])){
-            return $this->StudentList[$id];
+    function getStudent($student_id){
+        if(isset($this->StudentList[$student_id])){
+            return $this->StudentList[$student_id];
         }else{
-            return new Student($id);
+            return new Student($student_id);
         }
     }
 
     //Returns the name of a course from it's id.
-    function getClassNameById($id){
+    function getClassNameById($course_id){
         $result = new Course();
-        $result->findById($id);
+        $result->findById($course_id);
         return $result->get('name');
         
     }
@@ -235,7 +235,7 @@ class Database {
             }
         }*/
         $end = microtime(true);
-        echo 'Generating course Suggestions took ' . ($end-$start) . ' seconds!<br>';
+        //echo 'Generating course Suggestions took ' . ($end-$start) . ' seconds!<br>';
         
         return $likelyClasses;
 
@@ -248,15 +248,80 @@ class Database {
 
     Perhaps this needs to be cached in some way.
     */
-    function courseFrequency($id){
-
-        $statement = "SELECT Count FROM courseFrequency WHERE course_id =".$id;
+    function courseFrequency($course_id){
+        //Should I be using ORMs to do this?
+        //Replace with query.
+        $statement = "SELECT Count FROM courseFrequency WHERE course_id =".$course_id;
         $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
 
         if(mysqli_fetch_array($result)==null){
             return 1;
         }
         return mysqli_fetch_array($result)[0];
+    }
+
+
+    /*
+    Get an array of the tags associated with a particular course.
+
+    */
+    function courseTags($course_id){
+        $query = new Query('tagaction');
+        $result = $query->select('*',array(array('course_id','=',$course_id)),'','',false);
+
+        $tagResults = array();
+
+        foreach($result as $row){
+            if(sizeof($tagResults) >= 5){
+                break;
+            }
+            $tag_id = $row['tag_id'];
+            $tag_name = $row['tag_name'];
+            //echo "<h4> do it:".$tag_id."</h4>";
+            if(!isset($tagResults[$tag_id])){
+                $tagResults[$tag_id]['tagName'] = $tag_name;
+                $tagResults[$tag_id]['tagId'] = $tag_id;
+                $tagResults[$tag_id]['count'] = 1;
+            }else{
+                $count = $tagResults[$tag_id]['count']+=1;
+                
+                $tagResults[$tag_id]['tagName'] = $tag_name;
+                $tagResults[$tag_id]['tagId'] = $tag_id;
+                $tagResults[$tag_id]['count'] = $count;
+            }
+        }
+        
+        $query = new Query('Tags');
+        $result = $query->select('*',true,'','',false);
+        $numTags = mysqli_num_rows($result);
+
+        while(sizeof($tagResults) <= 5){
+            $tag_id = new ORM('Tags');
+            $random_id = rand(0,$numTags);
+            $tag_id->findById($random_id);            
+            $tag_name = $tag_id->get('name');
+
+            if(!isset($tagResults[$random_id])){
+                $tagResults[$random_id] = array('tagName' => $tag_name,
+                                            'tagId' => $tag_id,
+                                            'count' => 0);
+
+            }
+        }
+
+        $tagResultsArray = array();
+        //must make this into a list, not an associative array, due to the precondition of mustache.
+        //Here is the transformation:
+        foreach($tagResults as $key => $value){
+            array_push($tagResultsArray,array('tagName' => $value['tagName'],
+                                                'tagId' => $value['tagId'],
+                                                'count' => $value['count']));
+
+        }
+        
+
+
+        return $tagResultsArray;
     }
 }
 

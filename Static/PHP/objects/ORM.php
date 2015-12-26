@@ -15,6 +15,8 @@ class ORM{ /* Object-relational mapping class */
 'departments',
 'model',
 'sessions',
+'tagaction',
+'tags',
 'year')))
 			throw new Exception('Table name invalid!');
 		$this->table = $table;
@@ -237,6 +239,18 @@ class Session extends ORM{
 class Year extends ORM{
 	public function __construct(){
 		parent::__construct('year');
+	}
+}
+
+class Tags extends ORM{
+	public function __construct(){
+		parent::__construct('tags');
+	}
+}
+
+class TagAction extends ORM{
+	public function __construct(){
+		parent::__construct('tagaction');
 	}
 }
 

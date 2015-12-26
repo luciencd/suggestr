@@ -87,8 +87,11 @@ class HomeController extends PageController {
 												  'name' => ucwords(strtolower($course->get('name'))),
 												  'department_id' => $course->get('department_id'),
 												  'number' => $course->get('number'),
-												  'description' => ((strlen($course->get('description'))==0)?'No description':$course->get('description'))));
-				}
+												  'description' => ((strlen($course->get('description'))==0)?'No description':$course->get('description')),
+												  'allTags' => $Data->courseTags($course->get('id')),//Should contain 5 tags.
+												  ));
+
+				}//var_dump($Data->courseTags($course->get('id')));
 			}catch(Exception $e){}
 		}
 

@@ -103,6 +103,9 @@
 				}
 			});
 		}
+
+
+		//*****************ADD tag//
 	});
 </script>
 
@@ -130,7 +133,9 @@
 			</div>
 			<div class="panel panel-default" id="courseResultsArea">
 				{{#allCourses}}
+
 					<div class="panel-heading">
+
 						<input type="hidden" id="course_id" value="{{id}}" />
 						<div class="row">
 							<div class="col-md-7">
@@ -146,9 +151,27 @@
 							</div>
 						</div>
 					</div>
+
 					<div class="panel-body">
 						<div class="row">{{description}}</div>
 					</div>
+					
+					<div class="panel-heading">
+						
+						<div class="row">
+							<div class="col-md-11">
+								{{#allTags}}
+								<div class="btn-group" role="group">
+									<button type="button" class="btn btn-default">{{tagName}}|{{count}}</button>
+								</div>
+								{{/allTags}}
+							</div>
+						</div>
+						
+					</div>
+
+					
+					<!-- needs spacing here-->
 				{{/allCourses}}
 			</div>
 		</div>
