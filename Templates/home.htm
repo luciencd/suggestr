@@ -105,7 +105,7 @@
 		}
 
 
-		//*****************ADD tag//
+		//*****************ADD tag*****************//
 	});
 </script>
 
@@ -114,9 +114,14 @@
 		{{#usersCourses}}
 			<li class="list-group-item">
 				<input type="hidden" id="course_id" value="{{id}}" />
-				<span class="badge">{{number}}</span>
 				<span class="badge XButton">X</span>
+				<!-- How to make this look better. Also, class should be unique no?-->
+				<span class="badge">ADD TAG</span>
+				
+				
+
 				{{name}}
+				<span class="badge">{{number}}</span>
 			</li>
 		{{/usersCourses}}
 	</ul>
