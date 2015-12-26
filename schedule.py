@@ -83,7 +83,7 @@ class Database():
         return Student(id,session_id,major,year,taken,no,yes,chosen)
 
     def getAllSessions(self):
-        
+        #Create cache every time it requests it. 
         self.cursor.execute("SELECT id FROM Model")
         allIds = self.cursor.fetchall()
         allIds = map(lambda id_: int(id_[0]),allIds)
