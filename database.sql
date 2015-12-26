@@ -7302,7 +7302,13 @@ CREATE TABLE `TagAction` (
 INSERT INTO `TagAction` (`id`, `tag_id`, `tag_name`, `session_id`, `course_id`) VALUES
 (1, 1, 'small', 993, 36316),
 (2, 2, 'medium', 992, 35500);
-
+(3, 3, 'large', 992, 35873);
+(4, 2, 'medium', 992, 35500);
+(5, 2, 'medium', 992, 36040);
+(6, 2, 'medium', 992, 35500);
+(4, 3, 'large', 992, 35997);
+(5, 3, 'large', 992, 35997);
+(6, 3, 'large', 992, 35997);
 -- --------------------------------------------------------
 
 --
