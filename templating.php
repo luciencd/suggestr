@@ -27,17 +27,16 @@ function Render($templ, $objects, $useMain=true) {
 		$query = new Query('sessions');
 		$id = $query->nextId();
 		if(is_numeric($id)){
-			ob_start();
+			
 			//echo "isnumeric";
 			$session = new Session();
 			$session->set('amount', 0); // Just so that the ORM class thinks something's dirty and allows entry of an empty row
 			$session->save(); // Add an empty row to the Sessions table with the next session ID
 			//echo $id;
+			
+			header('Location: /'); // Needs to reload since a cookie must be set at the start of the request.
 			setcookie('sessionId', $id, time()+315360000, '/'); // Shouldn't expire for 10 years
 			$_COOKIE['sessionId'] = $id;
-			header('Location: /'); // Needs to reload since a cookie must be set at the start of the request.
-			echo "settingcookie: ".$_COOKIE['sessionId'];
-			ob_end_flush();
 			
 		}else
 			throw new Exception("Error Processing New Session.", 1);

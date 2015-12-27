@@ -51,6 +51,7 @@
 
 .panel-default {
     margin: 0px;
+
 }
 
 .page-header {
@@ -70,6 +71,11 @@
 #page-body {
     
 }
+
+.panel-bottom {
+	padding-bottom: 10px;
+}
+
 
 body{
 	background-color: #EFEFEF;

@@ -303,7 +303,7 @@ class Database {
 
             if(!isset($tagResults[$random_id])){
                 $tagResults[$random_id] = array('tagName' => $tag_name,
-                                            'tagId' => $tag_id,
+                                            'tagId' => $random_id,
                                             'count' => 0);
 
             }
