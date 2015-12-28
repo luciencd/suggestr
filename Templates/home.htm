@@ -14,7 +14,7 @@
 			// Mark course as ignored in the model
 			$.post('/a.php?p=IgnoreCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
 				if(!getAjaxStatus(d)){
-					//alert('Sorry, there was an error.');
+					alert('Sorry, there was an error.');
 				}else{
 					// Hide/remove elements
 
@@ -31,6 +31,7 @@
 		// **************** ADD COURSE TO SESSION ****************
 		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
 			$elem = $(this);
+			//alert($('div.panel-heading input#course_id').val());
 			// Mark course as ignored in the model
 			$.post('/a.php?p=AddCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
 				if(!getAjaxStatus(d)){
@@ -60,7 +61,7 @@
 			// Mark course as ignored in the model
 			$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
 				if(!getAjaxStatus(d)){
-					//alert('Sorry, there was an error.');
+					alert('Sorry, there was an error.');
 				}else{
 					// Hide/remove elements
 					$elem.parent('li.list-group-item').slideUp(400, function(){
@@ -109,18 +110,25 @@
 			$tag_id = $(this).children(".tagName").html();
 			$tag_name = $(this).children(".tagCount").html();
 			alert($course_id+" "+$tag_id+" "+$tag_name);
-			$.post('/a.php?p=AddTag', 
-				{course_id: $course_id,
-				tag_id: $tag_id,
-				tag_name: $tag_name}), function(d){
 
+			$.post('/a.php?p=AddTag', {course_id: $course_id,tag_id: $tag_id, tag_name: $tag_name},function(d){
+				    alert("test");
+					alert(d.post_response.json);
+					if(!getAjaxStatus(d)){
+						alert("didnt work");
 
-			}
-
-			$voteCount = $(this).children(".tagCount").html();
-			//Check if has voted before on this tag.
+					}else{
+						alert("worked");
+					}
+				},"json"
+			);
+						// Hide/remove element
 			
+			$voteCount = $(this).children(".tagCount").html();
+						//Check if has voted before on this tag.
+						
 			$(this).children(".tagCount").html(parseInt($voteCount)+1);
+			
 
 			//Call AJAX to update database.*/
 			

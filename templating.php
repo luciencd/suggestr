@@ -36,10 +36,14 @@ function Render($templ, $objects, $useMain=true) {
 			
 			header('Location: /'); // Needs to reload since a cookie must be set at the start of the request.
 			setcookie('sessionId', $id, time()+315360000, '/'); // Shouldn't expire for 10 years
+			echo '<h4>'.$_COOKIE['sessionId'].'</h4>';
 			$_COOKIE['sessionId'] = $id;
+			echo '<h4>'.$_COOKIE['sessionId'].'</h4>';
 			
 		}else
 			throw new Exception("Error Processing New Session.", 1);
+	}else{
+		echo 'cookie alreay set template'.$_COOKIE['sessionId'];
 	}
 	$objects["sessionId"] = $_COOKIE['sessionId']; // Make the session ID avaliable to all controllers.
 	if($useMain){

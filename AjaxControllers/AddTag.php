@@ -8,20 +8,20 @@ class AddTag extends AjaxController {
 			$this->failureReason = 'Sorry, there was an error.';
 			return false;
 		}*/
-		
+		$this->failureReason = 'Sorry, there was an error.';
 		//$query = new Query('tagaction');
 		//Check if already added this course to tag action.
-
+		//echo "<h4> will add TAG </h4>"
 		// Now add this course to the user's model
 		$action = new TagAction();
-		$action->set('id',3);
+		//$action->set('id',3);
 		$action->set('tag_id', $post['tag_id']);
 		$action->set('tag_name', $post['tag_name']);
 		$action->set('course_id', $post['course_id']);
 		$action->set('session_id', 1);
 		$action->save();
 
-		return "asshole";
+		return false;
 	}
 }
 

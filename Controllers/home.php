@@ -16,10 +16,17 @@ class HomeController extends PageController {
 		//Generate the data from mysql.
 
 		//NEED TO FIGURE OUT WHY COOKIE IS NOT WORKING. HERE I SET IT manually.
-		//if(!isset($_COOKIE['sessionId'])){
+		if(isset($_COOKIE['sessionId'])){
+			echo "cookie set to: ".$_COOKIE['sessionId'];
+		}else{
 
+			$_COOKIE['sessionId'] = rand(880,925);
+
+			echo "cookie not set. now set to: ".$_COOKIE['sessionId'];
+		}
 		//setcookie('sessionId', rand(880,925), time()+315360000, '/');
-		$_COOKIE['sessionId'] = rand(880,925);
+		 
+		
 		//}
 		
 		//Something wrong when no classes are taken by a given session.

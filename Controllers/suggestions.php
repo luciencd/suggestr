@@ -81,17 +81,10 @@ class Database {
     ##requires: id is a session id in the database.
     ##returns: 
     function loadAllStudents(){
-        $start = microtime(true);
 
         $query = new Query('action');
         $result = $query->select('*',true,'','',false);///Need to return ordered by session_id
-        //This takes quite a bit of time. Need to shorten it.
 
-        $end = microtime(true);
-        //echo 'MYSQL * action query took ' . ($end-$start) . ' seconds!<br>';
-        $start = microtime(true);
-       
-        //$newStudent = new Student();
         //In order, add each student to the list, adding each course that they took, no, or yes.
         //foreach($result as $action){
         while($row = mysqli_fetch_array($result)){
@@ -119,8 +112,7 @@ class Database {
             $this->StudentList[$id] = $CurrentStudent;
 
         }
-        $end = microtime(true);
-        //echo 'PHP database class creation took ' . ($end-$start) . ' seconds!<br>';
+
     }
 
 
@@ -263,7 +255,7 @@ class Database {
 
     /*
     Get an array of the tags associated with a particular course.
-
+    Draw visual of array here:
     */
     function courseTags($course_id){
         $query = new Query('tagaction');
