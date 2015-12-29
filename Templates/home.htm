@@ -60,6 +60,7 @@
 			$elem = $(this);
 			// Mark course as ignored in the model
 			$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
+
 				if(!getAjaxStatus(d)){
 					alert('Sorry, there was an error.');
 				}else{
@@ -104,33 +105,27 @@
 		//*****************ADD tag count*****************//
 		$(document).on('click', 'div.panel-bottom div.row div.col-md-11 div.btn-group button.btn-default', function(){
 
-			//alert($voteCount);
 
-			$course_id = $(this).siblings('input#tag_id').val();
-			$tag_id = $(this).children(".tagName").html();
-			$tag_name = $(this).children(".tagCount").html();
-			alert($course_id+" "+$tag_id+" "+$tag_name);
+			$course_id = $(this).parent('div.btn-group').parent('div.col-md-11').parent('div.row').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+			$tag_id = $(this).siblings('input#tag_id').val();
+			$tag_name = $(this).children(".tagName").html();
+			$tag_count = $(this).children(".tagCount").html();
 
-			$.post('/a.php?p=AddTag', {course_id: $course_id,tag_id: $tag_id, tag_name: $tag_name},function(d){
-				    alert("test");
-					alert(d.post_response.json);
-					if(!getAjaxStatus(d)){
-						alert("didnt work");
-
-					}else{
-						alert("worked");
-					}
-				},"json"
-			);
-						// Hide/remove element
 			
-			$voteCount = $(this).children(".tagCount").html();
-						//Check if has voted before on this tag.
-						
+			//ensure no voting twice.
+
+			$.post('/a.php?p=AddTag', {course_id: $course_id, tag_id: $tag_id, tag_name: $tag_name,},function(d,status){
+				
+				//Not really sure what to do here to be honest.
+				
+			});
+						// Hide/remove element
+			$voteCount = $(this).children(".tagCount").html();		
 			$(this).children(".tagCount").html(parseInt($voteCount)+1);
 			
+			
 
-			//Call AJAX to update database.*/
+			//Call AJAX to update database.
 			
 		});
 	});
@@ -167,7 +162,7 @@
 				{{#allCourses}}
 					<div class="single-course">
 						<div class="panel-heading">
-
+							<!-- perhaps move course_id one position up -->
 							<input type="hidden" id="course_id" value="{{id}}" />
 							<div class="row">
 								<div class="col-md-7">
