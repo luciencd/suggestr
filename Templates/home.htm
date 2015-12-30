@@ -31,7 +31,7 @@
 		// **************** ADD COURSE TO SESSION ****************
 		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
 			$elem = $(this);
-			alert($('div.panel-heading input#course_id').val());
+			//alert($('div.panel-heading input#course_id').val());
 			// Mark course as ignored in the model
 			//alert()
 			$.post('/a.php?p=AddCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
