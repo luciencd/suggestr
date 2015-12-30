@@ -31,16 +31,15 @@
 		// **************** ADD COURSE TO SESSION ****************
 		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
 			$elem = $(this);
-			//alert($('div.panel-heading input#course_id').val());
+			alert($('div.panel-heading input#course_id').val());
 			// Mark course as ignored in the model
-			$.post('/a.php?p=AddCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
+			//alert()
+			$.post('/a.php?p=AddCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
 				if(!getAjaxStatus(d)){
 					alert('Sorry, there was an error.');
 				}else{
 					// Hide/remove elements
-					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
-						$(this).remove();
-					});
+					
 
 					// Add course to left-hand list of courses
 					var id = $elem.siblings('input#course_id').val().trim();
@@ -49,6 +48,10 @@
 					$("div#sidebar ul.list-group")
 						.append('<li class="list-group-item" style="display: none;"><input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 					$("div#sidebar ul.list-group li.list-group-item:last").slideDown(400);
+
+					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
+						$(this).remove();
+					});
 				}
 			});
 			// Clear search box
