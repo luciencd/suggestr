@@ -1,10 +1,13 @@
 <?php
-
+require_once(ROOT.'Controllers/suggestions.php');
 class SearchController extends AjaxController {
 	public $template = "Search";
 	public function process($get,$post) {
 		$_COOKIE['sessionId'] = 1;//Remove this once we solved sessionId
-
+		
+		$Data = new Database();//not sure if this follows mvc protocol.
+		$student = $Data->getStudent($_COOKIE['sessionId']);
+		
 
 		// Select all of the courses that this user is already added
 		$query = new Query('action');
@@ -23,7 +26,9 @@ class SearchController extends AjaxController {
 											  'name' => ucwords(strtolower($course->get('name'))),
 											  'department_id' => $course->get('department_id'),
 											  'number' => $course->get('number'),
-											  'description' => ((strlen($course->get('description'))==0)?'No description':$course->get('description'))));
+											  'description' => ((strlen($course->get('description'))==0)?'No description':$course->get('description')),
+											  'allTags' => $Data->courseTags($course->get('id'))//Should contain 5 tags.
+											));
 			}//will need to add tags. Make a new function taking in an array and returning the classes as an array in this form.
 		}
 		$this->pageData['courseResults'] = $courses;
