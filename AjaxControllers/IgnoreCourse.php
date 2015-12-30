@@ -2,6 +2,9 @@
 
 class IgnoreCourseController extends AjaxController {
 	public function process($get,$post) {
+		$_COOKIE['sessionId'] = 1;
+
+
 		if(!isset($post['course_id'])||!is_numeric($post['course_id'])||
 		   !isset($_COOKIE['sessionId'])||!is_numeric($_COOKIE['sessionId'])){
 			$this->failureReason = 'Sorry, there was an error.';
@@ -20,7 +23,7 @@ class IgnoreCourseController extends AjaxController {
 		$action = new Action();
 		$action->set('course_id', $post['course_id']);
 		$action->set('session_id', $_COOKIE['sessionId']);
-		$action->set('choice', 1);
+		$action->set('choice', 2);
 		$action->save();
 		return true;
 	}

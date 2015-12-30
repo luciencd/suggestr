@@ -11,19 +11,20 @@ class HomeController extends PageController {
 		return $result;
 	}
 	public function process($get, $post) {
-
+		$_COOKIE['sessionId'] = 1;
 		$this->pageData["Title"] = "Home";
 		//Generate the data from mysql.
 
 		//NEED TO FIGURE OUT WHY COOKIE IS NOT WORKING. HERE I SET IT manually.
+		/*
 		if(isset($_COOKIE['sessionId'])){
 			echo "cookie set to: ".$_COOKIE['sessionId'];
 		}else{
 
-			$_COOKIE['sessionId'] = rand(880,925);
-
+			//$_COOKIE['sessionId'] = rand(880,925);
+			
 			echo "cookie not set. now set to: ".$_COOKIE['sessionId'];
-		}
+		}*/
 		//setcookie('sessionId', rand(880,925), time()+315360000, '/');
 		 
 		

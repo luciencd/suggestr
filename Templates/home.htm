@@ -47,7 +47,7 @@
 					var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
 					var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
 					$("div#sidebar ul.list-group")
-						.append('<li class="list-group-item" style="display: none;"><input type="hidden" id="course_id" value="'+id+'" /><span class="badge">'+number+'</span><span class="badge XButton">X</span>'+name+'</li>');
+						.append('<li class="list-group-item" style="display: none;"><input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 					$("div#sidebar ul.list-group li.list-group-item:last").slideDown(400);
 				}
 			});
@@ -63,6 +63,7 @@
 
 				if(!getAjaxStatus(d)){
 					alert('Sorry, there was an error.');
+					//alert(d);
 				}else{
 					// Hide/remove elements
 					$elem.parent('li.list-group-item').slideUp(400, function(){
@@ -101,32 +102,28 @@
 			});
 		}
 
+		
+
 
 		//*****************ADD tag count*****************//
 		$(document).on('click', 'div.panel-bottom div.row div.col-md-11 div.btn-group button.btn-default', function(){
 
 
-			$course_id = $(this).parent('div.btn-group').parent('div.col-md-11').parent('div.row').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
-			$tag_id = $(this).siblings('input#tag_id').val();
-			$tag_name = $(this).children(".tagName").html();
-			$tag_count = $(this).children(".tagCount").html();
+			var $course_id = $(this).parent('div.btn-group').parent('div.col-md-11').parent('div.row').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+			var $tag_id = $(this).siblings('input#tag_id').val();
+			var $tag_name = $(this).children(".tagName").html();
+			var $tag_count = $(this).children(".tagCount").html();
+			var $final_position = $(this).children(".tagCount");
+			var $num = 1;//adding one vote here.
+			//PERHAPS ALLOW TO RETRACT VOTE in the future by passing in -1, and deleting the initial entry in the table.
 
-			
-			//ensure no voting twice.
-
-			$.post('/a.php?p=AddTag', {course_id: $course_id, tag_id: $tag_id, tag_name: $tag_name,},function(d,status){
-				
-				//Not really sure what to do here to be honest.
-				
+			$.post('/a.php?p=AddTag', {course_id: $course_id, tag_id: $tag_id, tag_name: $tag_name,num: $num} ,function(d) { 
+				if(!getAjaxStatus(d)){//If you voted twice, error will be here.
+					//alert('Sorry, you have already voted on this tag.');
+				}else{
+					$final_position.html(parseInt($tag_count)+1);
+				}	
 			});
-						// Hide/remove element
-			$voteCount = $(this).children(".tagCount").html();		
-			$(this).children(".tagCount").html(parseInt($voteCount)+1);
-			
-			
-
-			//Call AJAX to update database.
-			
 		});
 	});
 </script>
@@ -158,7 +155,7 @@
 				<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
 				<span class="input-group-addon" style="cursor: pointer;">Search</span>
 			</div>
-			<div class="panel panel-default" id="courseResultsArea">
+			<!--<div class="panel panel-default" id="courseResultsArea">-->
 				{{#allCourses}}
 					<div class="single-course">
 						<div class="panel-heading">
@@ -193,7 +190,7 @@
 										<input type="hidden" id="tag_id" value="{{tagId}}" />
 										<button type="button" class="btn btn-default">
 											<span class = "tagName">{{tagName}}</span> 
-											| 
+											
 											<span class = "tagCount">{{count}}</span>
 										</button>
 									</div>
@@ -206,7 +203,7 @@
 					</div>
 					<!-- needs spacing here-->
 				{{/allCourses}}
-			</div>
+			<!--</div>-->
 		</div>
 	</div>
 </div> <!-- /col-md-7 -->

@@ -252,54 +252,41 @@ class Database {
         return mysqli_fetch_array($result)[0];
     }
 
-
+    function cmp2($a, $b)
+        {
+            if ($a['count'] == $b['count']) {
+                return 0;
+            }
+            return ($a['count']< $b['count']) ? 1 : -1;
+        }
     /*
     Get an array of the tags associated with a particular course.
     Draw visual of array here:
     */
     function courseTags($course_id){
-        $query = new Query('tagaction');
-        $result = $query->select('*',array(array('course_id','=',$course_id)),'','',false);
+        
+        /*find a way to limit total amount of outgoing tags or some other mechanic.*/
+
+
+        $query = new Query('tags');
+        $result = $query->select('*',true,'','',false);
 
         $tagResults = array();
 
         foreach($result as $row){
-            if(sizeof($tagResults) >= 5){
-                break;
-            }
-            $tag_id = $row['tag_id'];
-            $tag_name = $row['tag_name'];
-            //echo "<h4> do it:".$tag_id."</h4>";
+
+            $tag_id = $row['id'];
+            $tag_name = $row['name'];
+
             if(!isset($tagResults[$tag_id])){
                 $tagResults[$tag_id]['tagName'] = $tag_name;
                 $tagResults[$tag_id]['tagId'] = $tag_id;
-                $tagResults[$tag_id]['count'] = 1;
-            }else{
-                $count = $tagResults[$tag_id]['count']+=1;
-                
-                $tagResults[$tag_id]['tagName'] = $tag_name;
-                $tagResults[$tag_id]['tagId'] = $tag_id;
-                $tagResults[$tag_id]['count'] = $count;
+                $tagResults[$tag_id]['count'] = $this->courseTagFrequency($course_id,$tag_id);
             }
         }
-        
-        $query = new Query('Tags');
-        $result = $query->select('*',true,'','',false);
-        $numTags = mysqli_num_rows($result);
+        usort($tagResults,array($this,'cmp2'));
 
-        while(sizeof($tagResults) <= 5){
-            $tag_id = new ORM('Tags');
-            $random_id = rand(0,$numTags);
-            $tag_id->findById($random_id);            
-            $tag_name = $tag_id->get('name');
 
-            if(!isset($tagResults[$random_id])){
-                $tagResults[$random_id] = array('tagName' => $tag_name,
-                                            'tagId' => $random_id,
-                                            'count' => 0);
-
-            }
-        }
 
         $tagResultsArray = array();
         //must make this into a list, not an associative array, due to the precondition of mustache.
@@ -314,6 +301,14 @@ class Database {
 
 
         return $tagResultsArray;
+    }
+
+    function courseTagFrequency($course_id, $tag_id){
+        $query = new Query('tagaction');
+        $result = $query->select('*',array(array('course_id','=',$course_id),array('tag_id','=',$tag_id)),'','',false);
+
+
+        return mysqli_num_rows($result);
     }
 }
 

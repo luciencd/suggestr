@@ -3,6 +3,9 @@
 class SearchController extends AjaxController {
 	public $template = "Search";
 	public function process($get,$post) {
+		$_COOKIE['sessionId'] = 1;//Remove this once we solved sessionId
+
+
 		// Select all of the courses that this user is already added
 		$query = new Query('action');
 		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId'])));
