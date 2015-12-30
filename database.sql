@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:8889
--- Generation Time: Dec 26, 2015 at 11:56 PM
+-- Generation Time: Dec 30, 2015 at 02:49 AM
 -- Server version: 5.5.42
 -- PHP Version: 5.6.10
 
@@ -28,7 +28,7 @@ CREATE TABLE `Action` (
   `choice` int(1) NOT NULL COMMENT '0: add; 1: ignore',
   `POST` text NOT NULL,
   `session_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5353 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5368 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Action`
@@ -5388,7 +5388,16 @@ INSERT INTO `Action` (`id`, `major`, `year`, `course_id`, `choice`, `POST`, `ses
 (5349, 'Psychology', 'Freshman', 35908, 2, '', 929),
 (5350, 'Psychology', 'Freshman', 36317, 2, '', 929),
 (5351, 'Psychology', 'Freshman', 35497, 2, '', 929),
-(5352, 'Psychology', 'Freshman', 35721, 1, '', 929);
+(5352, 'Psychology', 'Freshman', 35721, 1, '', 929),
+(5356, '', '', 35500, 1, '', 1),
+(5357, '', '', 35952, 1, '', 1),
+(5358, '', '', 36316, 1, '', 1),
+(5360, '', '', 35721, 1, '', 1),
+(5361, '', '', 35873, 1, '', 1),
+(5362, '', '', 36236, 1, '', 1),
+(5364, '', '', 35483, 1, '', 1),
+(5365, '', '', 36139, 1, '', 1),
+(5367, '', '', 36124, 1, '', 1);
 
 -- --------------------------------------------------------
 
@@ -6819,7 +6828,7 @@ CREATE TABLE `Sessions` (
   `keep` varchar(10) NOT NULL,
   `amount` int(11) NOT NULL,
   `department_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=455 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=477 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Sessions`
@@ -7279,7 +7288,29 @@ INSERT INTO `Sessions` (`id`, `major_id`, `year`, `taken`, `keep`, `amount`, `de
 (451, 0, 0, '', '', 0, 0),
 (452, 0, 0, '', '', 0, 0),
 (453, 0, 0, '', '', 0, 0),
-(454, 0, 0, '', '', 0, 0);
+(454, 0, 0, '', '', 0, 0),
+(455, 0, 0, '', '', 0, 0),
+(456, 0, 0, '', '', 0, 0),
+(457, 0, 0, '', '', 0, 0),
+(458, 0, 0, '', '', 0, 0),
+(459, 0, 0, '', '', 0, 0),
+(460, 0, 0, '', '', 0, 0),
+(461, 0, 0, '', '', 0, 0),
+(462, 0, 0, '', '', 0, 0),
+(463, 0, 0, '', '', 0, 0),
+(464, 0, 0, '', '', 0, 0),
+(465, 0, 0, '', '', 0, 0),
+(466, 0, 0, '', '', 0, 0),
+(467, 0, 0, '', '', 0, 0),
+(468, 0, 0, '', '', 0, 0),
+(469, 0, 0, '', '', 0, 0),
+(470, 0, 0, '', '', 0, 0),
+(471, 0, 0, '', '', 0, 0),
+(472, 0, 0, '', '', 0, 0),
+(473, 0, 0, '', '', 0, 0),
+(474, 0, 0, '', '', 0, 0),
+(475, 0, 0, '', '', 0, 0),
+(476, 0, 0, '', '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -7290,10 +7321,10 @@ INSERT INTO `Sessions` (`id`, `major_id`, `year`, `taken`, `keep`, `amount`, `de
 CREATE TABLE `TagAction` (
   `id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
-  `tag_name` varchar(11) NOT NULL,
+  `tag_name` varchar(20) NOT NULL,
   `session_id` int(11) NOT NULL,
   `course_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=137 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `TagAction`
@@ -7301,14 +7332,134 @@ CREATE TABLE `TagAction` (
 
 INSERT INTO `TagAction` (`id`, `tag_id`, `tag_name`, `session_id`, `course_id`) VALUES
 (1, 1, 'small', 993, 36316),
-(2, 2, 'medium', 992, 35500);
-(3, 3, 'large', 992, 35873);
-(4, 2, 'medium', 992, 35500);
-(5, 2, 'medium', 992, 36040);
-(6, 2, 'medium', 992, 35500);
-(4, 3, 'large', 992, 35997);
-(5, 3, 'large', 992, 35997);
-(6, 3, 'large', 992, 35997);
+(2, 2, 'medium', 992, 35500),
+(11, 2, 'medium', 1, 35500),
+(12, 1, 'small', 1, 36316),
+(13, 1, 'small', 1, 36316),
+(14, 3, 'large', 1, 36254),
+(15, 3, 'large', 1, 36254),
+(16, 8, 'discussion', 1, 35483),
+(17, 2, 'medium', 1, 35500),
+(18, 6, 'tough', 1, 35952),
+(19, 4, 'projects', 1, 35466),
+(20, 7, 'easy', 1, 36316),
+(21, 5, 'tests', 1, 36316),
+(22, 7, 'easy', 1, 35997),
+(23, 7, 'easy', 1, 36236),
+(24, 9, 'homework', 1, 35586),
+(25, 5, 'tests', 1, 35586),
+(26, 6, 'tough', 1, 35586),
+(27, 2, 'medium', 1, 35721),
+(28, 3, 'large', 1, 35721),
+(29, 6, 'tough', 1, 35721),
+(30, 5, 'tests', 1, 35721),
+(31, 5, 'tests', 1, 36093),
+(32, 1, 'small', 1, 35500),
+(33, 3, 'large', 1, 35483),
+(34, 5, 'tests', 1, 36303),
+(35, 4, 'projects', 1, 36303),
+(36, 8, 'discussion', 1, 35466),
+(37, 8, 'discussion', 1, 35952),
+(38, 1, 'small', 1, 35483),
+(39, 9, 'homework', 1, 36254),
+(40, 2, 'medium', 1, 36254),
+(41, 1, 'small', 1, 36093),
+(42, 5, 'tests', 1, 35483),
+(43, 10, 'great', 1, 35483),
+(44, 10, 'great', 1, 35997),
+(45, 4, 'projects', 1, 35483),
+(46, 6, 'tough', 1, 36093),
+(47, 10, 'great', 1, 35952),
+(48, 9, 'homework', 1, 35952),
+(49, 2, 'medium', 1, 35483),
+(50, 2, 'medium', 1, 35997),
+(51, 5, 'tests', 1, 35997),
+(52, 5, 'tests', 1, 35952),
+(53, 10, 'great', 1, 35721),
+(54, 9, 'homework', 1, 35500),
+(55, 7, 'easy', 1, 35500),
+(56, 10, 'great', 1, 36316),
+(57, 9, 'homework', 1, 35993),
+(58, 1, 'small', 1, 35997),
+(59, 2, 'medium', 1, 35952),
+(60, 4, 'projects', 1, 35997),
+(61, 6, 'tough', 1, 35483),
+(62, 4, 'projects', 1, 35500),
+(63, 6, 'tough', 1, 36040),
+(64, 4, 'projects', 1, 35952),
+(65, 8, 'discussion', 1, 35681),
+(66, 9, 'homework', 1, 35721),
+(67, 4, 'projects', 1, 36093),
+(68, 10, 'great', 1, 36093),
+(69, 6, 'tough', 1, 36139),
+(70, 7, 'easy', 1, 36093),
+(71, 10, 'great', 1, 35466),
+(72, 4, 'projects', 1, 35721),
+(73, 5, 'tests', 1, 36000),
+(74, 6, 'tough', 1, 36000),
+(75, 8, 'discussion', 1, 36000),
+(76, 7, 'easy', 1, 35721),
+(77, 1, 'small', 1, 35721),
+(78, 3, 'large', 1, 36316),
+(79, 8, 'discussion', 1, 36093),
+(80, 5, 'tests', 1, 35466),
+(81, 9, 'homework', 1, 35483),
+(82, 6, 'tough', 1, 35500),
+(83, 5, 'tests', 1, 36236),
+(84, 4, 'projects', 1, 36032),
+(85, 10, 'great', 1, 35681),
+(86, 10, 'great', 1, 36254),
+(87, 5, 'tests', 1, 35681),
+(88, 8, 'discussion', 1, 35721),
+(89, 4, 'projects', 1, 36000),
+(90, 3, 'large', 1, 36040),
+(91, 4, 'projects', 1, 35486),
+(92, 7, 'easy', 1, 35466),
+(93, 6, 'tough', 1, 36254),
+(94, 5, 'tests', 1, 36254),
+(95, 3, 'large', 1, 35586),
+(96, 9, 'homework', 1, 36124),
+(97, 2, 'medium', 1, 35899),
+(98, 4, 'projects', 1, 36139),
+(99, 3, 'large', 1, 35681),
+(100, 2, 'medium', 1, 35681),
+(101, 5, 'tests', 1, 35717),
+(102, 10, 'great', 1, 35717),
+(103, 1, 'small', 1, 36032),
+(104, 7, 'easy', 1, 35586),
+(105, 9, 'homework', 1, 35681),
+(106, 7, 'easy', 1, 36254),
+(107, 4, 'projects', 1, 36097),
+(108, 4, 'projects', 1, 36254),
+(109, 6, 'tough', 1, 35486),
+(110, 9, 'homework', 1, 35717),
+(111, 1, 'small', 1, 35586),
+(112, 3, 'large', 1, 35952),
+(113, 1, 'small', 1, 35565),
+(114, 1, 'small', 1, 36303),
+(115, 6, 'tough', 1, 36080),
+(116, 1, 'small', 1, 36097),
+(117, 2, 'medium', 1, 36000),
+(118, 1, 'small', 1, 36000),
+(119, 5, 'tests', 1, 36097),
+(120, 8, 'discussion', 1, 36309),
+(121, 3, 'large', 1, 35997),
+(122, 8, 'discussion', 1, 35997),
+(123, 6, 'tough', 1, 35997),
+(124, 9, 'homework', 1, 35900),
+(125, 7, 'easy', 1, 36103),
+(126, 1, 'small', 1, 36103),
+(127, 2, 'medium', 1, 35430),
+(128, 8, 'discussion', 1, 36032),
+(129, 3, 'large', 1, 35717),
+(130, 4, 'projects', 1, 35717),
+(131, 2, 'medium', 1, 36303),
+(132, 1, 'small', 1, 35681),
+(133, 5, 'tests', 1, 36139),
+(134, 7, 'easy', 1, 35483),
+(135, 9, 'homework', 1, 36139),
+(136, 3, 'large', 1, 36139);
+
 -- --------------------------------------------------------
 
 --
@@ -7416,7 +7567,7 @@ ALTER TABLE `Tags`
 -- AUTO_INCREMENT for table `Action`
 --
 ALTER TABLE `Action`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5353;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5368;
 --
 -- AUTO_INCREMENT for table `Courses`
 --
@@ -7426,9 +7577,9 @@ ALTER TABLE `Courses`
 -- AUTO_INCREMENT for table `Sessions`
 --
 ALTER TABLE `Sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=455;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=477;
 --
 -- AUTO_INCREMENT for table `TagAction`
 --
 ALTER TABLE `TagAction`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=137;
