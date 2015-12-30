@@ -199,7 +199,7 @@ class Database {
             $score = $second[0];
             $classes = $second[1];
             //echo $score.'<br>';
-            if($score > .2){
+            if($score > .1){
                 foreach($classes as $class){
                     if(!in_array($class,$coursesTaken)){//If this is a hashtable, don't think this matters
                         if(isset($likelyClasses[$class])){

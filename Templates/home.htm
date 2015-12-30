@@ -26,7 +26,7 @@
 			});
 			// Clear search box
 			$("div#content div#classSearch input#classSearchField").val("");
-			doneTyping();
+			//doneTyping();
 		});
 		// **************** ADD COURSE TO SESSION ****************
 		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
@@ -55,8 +55,11 @@
 				}
 			});
 			// Clear search box
+
 			$("div#content div#classSearch input#classSearchField").val("");
-			doneTyping();
+			//doneTyping();
+			//Causes problem which resets suggestions!!
+			//Should probably reset suggestions.
 		});
 		// **************** REMOVE COURSE FROM SESSION ****************
 		$(document).on('click', 'div#sidebar ul.list-group li.list-group-item span.XButton', function(){
