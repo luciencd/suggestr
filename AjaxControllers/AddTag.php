@@ -17,11 +17,12 @@ class AddTagController extends AjaxController {
 		$query = new Query('tagaction');
 		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']), 
 											array('tag_id', '=', $post['tag_id']),
-											array('course_id', '=', $post['course_id'])), '', 1);
+											array('course_id', '=', $post['course_id'])), '', 2,true);
 
 		if(count($result)!=0){
 			// Abort because this tag has already been voted on by this session on this course.
 			$this->failureReason = 'you already uptoked.';
+			$result[0]->delete();
 			return false;
 		}
 		

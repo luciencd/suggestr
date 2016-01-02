@@ -127,9 +127,11 @@
 			//$(this).css({"background-color": '#FF4500'});
 			$.post('/a.php?p=AddTag', {course_id: $course_id, tag_id: $tag_id, tag_name: $tag_name,num: $num} ,function(d) { 
 				if(!getAjaxStatus(d)){//If you voted twice, error will be here.
-					//$buttonItself.css({"background-color": '#FF4500'});
+					$buttonItself.css({"background-color": '#FF4500'});
+					$final_position.html(parseInt($tag_count)-1);
 				}else{
 					$final_position.html(parseInt($tag_count)+1);
+					$buttonItself.css({"background-color": 'green'});
 					//$buttonItself.animate({backgroundColor: '#00C957'}, 'slow');
 					//$buttonItself.animate({backgroundColor: '#AAAAAA'}, 'slow');
 				}	
@@ -139,6 +141,7 @@
 </script>
 
 <div class="col-md-5" id="sidebar">
+
 	<ul class="list-group">
 		{{#usersCourses}}
 			<li class="list-group-item">
@@ -161,11 +164,14 @@
 <div class="col-md-7">
 	<div class="container">
 		<div id="content">
+
 			<div class="input-group" id="classSearch">
 				<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
 				<span class="input-group-addon" style="cursor: pointer;">Search</span>
 			</div>
-			<div class="panel panel-default" id="courseResultsArea">
+			
+			<div class="panel-default" id="courseResultsArea">
+
 				{{#allCourses}}
 					<div class="single-course">
 						<div class="panel-heading">
