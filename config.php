@@ -2,12 +2,12 @@
 
 $GLOBALS['CONFIG'] = array();
 
-$CONFIG['development'] = true; // Flag for development mode
+$CONFIG['development'] = false; // Flag for development mode
 $CONFIG['app-path'] = "http://suggestr.co/";
-$CONFIG['db-address'] = "";
-$CONFIG['db-database'] = "";
-$CONFIG['db-username'] = "";
-$CONFIG['db-password'] = "";
+$CONFIG['db-address'] = "us-cdbr-iron-east-03.cleardb.net";
+$CONFIG['db-database'] = "ad_771f5ec54b7a0d1";
+$CONFIG['db-username'] = "b5777848a3bae2";
+$CONFIG['db-password'] = "c36eb0a1";
 $CONFIG['smtp-host'] = "mail.suggestr.co";
 
 // Development mode overrides
