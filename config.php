@@ -3,7 +3,8 @@
 $GLOBALS['CONFIG'] = array();
 
 $CONFIG['development'] = false; // Flag for development mode
-$CONFIG['app-path'] = "http://suggestr.co/";
+//$CONFIG['app-path'] = "http://suggestr.co/";
+$CONFIG['app-path'] = "http://suggestr.mybluemix.net/";
 $CONFIG['db-address'] = "us-cdbr-iron-east-03.cleardb.net";
 $CONFIG['db-database'] = "ad_771f5ec54b7a0d1";
 $CONFIG['db-username'] = "b5777848a3bae2";
@@ -34,7 +35,7 @@ if($CONFIG['development']) {
 }
 ini_set("SMTP",$CONFIG['smtp-host']);
 
-
+echo "<h4>config successful</h4>";
 require_once(ROOT.'templating.php');
 require_once(ROOT.'ajax.php');
 require_once(ROOT.'database.php');
