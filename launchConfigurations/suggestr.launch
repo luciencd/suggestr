@@ -1,0 +1,16 @@
+{
+  "ServiceId": "com.ibm.cloudoe.orion.client.deploy",
+  "Params": {
+    "Target": {
+      "Url": "https://api.ng.bluemix.net",
+      "Org": "chrisl2@rpi.edu",
+      "Space": "suggestr"
+    },
+    "Name": "suggestr",
+    "Instrumentation": {
+      "domain": "suggestr.co"
+    }
+  },
+  "Path": "manifest.yml",
+  "Type": "Cloud Foundry"
+}
