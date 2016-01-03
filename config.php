@@ -3,7 +3,7 @@
 $GLOBALS['CONFIG'] = array();
 
 $CONFIG['development'] = false; // Flag for development mode
-$CONFIG['app-path'] = "http://suggestr.mybluemix.net/";
+$CONFIG['app-path'] = "http://suggestr.co/";
 $CONFIG['db-address'] = "us-cdbr-iron-east-03.cleardb.net";
 $CONFIG['db-database'] = "ad_771f5ec54b7a0d1";
 $CONFIG['db-username'] = "b5777848a3bae2";
