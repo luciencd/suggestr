@@ -17,6 +17,7 @@ if(!isset($_GET['SUGGESTR_PAGE']))die();
 if(!isset($_GET['AJAX']))
 	$_GET['AJAX'] = false;
 
+
 // Controller Router
 // The keys in the router array are page URLs
 // The values in the router array are controller names
@@ -63,6 +64,7 @@ if(isset($_GET['SUGGESTR_PAGE']) &&
 */
 
 // Ok. Now we render the appropriate controller.
+//echo "<h4>suggestr.php b4 controller</h4>";
 $controller;
 if(!$isAjax){
 	if(!array_key_exists($_GET['SUGGESTR_PAGE'],$router)) {
@@ -75,6 +77,7 @@ if(!$isAjax){
 	$controller->process($_GET,$_POST,$_FILES,$_SYSTEM);
 	die($controller->render(!$_GET['AJAX']));
 }else{
+
 	// We need to have authentication variables ready
 	// Running user_isadmin sets them.
 	// Note we don't care if the user is or is not an admin

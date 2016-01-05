@@ -1,46 +1,23 @@
 <?php
 // Page Controller for the Index Page
-require_once(ROOT.'Controllers/suggestions.php');
+require_once('Controllers/suggestions.php');
 //error_reporting(0);
 class HomeController extends PageController {
 	public $pageTemplate = "Home";
-	public function predictClasses(){//Take in session_id
 
-		$command = 'python schedule.py';// . json_encode($classes)
-		$result = json_decode(shell_exec('python "schedule.py"'),true);
-		return $result;
-	}
 	public function process($get, $post) {
 		$_COOKIE['sessionId'] = 1;
 		$this->pageData["Title"] = "Home";
+		
 		//Generate the data from mysql.
 
-		//NEED TO FIGURE OUT WHY COOKIE IS NOT WORKING. HERE I SET IT manually.
-		/*
-		if(isset($_COOKIE['sessionId'])){
-			echo "cookie set to: ".$_COOKIE['sessionId'];
-		}else{
+		//NEED TO FIGURE OUT WHY COOKIE IS NOT WORKING. 
 
-			//$_COOKIE['sessionId'] = rand(880,925);
-			
-			echo "cookie not set. now set to: ".$_COOKIE['sessionId'];
-		}*/
-		//setcookie('sessionId', rand(880,925), time()+315360000, '/');
-		 
-		
-		//}
-		
-		//Something wrong when no classes are taken by a given session.
-		//I'll try to fix that someday.
 	
 
-
+		
 		$Data = new Database();
-
-		//Setting up student
-		//Replace with $session_id. The cookie doesn't work for me(Lucien) though...
-		//$session = 912;//intval($_COOKIE['sessionId']);
-		//echo "num: ".$session;
+		
 		$student = $Data->getStudent($_COOKIE['sessionId']);
 		$studentCourses = $student->getTaken();
 
@@ -69,18 +46,10 @@ class HomeController extends PageController {
 
 		// Generate all of the courses (for testing)
 
-		//Get list of predicted courses from Python.
-		$predClasses = $this->predictClasses();
-
 		$allCourses = array();
 		$query = new Query('courses');
 
-		//Adding predicted courses to the $allCourses array.
-		/*foreach($predClasses as $class){
-			$result = new Course();
-			$result->findById($class['id']);
-			array_push($allCourses,$result);
-		}*/
+
 
 		//Grabs the Id's from the Jaccard Array and 
 		foreach($JaccardCourses as $class => $score){
@@ -110,6 +79,7 @@ class HomeController extends PageController {
 
 		//Populate webpage with all the different courses that were predicted.
 		$this->pageData['allCourses'] = $allNewCourses;
+		
 		
 		/*
 		IMPORTANT NODE

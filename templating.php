@@ -1,6 +1,6 @@
 <?php
 // Code to initialize Mustache and associated helper functions
-require_once(ROOT.'/Vendor/Mustache/Autoloader.php');
+require_once('Vendor/Mustache/Autoloader.php');
 Mustache_Autoloader::register();
 $options =  array('extension' => '.htm');
 $template = new Mustache_Engine(array(
@@ -12,7 +12,7 @@ function RenderError($description, $addtl = null) {
 	$_SYSTEM = array("SUGGESTR_ERROR"=>$description);
 	if($GLOBALS['CONFIG']['development']) $_SYSTEM["SUGGESTR_EXTENDED_ERROR"] = $addtl;
 	$controller->process($_GET,$_POST,$_FILES,$_SYSTEM);
-	echo $controller->render();
+	echo "Error:".$controller->render();
 	die();
 }
 
@@ -28,7 +28,7 @@ function Render($templ, $objects, $useMain=true) {
 		$id = $query->nextId();
 		if(is_numeric($id)){
 			
-			echo "<h4>templating isnumeric</h4>";
+			
 			$session = new Session();
 			$session->set('amount', 0); // Just so that the ORM class thinks something's dirty and allows entry of an empty row
 			$session->save(); // Add an empty row to the Sessions table with the next session ID
@@ -71,9 +71,11 @@ function RenderEmail($templ, $objects, $useMain=true) {
 // DO NOT TRUST THIS WITH EXTERNAL DATA!!!
 // Note your class must be named in the following format:
 // $name = "index" means a class name of IndexController
+// took away / from file thing
+// require_once('config.php');
 function GetController($name) {
-	if (file_exists(ROOT.'/Controllers/' . $name . ".php")) {
-		require_once(ROOT.'/Controllers/' . $name . ".php");
+	if (file_exists('Controllers/'.$name.'.php')) {//must change.
+		require_once('Controllers/'.$name.'.php');
 		$className = ucwords($name)."Controller";
 		return new $className;
 	}else{

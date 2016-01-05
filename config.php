@@ -35,7 +35,7 @@ if($CONFIG['development']) {
 }
 ini_set("SMTP",$CONFIG['smtp-host']);
 
-echo "<h4>config successful</h4>";
+
 require_once(ROOT.'templating.php');
 require_once(ROOT.'ajax.php');
 require_once(ROOT.'database.php');
