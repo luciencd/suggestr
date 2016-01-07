@@ -1,4 +1,4 @@
-SUGGESTR - suggestr.co
+SUGGESTR - suggestr.co, http://suggestr.mybluemix.net/
 Suggestr is a stress-free, web-based course suggester app centered around simplicity.
 
 Contributors: Lucien Christie-Dervaux, Ben Espey, & Leopold Joy
