@@ -72,9 +72,12 @@ function RenderEmail($templ, $objects, $useMain=true) {
 // Note your class must be named in the following format:
 // $name = "index" means a class name of IndexController
 function GetController($name) {
+	echo '<h3>GetController: '.$name.'</h3>';
+	echo '<h3> filedir: '.ROOT.'/Controllers/' . $name . ".php</h3>";
 	if (file_exists(ROOT.'/Controllers/' . $name . ".php")) {
 		require_once(ROOT.'/Controllers/' . $name . ".php");
 		$className = ucwords($name)."Controller";
+		echo '<h4>'.$className.'</h4>';
 		return new $className;
 	}else{
 		die();	
