@@ -29,6 +29,7 @@ $router["/home"] = "Home";
 // The values in the router array are controller names
 $Ajaxrouter = array();
 $Ajaxrouter["Search/"] = "Search";
+$Ajaxrouter["Suggest/"] = "Suggest";
 $Ajaxrouter["IgnoreCourse/"] = "IgnoreCourse";
 $Ajaxrouter["AddCourse/"] = "AddCourse";
 $Ajaxrouter["TookCourse/"] = "TookCourse";

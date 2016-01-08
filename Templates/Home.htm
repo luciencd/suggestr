@@ -80,6 +80,8 @@
 					var id = $elem.siblings('input#course_id').val().trim();
 					var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
 					var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
+					//Can I get an AJAX call to return a particular class window based on certain values?
+					
 					$("div#sidebar div.list-group ul#list-add")
 						.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;"><input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 					
@@ -153,11 +155,15 @@
 		}
 		
 		//******************RESET SUGGESTIONS BUTTON******************/
-		$(document).on('click', 'div.btn-suggestr', function(){
-			alert("fuck");
-			//$.post('/a.php?p=Suggest',function(d){
-			//	alert("fuck");
-			//});
+		$(document).on('click', 'div.btn-container-suggestr', function(){
+			$.post('/a.php?p=Suggest',function(d){
+				if(getAjaxStatus(d)){
+					// Everything went well
+					$("div#courseResultsArea").html(getAjaxData(d));
+				}else{
+					//alert(getAjaxFailureReason(d));
+				}
+			});
 		});
 
 
@@ -201,7 +207,7 @@
 					<span class="badge XButton">X</span>
 				</div>-->
 				<span>
-					Add past courses below. Use the search bar on the right. 
+					Add courses you've already taken. Use the search bar on the right. 
 				</span>
 			</li>
 			<!-- not sure of how styling this be.<br>-->
@@ -230,7 +236,7 @@
 		<ul id="list-add">
 			<li class="list-group-item" >
 				<span>
-					Add Courses you might want to take next semester! 
+					Add courses you might want to take next semester! 
 				</span>
 			</li>
 			
@@ -250,10 +256,10 @@
 		
 		</ul>
 		
-		<div class="arrow-down" style="border-top: 20px solid #46b8da;"></div>
+		<div class="arrow-down" style="border-top: 20px solid #2e6da4;"></div>
 		
 		<div class = "btn-container-yacs">
-			<button type="button" class="btn btn-info">YACS</button>
+			<button type="button" class="btn btn-primary">YACS</button>
 		</div>
 	</div>
 		
