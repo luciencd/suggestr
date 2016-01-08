@@ -1,13 +1,14 @@
 <script type="text/javascript">
 	$(function(){
 		// **************** POSTPONE COURSE FROM SESSION ****************
-		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-primary', function(){
+		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
 			// Hide/remove elements
 
 			$(this).parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
 				$(this).remove();
 			});
 		});
+		/*
 		// **************** IGNORE COURSE FROM SESSION ****************
 		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
 			$elem = $(this);
@@ -27,7 +28,8 @@
 			// Clear search box
 			$("div#content div#classSearch input#classSearchField").val("");
 			//doneTyping();
-		});
+		});*/
+		
 		// **************** ADD COURSE TO SESSION ****************
 		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
 			$elem = $(this);
@@ -153,17 +155,17 @@
 	<div class="list-group" >
 		<ul>
 			<li class="list-group-item">
-				<div class = "side-options">
+				<!--<div class = "side-options">
 					<span class="badge XButton">X</span>
-				</div>
+				</div>-->
 				<span>
 					Add past courses below. Use the search bar on the right. 
 				</span>
 			</li>
-			<br>
+			<!-- not sure of how styling this be.<br>-->
 			
 			{{#usersCourses}}
-				<li class="list-group-item">
+				<li class="list-group-item" style="background-color:#e5ffe5">
 					<input type="hidden" id="course_id" value="{{id}}" />
 					<span class="badge XButton">X</span>
 					<!-- How to make this look better. Also, class should be unique no?
@@ -177,10 +179,39 @@
 			{{/usersCourses}}
 			
 		</ul>
-		<div class = "btn-suggestr">
-			<button type="button" class="btn btn-info">Suggest</button>
+		
+		<div class="arrow-down" style="border-top: 20px solid#4cae4c;"></div>
+		<div class = "btn-container-suggestr">
+			<button type="button" class="btn btn-success">Suggest</button>
 		</div>
-
+		
+		<ul>
+			<li class="list-group-item">
+				<span>
+					Add Courses you might want to take next semester! 
+				</span>
+			</li>
+		{{#futureUsersCourses}}
+				<li class="list-group-item" style="background-color:#e5f2ff">
+					<input type="hidden" id="course_id" value="{{id}}" />
+					<span class="badge XButton">X</span>
+					<!-- How to make this look better. Also, class should be unique no?
+					<span class="badge">ADD TAG</span>-->
+					
+					
+	
+					{{name}}
+					<span class="badge">{{number}}</span>
+				</li>
+			{{/futureUsersCourses}}
+		
+		</ul>
+		
+		<div class="arrow-down" style="border-top: 20px solid #46b8da;"></div>
+		
+		<div class = "btn-container-yacs">
+			<button type="button" class="btn btn-info">YACS</button>
+		</div>
 	</div>
 		
 	
@@ -215,8 +246,8 @@
 								<div class="col-md-5">
 									<div class="btn-group" role="group">
 										<input type="hidden" id="course_id" value="{{id}}" />
-										<button type="button" class="btn btn-success">Add</button>
-										<button type="button" class="btn btn-primary">Postpone</button>
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
 										<button type="button" class="btn btn-danger">Ignore</button>
 									</div>
 								</div>
@@ -227,7 +258,7 @@
 							<div class="row">{{description}}</div>
 						</div>
 						<!--
-						<div class="panel-bottom">
+						<div class="panel-bottom" style="visibility: hidden;">
 							
 							<div class="row">
 								<div class="col-md-11">
@@ -244,8 +275,8 @@
 								</div>
 							</div>
 							
-						</div>
-						-->
+						</div>-->
+						
 					</div>
 					<!-- needs spacing here-->
 				{{/allCourses}}

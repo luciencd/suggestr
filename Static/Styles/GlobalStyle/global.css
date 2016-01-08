@@ -148,10 +148,8 @@ body{
 .side-options {
 	float:right;
 }
-.btn-suggestr {
-	text-align:center;
-	margin-bottom:10px;
-}
+
+
 .btn-default, span.tagName{
 	font-size: 11px;
 	padding:1px;
@@ -173,4 +171,80 @@ div.single-course{
 }
 div.panel.panel-default {
 	background-color: white;
+}
+
+
+div.list-group ul {
+	margin-bottom:0;
+}
+
+/*custom buttons*/
+.btn-container-suggestr {
+	text-align:center;
+	margin-bottom:10px;
+}
+/*custom buttons*/
+.btn-container-yacs {
+	text-align:center;
+}
+
+
+
+.btn-yacs {
+  text-align:center;
+  color: #ffffff; 
+  background-color: #ccccff; 
+  border-color: #6666ff; 
+} 
+ 
+.btn-yacs:hover, 
+.btn-yacs:focus, 
+.btn-yacs:active, 
+.btn-yacs.active, 
+.open .dropdown-toggle.btn-sample { 
+  color: #ffffff; 
+  background-color: #ccccff; 
+  border-color: #6666ff; 
+} 
+ 
+.btn-yacs:active, 
+.btn-yacs.active, 
+.open .dropdown-toggle.btn-sample { 
+  background-image: none; 
+} 
+ 
+.btn-yacs.disabled, 
+.btn-yacs[disabled], 
+fieldset[disabled] .btn-sample, 
+.btn-yacs.disabled:hover, 
+.btn-yacs[disabled]:hover, 
+fieldset[disabled] .btn-sample:hover, 
+.btn-yacs.disabled:focus, 
+.btn-yacs[disabled]:focus, 
+fieldset[disabled] .btn-sample:focus, 
+.btn-yacs.disabled:active, 
+.btn-yacs[disabled]:active, 
+fieldset[disabled] .btn-sample:active, 
+.btn-yacs.disabled.active, 
+.btn-yacs[disabled].active, 
+fieldset[disabled] .btn-sample.active { 
+  background-color: #ccccff; 
+  border-color: #6666ff; 
+} 
+ 
+.btn-sample .badge { 
+  color: #611BBD; 
+  background-color: #6666ff; 
+}
+/*icons*/
+
+.arrow-down {
+	margin:0 auto;
+	width: 0; 
+	height: 0; 
+	
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+	
+	border-top: 20px solid #5bc0de;
 }

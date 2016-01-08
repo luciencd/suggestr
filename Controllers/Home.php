@@ -74,7 +74,7 @@ class HomeController extends PageController {
 												  'department_id' => $course->get('department_id'),
 												  'number' => $course->get('number'),
 												  'description' => ((strlen($course->get('description'))==0)?'No description':$course->get('description')),
-												  'allTags' => $Data->courseTags($course->get('id')),//Should contain 5 tags.
+												  'allTags' => array(array())/*$Data->courseTags($course->get('id')),*///Should contain 5 tags.
 												  ));
 
 				}//var_dump($Data->courseTags($course->get('id')));
