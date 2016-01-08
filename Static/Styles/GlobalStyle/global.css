@@ -22,6 +22,8 @@
 	margin: 0px;
 }
 
+
+
 div.class-list-title1 {
 	display:inline-block;
 	width: 42.66%;
@@ -40,7 +42,7 @@ div.class-list-title2 {
 
 #content {
 	padding: 10px;
-	margin-top: 125px;
+	margin-top: 105px;
 	/*position: fixed;*/
 }
 
@@ -50,19 +52,21 @@ div.class-list-title2 {
 
 div.info-bar-1{
 
-	margin-top: 138px;
+	margin-top: 118px;
 	margin-bottom: 10px;
 	position: fixed;
 
 }
 div.info-bar-2{
-	margin-top: 138px;
+	margin-top: 118px;
 	margin-bottom: 10px;
 	position: fixed;
 
 }
+
+
 .list-group {
-	margin-top: 135px;
+	margin-top: 115px;
 	border-radius: 0px;
 	position: fixed;
 	
@@ -97,8 +101,13 @@ div.info-bar-2{
 
 #classSearch {
 	padding-bottom: 10px;
+	width:100%;
+	border-radius:5px 5px 5px 5px;
 }
-
+#classSearchField {
+	
+	border-radius:5px 5px 5px 5px;
+}
 #page-body {
     
 }
@@ -127,7 +136,22 @@ body{
 	cursor: pointer;
 }
 
+.btn-group .button:last-child {
+  border-radius: 0 6px 6px 0;
+  margin-left: -1px;
+}
 
+.btn-group .button:only-child {
+  border-radius: 6px;
+  margin-left: 0;
+}
+.side-options {
+	float:right;
+}
+.btn-suggestr {
+	text-align:center;
+	margin-bottom:10px;
+}
 .btn-default, span.tagName{
 	font-size: 11px;
 	padding:1px;

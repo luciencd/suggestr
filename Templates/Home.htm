@@ -45,9 +45,9 @@
 					var id = $elem.siblings('input#course_id').val().trim();
 					var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
 					var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
-					$("div#sidebar ul.list-group")
+					$("div#sidebar div.list-group ul")
 						.append('<li class="list-group-item" style="display: none;"><input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
-					$("div#sidebar ul.list-group li.list-group-item:last").slideDown(400);
+					$("div#sidebar div.list-group ul li.list-group-item:last").slideDown(400);
 
 					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
 						$(this).remove();
@@ -62,7 +62,7 @@
 			//Should probably reset suggestions.
 		});
 		// **************** REMOVE COURSE FROM SESSION ****************
-		$(document).on('click', 'div#sidebar ul.list-group li.list-group-item span.XButton', function(){
+		$(document).on('click', 'div#sidebar div.list-group ul li.list-group-item span.XButton', function(){
 			$elem = $(this);
 			// Mark course as ignored in the model
 			$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
@@ -107,8 +107,15 @@
 				}
 			});
 		}
-
 		
+		//******************RESET SUGGESTIONS BUTTON******************/
+		$(document).on('click', 'div.btn-suggestr', function(){
+			alert("fuck");
+			//$.post('/a.php?p=Suggest',function(d){
+			//	alert("fuck");
+			//});
+		});
+
 
 
 		//*****************ADD tag count*****************//
@@ -137,26 +144,46 @@
 				}	
 			});
 		});
+		
+		//Close help option 1.
 	});
 </script>
 
 <div class="col-md-5" id="sidebar">
-
-	<ul class="list-group">
-		{{#usersCourses}}
+	<div class="list-group" >
+		<ul>
 			<li class="list-group-item">
-				<input type="hidden" id="course_id" value="{{id}}" />
-				<span class="badge XButton">X</span>
-				<!-- How to make this look better. Also, class should be unique no?
-				<span class="badge">ADD TAG</span>-->
-				
-				
-
-				{{name}}
-				<span class="badge">{{number}}</span>
+				<div class = "side-options">
+					<span class="badge XButton">X</span>
+				</div>
+				<span>
+					Add past courses below. Use the search bar on the right. 
+				</span>
 			</li>
-		{{/usersCourses}}
-	</ul>
+			<br>
+			
+			{{#usersCourses}}
+				<li class="list-group-item">
+					<input type="hidden" id="course_id" value="{{id}}" />
+					<span class="badge XButton">X</span>
+					<!-- How to make this look better. Also, class should be unique no?
+					<span class="badge">ADD TAG</span>-->
+					
+					
+	
+					{{name}}
+					<span class="badge">{{number}}</span>
+				</li>
+			{{/usersCourses}}
+			
+		</ul>
+		<div class = "btn-suggestr">
+			<button type="button" class="btn btn-info">Suggest</button>
+		</div>
+
+	</div>
+		
+	
 </div> <!-- /Sidebar -->
 
 
@@ -167,7 +194,11 @@
 
 			<div class="input-group" id="classSearch">
 				<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
-				<span class="input-group-addon" style="cursor: pointer;">Search</span>
+				<!--<span class="input-group-addon" style = "cursor: pointer;">Search</span>-->
+				<!--<span class="input-group-addon" style = "cursor: pointer; background-color:#5bc0de;">Suggest!</span>-->
+				
+				
+				
 			</div>
 			
 			<div class="panel-default" id="courseResultsArea">
@@ -195,7 +226,7 @@
 						<div class="panel-body">
 							<div class="row">{{description}}</div>
 						</div>
-						
+						<!--
 						<div class="panel-bottom">
 							
 							<div class="row">
@@ -214,7 +245,7 @@
 							</div>
 							
 						</div>
-						
+						-->
 					</div>
 					<!-- needs spacing here-->
 				{{/allCourses}}
