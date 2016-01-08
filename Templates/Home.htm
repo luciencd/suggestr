@@ -30,8 +30,41 @@
 			//doneTyping();
 		});*/
 		
-		// **************** ADD COURSE TO SESSION ****************
+		// **************** TOOK COURSE TO SESSION ****************
 		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
+			$elem = $(this);
+			//alert($('div.panel-heading input#course_id').val());
+			// Mark course as ignored in the model
+			//alert()
+			$.post('/a.php?p=TookCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
+				if(!getAjaxStatus(d)){
+					alert('Sorry, there was an error.');
+				}else{
+					// Hide/remove elements
+					
+
+					// Add course to left-hand list of courses
+					//getting variables from right-hand
+					var id = $elem.siblings('input#course_id').val().trim();
+					var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
+					var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
+					
+					//Adding class css/html to left-hand
+					$("div#sidebar div.list-group ul#list-took")
+						.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;><input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+					
+					
+					$("div#sidebar div.list-group ul#list-took li.list-group-item:last").slideDown(400);
+					
+					//Removing class from right panel,(suggestion and search area)
+					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
+						$(this).remove();
+					});
+				}
+			});
+			
+		// **************** ADD COURSE TO SESSION ****************
+		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-primary', function(){
 			$elem = $(this);
 			//alert($('div.panel-heading input#course_id').val());
 			// Mark course as ignored in the model
@@ -47,15 +80,24 @@
 					var id = $elem.siblings('input#course_id').val().trim();
 					var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
 					var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
-					$("div#sidebar div.list-group ul")
-						.append('<li class="list-group-item" style="display: none;"><input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
-					$("div#sidebar div.list-group ul li.list-group-item:last").slideDown(400);
+					$("div#sidebar div.list-group ul#list-add")
+						.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;"><input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+					
+					//Removing from right-side suggestions or search.
+					$("div#sidebar div.list-group ul#list-add li.list-group-item:last").slideDown(400);
 
 					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
 						$(this).remove();
 					});
 				}
 			});
+			$("div#content div#classSearch input#classSearchField").val("");
+			//doneTyping();
+			//Causes problem which resets suggestions!!
+			//Should probably reset suggestions.
+		});
+			
+		
 			// Clear search box
 
 			$("div#content div#classSearch input#classSearchField").val("");
@@ -153,8 +195,8 @@
 
 <div class="col-md-5" id="sidebar">
 	<div class="list-group" >
-		<ul>
-			<li class="list-group-item">
+		<ul id="list-took">
+			<li class="list-group-item" >
 				<!--<div class = "side-options">
 					<span class="badge XButton">X</span>
 				</div>-->
@@ -165,17 +207,17 @@
 			<!-- not sure of how styling this be.<br>-->
 			
 			{{#usersCourses}}
-				<li class="list-group-item" style="background-color:#e5ffe5">
-					<input type="hidden" id="course_id" value="{{id}}" />
-					<span class="badge XButton">X</span>
-					<!-- How to make this look better. Also, class should be unique no?
-					<span class="badge">ADD TAG</span>-->
-					
-					
-	
-					{{name}}
-					<span class="badge">{{number}}</span>
-				</li>
+			<li class="list-group-item" style="background-color:#e5ffe5">
+				<input type="hidden" id="course_id" value="{{id}}" />
+				<span class="badge XButton">X</span>
+				<!-- How to make this look better. Also, class should be unique no?
+				<span class="badge">ADD TAG</span>-->
+				
+				
+
+				{{name}}
+				<span class="badge">{{number}}</span>
+			</li>
 			{{/usersCourses}}
 			
 		</ul>
@@ -185,24 +227,25 @@
 			<button type="button" class="btn btn-success">Suggest</button>
 		</div>
 		
-		<ul>
-			<li class="list-group-item">
+		<ul id="list-add">
+			<li class="list-group-item" >
 				<span>
 					Add Courses you might want to take next semester! 
 				</span>
 			</li>
-		{{#futureUsersCourses}}
-				<li class="list-group-item" style="background-color:#e5f2ff">
-					<input type="hidden" id="course_id" value="{{id}}" />
-					<span class="badge XButton">X</span>
-					<!-- How to make this look better. Also, class should be unique no?
-					<span class="badge">ADD TAG</span>-->
-					
-					
-	
-					{{name}}
-					<span class="badge">{{number}}</span>
-				</li>
+			
+			{{#futureUsersCourses}}
+			<li class="list-group-item" style="background-color:#e5f2ff">
+				<input type="hidden" id="course_id" value="{{id}}" />
+				<span class="badge XButton">X</span>
+				<!-- How to make this look better. Also, class should be unique no?
+				<span class="badge">ADD TAG</span>-->
+				
+				
+
+				{{name}}
+				<span class="badge">{{number}}</span>
+			</li>
 			{{/futureUsersCourses}}
 		
 		</ul>

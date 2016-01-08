@@ -91,11 +91,11 @@ class HomeController extends PageController {
 
 		*/
 		//////////
-		// Select all of the courses that this user is already added
+		
+		// Select all of the courses that this user HAS TAKEN IN THE PAST
 		$query = new Query('action');
 		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']),
-											array('choice', '=', 1)));///is 0 in leo's version, 1 in my old database. we need to sort that shit.
-
+											array('choice', '=', 1)));//1 means taken
 		$idsAlreadyAdded = array();
 		foreach($result as $action){
 			array_push($idsAlreadyAdded, $action->get('course_id'));
@@ -115,7 +115,34 @@ class HomeController extends PageController {
 		}
 
 		$this->pageData['usersCourses'] = $usersCourses;
-		//Pushes all the new courses to the view.
+		//Pushes all the new courses to the HAS TAKEN part of the view.
+		
+		
+		// Select all of the courses that this user is already added
+		$query = new Query('action');
+		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']),
+											array('choice', '=', 0)));
+
+		$idsAlreadyAdded = array();
+		foreach($result as $action){
+			array_push($idsAlreadyAdded, $action->get('course_id'));
+		}
+		
+		// Get all of the courses in this user's session
+		$usersCourses = array();
+		foreach($idsAlreadyAdded as $courseId){
+			try{
+				$course = new Course();
+				$course->findById($courseId);
+				array_push($usersCourses, array('id' => $course->get('id'),
+											  'name' => ucwords(strtolower($course->get('name'))),
+											  'department_id' => $course->get('department_id'),
+											  'number' => $course->get('number')));
+			}catch(Exception $e){}
+		}
+
+		$this->pageData['futureUsersCourses'] = $usersCourses;
+		//Pushes all the new courses to the ADDING LIST view.
 		
 	}
 }

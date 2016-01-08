@@ -31,6 +31,7 @@ $Ajaxrouter = array();
 $Ajaxrouter["Search/"] = "Search";
 $Ajaxrouter["IgnoreCourse/"] = "IgnoreCourse";
 $Ajaxrouter["AddCourse/"] = "AddCourse";
+$Ajaxrouter["TookCourse/"] = "TookCourse";
 $Ajaxrouter["RemoveCourse/"] = "RemoveCourse";
 $Ajaxrouter["AddTag/"] = "AddTag";
 
