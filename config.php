@@ -2,7 +2,7 @@
 
 $GLOBALS['CONFIG'] = array();
 
-$CONFIG['development'] = false; // Flag for development mode
+$CONFIG['development'] = true; // Flag for development mode
 //$CONFIG['app-path'] = "http://suggestr.co/";
 $CONFIG['app-path'] = "http://suggestr.mybluemix.net/";
 $CONFIG['db-address'] = "us-cdbr-iron-east-03.cleardb.net";
