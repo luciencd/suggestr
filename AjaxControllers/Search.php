@@ -1,12 +1,13 @@
 <?php
-require_once(ROOT.'Controllers/suggestions.php');
+
 class SearchController extends AjaxController {
 	public $template = "Search";
 	public function process($get,$post) {
 		$_COOKIE['sessionId'] = 1;//Remove this once we solved sessionId
 		
-		$Data = new Database();//not sure if this follows mvc protocol.
-		$student = $Data->getStudent($_COOKIE['sessionId']);
+		//$Data = new Database();//not sure if this follows mvc protocol.
+		//Removing 
+		//$student = $Data->getStudent($_COOKIE['sessionId']);
 		
 
 		// Select all of the courses that this user is already added
@@ -18,7 +19,7 @@ class SearchController extends AjaxController {
 		}
 		// Select all the courses where the query string is a sub-string of the name or id
 		$query = new Query('courses');
-		$result = $query->select('*', array(array('name', 'LIKE', '%'.$post['q'].'%'), 'OR', array('number', 'LIKE', '%'.$post['q'].'%')), array('number', 'ASC'), 100);
+		$result = $query->select('*', array(array('name', 'LIKE', '%'.$post['q'].'%'), 'OR', array('number', 'LIKE', '%'.$post['q'].'%')), array('number', 'ASC'), 30);
 		$courses = array();
 		foreach($result as $course){
 			if(!in_array($course->get('id'), $idsAlreadyAdded)){ // Check that this course has not been added by the user yet
@@ -27,10 +28,12 @@ class SearchController extends AjaxController {
 											  'department_id' => $course->get('department_id'),
 											  'number' => $course->get('number'),
 											  'description' => ((strlen($course->get('description'))==0)?'No description':$course->get('description')),
-											  'allTags' => $Data->courseTags($course->get('id'))//Should contain 5 tags.
+											  'allTags' => array(array())/*$Data->courseTags($course->get('id'))*/ //Should contain 5 tags.
 											));
 			}//will need to add tags. Make a new function taking in an array and returning the classes as an array in this form.
 		}
+		//$this->pageData['numResults'] = (String)count($courses);
+		//$this->pageData['term'] = $post['q'];
 		$this->pageData['courseResults'] = $courses;
 		return true;
 	}

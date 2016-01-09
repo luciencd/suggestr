@@ -42,7 +42,7 @@ div.class-list-title2 {
 
 #content {
 	padding: 10px;
-	margin-top: 105px;
+	margin-top: 115px;
 	/*position: fixed;*/
 }
 
@@ -52,13 +52,13 @@ div.class-list-title2 {
 
 div.info-bar-1{
 
-	margin-top: 118px;
+	margin-top: 128px;
 	margin-bottom: 10px;
 	position: fixed;
 
 }
 div.info-bar-2{
-	margin-top: 118px;
+	margin-top: 128px;
 	margin-bottom: 10px;
 	position: fixed;
 
@@ -66,7 +66,7 @@ div.info-bar-2{
 
 
 .list-group {
-	margin-top: 115px;
+	margin-top: 125px;
 	border-radius: 0px;
 	position: fixed;
 	
@@ -100,7 +100,7 @@ div.info-bar-2{
 }
 
 #classSearch {
-	padding-bottom: 10px;
+	/*padding-bottom: 10px;*/
 	width:100%;
 	border-radius:5px 5px 5px 5px;
 }

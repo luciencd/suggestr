@@ -4,9 +4,10 @@
  * NEED advice on how to make this MVC compatible. Currently it doesn't seem to be so.
  * Given that I require the model(suggestions.php), yet I have to reload all the data from initial refresh.
  */
-require_once(ROOT.'Controllers/suggestions.php');
+require_once('Controllers/suggestions.php');
+
 class SuggestController extends AjaxController {
-	public $template = "Search";//Identical to search one.
+	public $template = "Suggest";//Identical to search one.
 	public function process($get,$post) {
 		$_COOKIE['sessionId'] = 1;//Remove this once we solved sessionId
 		
@@ -70,6 +71,7 @@ class SuggestController extends AjaxController {
 		}
 
 		//Populate webpage with all the different courses that were predicted.
+		//$this->pageData['numResults'] = count($allNewCourses);
 		$this->pageData['courseResults'] = $allNewCourses;
 		
 		return true;

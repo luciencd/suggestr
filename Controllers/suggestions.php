@@ -204,10 +204,12 @@ class Database {
                     if(!in_array($class,$coursesTaken)){//If this is a hashtable, don't think this matters
                         if(isset($likelyClasses[$class])){
                             //Weird function need to analyse this.
-                            $likelyClasses[$class] += $score*(1/log($this->courseFrequency($class)+5));//Multiply by classification modifier
+                            $likelyClasses[$class] += $score;//How to shrink amount of queries.
+                            //$likelyClasses[$class] += $score*(1/log($this->courseFrequency($class)+5));//Multiply by classification modifier
                             //The more common a class is, the less it matters.
                         }else{
-                            $likelyClasses[$class] = $score*(1/log($this->courseFrequency($class)+5));
+                            $likelyClasses[$class] = $score;//How to shrink amount of queries.
+                            //$likelyClasses[$class] = $score*(1/log($this->courseFrequency($class)+5));
                             
                         }
                     }
