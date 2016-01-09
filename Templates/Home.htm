@@ -104,25 +104,26 @@ $(document).ready(function(){
 			
 	
 		// **************** REMOVE COURSE FROM SESSION ****************
-		$(document).ready(function(){
-			$(document).on('click', 'div#sidebar div.list-group ul li.list-group-item span.XButton', function(){
-				$elem = $(this);
-				// Mark course as ignored in the model
-				$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
-	
-					if(!getAjaxStatus(d)){
-						alert('Sorry, there was an error.');
-						//alert(d);
-					}else{
-						// Hide/remove elements
-						$elem.parent('li.list-group-item').slideUp(400, function(){
-							$(this).remove();
-							//doneTyping(); // Rerun the search in case new options are now avaliable...
-						});
-					}
-				});
+		
+		$(document).on('click', 'div#sidebar div.list-group ul li.list-group-item span.XButton', function(){
+			alert("remove button clicked");
+			$elem = $(this);
+			// Mark course as ignored in the model
+			$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
+
+				if(!getAjaxStatus(d)){
+					alert('Sorry, there was an error.');
+					//alert(d);
+				}else{
+					// Hide/remove elements
+					$elem.parent('li.list-group-item').slideUp(400, function(){
+						$(this).remove();
+						//doneTyping(); // Rerun the search in case new options are now avaliable...
+					});
+				}
 			});
 		});
+		
 		// **************** SEARCH ****************
 		//setup before functions
 		var typingTimer;                //timer identifier
