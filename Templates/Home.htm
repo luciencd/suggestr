@@ -194,6 +194,22 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
+	
+	$(document).on('click', 'div.btn-container-reset button.btn-info', function(){
+		
+		$.post('/a.php?p=Reset',function(d){
+			
+			alert("Sent");
+			if(getAjaxStatus(d)){
+				// Everything went well
+				alert("worked");
+			}else{
+				alert(getAjaxFailureReason(d));
+			}
+		});
+	
+	});
 
 
 
@@ -298,11 +314,11 @@ $(document).ready(function(){
 		</div>
 		
 
-		<!--
-		<div class = "btn-container-yacs">
-			<button type="button" class="btn btn-primary">YACS</button>
-		</div>
-		-->
+		
+		<!--<div class = "btn-container-reset">
+			<button type="button" class="btn btn-info">RESET</button>
+		</div>-->
+		
 	</div>
 		
 	
@@ -311,7 +327,6 @@ $(document).ready(function(){
 
 
 <div class="col-md-7">
-	{{session}}
 	<div class="container">
 		<div id="content">
 

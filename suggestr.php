@@ -35,6 +35,7 @@ $Ajaxrouter["AddCourse/"] = "AddCourse";
 $Ajaxrouter["TookCourse/"] = "TookCourse";
 $Ajaxrouter["RemoveCourse/"] = "RemoveCourse";
 $Ajaxrouter["AddTag/"] = "AddTag";
+$Ajaxrouter["Reset/"] = "Reset";
 
 // Is this an API method?
 $isAjax = (isset($_GET['SUGGESTR_PAGE']) && (strpos($_GET['SUGGESTR_PAGE'],'ajax/') === 0));
