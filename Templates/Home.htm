@@ -1,222 +1,249 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-		// **************** POSTPONE COURSE FROM SESSION ****************
-		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
-			// Hide/remove elements
+	// **************** POSTPONE COURSE FROM SESSION ****************
+	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
+		// Hide/remove elements
 
-			$(this).parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
-				$(this).remove();
-			});
+		$(this).parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
+			$(this).remove();
 		});
-		/*
-		// **************** IGNORE COURSE FROM SESSION ****************
-		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
-			$elem = $(this);
-			// Mark course as ignored in the model
-			$.post('/a.php?p=IgnoreCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
-				if(!getAjaxStatus(d)){
-					alert('Sorry, there was an error.');
-				}else{
-					// Hide/remove elements
-
-					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
-						$(this).remove();
-					});
-
-				}
-			});
-			// Clear search box
-			$("div#content div#classSearch input#classSearchField").val("");
-			//doneTyping();
-		});*/
-		
-		// **************** TOOK COURSE TO SESSION ****************
-		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
-			$elem = $(this);
-			//alert($('div.panel-heading input#course_id').val());
-			// Mark course as ignored in the model
-			//alert()
-			$.post('/a.php?p=TookCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
-				if(!getAjaxStatus(d)){
-					alert('Sorry, there was an error.');
-				}else{
-					// Hide/remove elements
-					
-
-					// Add course to left-hand list of courses
-					//getting variables from right-hand
-					var id = $elem.siblings('input#course_id').val().trim();
-					var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
-					var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
-					
-					//Adding class css/html to left-hand
-					$("div#sidebar div.list-group ul#list-took")
-						.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
-					
-					
-					$("div#sidebar div.list-group ul#list-took li.list-group-item:last").slideDown(400);
-					
-					//Removing class from right panel,(suggestion and search area)
-					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
-						$(this).remove();
-					});
-				}
-			});
-			
-		// **************** ADD COURSE TO SESSION ****************
-		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-primary', function(){
-			$elem = $(this);
-			//alert($('div.panel-heading input#course_id').val());
-			// Mark course as ignored in the model
-			//alert()
-			$.post('/a.php?p=AddCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
-				if(!getAjaxStatus(d)){
-					alert('Sorry, there was an error.');
-				}else{
-					// Hide/remove elements
-					
-
-					// Add course to left-hand list of courses
-					var id = $elem.siblings('input#course_id').val().trim();
-					var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
-					var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
-					//Can I get an AJAX call to return a particular class window based on certain values?
-					
-					//$("div#sidebar div.list-group ul#list-add")
-					//	.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
-					$("div#sidebar div.list-group ul#list-add")
-						.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
-					
-					//Removing from right-side suggestions or search.
-					$("div#sidebar div.list-group ul#list-add li.list-group-item:last").slideDown(400);
-
-					$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
-						$(this).remove();
-					});
-				}
-			});
-			//$("div#classSearch input#classSearchField").val("");
-			//doneTyping();
-			//Causes problem which resets suggestions!!
-			//Should probably reset suggestions.
-		});
-			
-	
-		// **************** REMOVE COURSE FROM SESSION ****************
-		
-		$(document).on('click', 'div#sidebar div.list-group ul li.list-group-item span.XButton', function(){
-			alert("remove button clicked");
-			$elem = $(this);
-			// Mark course as ignored in the model
-			$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
-
-				if(!getAjaxStatus(d)){
-					alert('Sorry, there was an error.');
-					//alert(d);
-				}else{
-					// Hide/remove elements
-					$elem.parent('li.list-group-item').slideUp(400, function(){
-						$(this).remove();
-						//doneTyping(); // Rerun the search in case new options are now avaliable...
-					});
-				}
-			});
-		});
-		
-		// **************** SEARCH ****************
-		//setup before functions
-		var typingTimer;                //timer identifier
-		var doneTypingInterval = 100;  //time in ms, 5 second for example
-		var $input = $('input#classSearchField');
-
-		//on keyup, start the countdown
-		$input.on('keyup', function () {
-			clearTimeout(typingTimer);
-			typingTimer = setTimeout(doneTyping, doneTypingInterval);
-		});
-
-		//on keydown, clear the countdown 
-		$input.on('keydown', function () {
-		  clearTimeout(typingTimer);
-		});
-
-		//user is "finished typing," do something
-		function doneTyping (){
-			$.post('/a.php?p=Search', {q: $input.val()}, function(d){
-				if(getAjaxStatus(d)){
-					// Everything went well
-					$("div#courseResultsArea").html(getAjaxData(d));
-				}else{
-					//alert(getAjaxFailureReason(d));
-				}
-			});
-		}
-		
-		//******************RESET SUGGESTIONS BUTTON******************/
-		$(document).on('click', 'div.btn-container-suggestr button.btn-primary', function(){
-			
-			$("div#courseResultsArea").html("");
-			$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
-			$.post('/a.php?p=Suggest',function(d){
-				
-				
-				if(getAjaxStatus(d)){
-					// Everything went well
-					$("div#courseResultsArea").html(getAjaxData(d));
-				}else{
-					alert(getAjaxFailureReason(d));
-				}
-			});
-		});
-
-
-
-		//*****************ADD tag count*****************//
-		$(document).on('click', 'div.panel-bottom div.row div.col-md-11 div.btn-group button.btn-default', function(){
-
-
-			var $course_id = $(this).parent('div.btn-group').parent('div.col-md-11').parent('div.row').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
-			var $tag_id = $(this).siblings('input#tag_id').val();
-			var $tag_name = $(this).children(".tagName").html();
-			var $tag_count = $(this).children(".tagCount").html();
-			var $final_position = $(this).children(".tagCount");
-			var $num = 1;//adding one vote here.
-
-			var $buttonItself = $(this);
-			//PERHAPS ALLOW TO RETRACT VOTE in the future by passing in -1, and deleting the initial entry in the table.
-			//$(this).css({"background-color": '#FF4500'});
-			$.post('/a.php?p=AddTag', {course_id: $course_id, tag_id: $tag_id, tag_name: $tag_name,num: $num} ,function(d) { 
-				if(!getAjaxStatus(d)){//If you voted twice, error will be here.
-					$buttonItself.css({"background-color": '#FF4500'});
-					$final_position.html(parseInt($tag_count)-1);
-				}else{
-					$final_position.html(parseInt($tag_count)+1);
-					$buttonItself.css({"background-color": 'green'});
-					//$buttonItself.animate({backgroundColor: '#00C957'}, 'slow');
-					//$buttonItself.animate({backgroundColor: '#AAAAAA'}, 'slow');
-				}	
-			});
-		});
-		
-		//Close help option 1.
 	});
+	/*
+	// **************** IGNORE COURSE FROM SESSION ****************
+	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
+		$elem = $(this);
+		// Mark course as ignored in the model
+		$.post('/a.php?p=IgnoreCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
+			if(!getAjaxStatus(d)){
+				alert('Sorry, there was an error.');
+			}else{
+				// Hide/remove elements
+
+				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
+					$(this).remove();
+				});
+
+			}
+		});
+		// Clear search box
+		$("div#content div#classSearch input#classSearchField").val("");
+		//doneTyping();
+	});*/
+	
+	// **************** TOOK COURSE TO SESSION ****************
+	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
+		$elem = $(this);
+		//alert($('div.panel-heading input#course_id').val());
+		// Mark course as ignored in the model
+		//alert()
+		$.post('/a.php?p=TookCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
+			if(!getAjaxStatus(d)){
+				alert('Sorry, there was an error.');
+			}else{
+				// Hide/remove elements
+				
+
+				// Add course to left-hand list of courses
+				//getting variables from right-hand
+				var id = $elem.siblings('input#course_id').val().trim();
+				var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
+				var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
+				
+				//Adding class css/html to left-hand
+				$("div#sidebar div.list-group ul#list-took div.tookList")
+					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+				
+				
+				$("div#sidebar div.list-group ul#list-took div.tookList li.list-group-item:last").slideDown(400);
+				
+				//Removing class from right panel,(suggestion and search area)
+				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
+					$(this).remove();
+				});
+			}
+		});
+	});
+		
+	// **************** ADD COURSE TO SESSION ****************
+	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-primary', function(){
+		$elem = $(this);
+		//alert($('div.panel-heading input#course_id').val());
+		// Mark course as ignored in the model
+		//alert()
+		$.post('/a.php?p=AddCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
+			if(!getAjaxStatus(d)){
+				alert('Sorry, there was an error.');
+			}else{
+				// Hide/remove elements
+				
+
+				// Add course to left-hand list of courses
+				var id = $elem.siblings('input#course_id').val().trim();
+				var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
+				var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
+				//Can I get an AJAX call to return a particular class window based on certain values?
+				
+				//$("div#sidebar div.list-group ul#list-add")
+				//	.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+				$("div#sidebar div.list-group ul#list-add div.addList")
+					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+				
+				//Removing from right-side suggestions or search.
+				$("div#sidebar div.list-group ul#list-add div.addList li.list-group-item:last").slideDown(400);
+
+				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
+					$(this).remove();
+				});
+			}
+		});
+	});
+
+	$('div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success').mouseenter(function() {
+			$elem = $(this);
+
+			$('ul#list-took li#description').css("background-color","#e5ffe5");
+		}).mouseleave(function(){
+			$elem = $(this);
+
+			$('ul#list-took li#description').css("background-color","#fff");
+		});
+	
+	$('div.panel-heading div.row div.col-md-5 div.btn-group button.btn-primary').mouseenter(function() {
+			$elem = $(this);
+
+			$('ul#list-add li#description').css("background-color","#e5f2ff");
+		}).mouseleave(function(){
+			$elem = $(this);
+
+			$('ul#list-add li#description').css("background-color","#fff");
+		});
+		
+
+	// **************** REMOVE COURSE FROM SESSION ****************
+	
+	$(document).on('click', 'div#sidebar div.list-group ul li.list-group-item span.XButton', function(){
+		$elem = $(this);
+		// Mark course as ignored in the model
+		$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
+
+			if(!getAjaxStatus(d)){
+				alert('Sorry, there was an error.');
+				//alert(d);
+			}else{
+				// Hide/remove elements
+				$elem.parent('li.list-group-item').slideUp(400, function(){
+					$(this).remove();
+					//doneTyping(); // Rerun the search in case new options are now avaliable...
+				});
+			}
+		});
+	});
+	
+	// **************** SEARCH ****************
+	//setup before functions
+	var typingTimer;                //timer identifier
+	var doneTypingInterval = 100;  //time in ms, 5 second for example
+	var $input = $('input#classSearchField');
+
+	//on keyup, start the countdown
+	$input.on('keyup', function () {
+		clearTimeout(typingTimer);
+		typingTimer = setTimeout(doneTyping, doneTypingInterval);
+
+		
+	});
+
+	//on keydown, clear the countdown 
+	$input.on('keydown', function () {
+	  clearTimeout(typingTimer);
+	});
+
+	//user is "finished typing," do something
+	function doneTyping (){
+		$("div#courseResultsArea").html("");
+		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
+		$.post('/a.php?p=Search', {q: $input.val()}, function(d){
+			if(getAjaxStatus(d)){
+				// Everything went well
+				if($input.val() === ''){
+					$("div#courseResultsArea").html('');
+				}else{
+					$("div#courseResultsArea").html(getAjaxData(d));
+				}
+				
+			}else{
+				//alert(getAjaxFailureReason(d));
+			}
+		});
+	}
+	
+	//******************RESET SUGGESTIONS BUTTON******************/
+	$(document).on('click', 'div.btn-container-suggestr button.btn-primary', function(){
+		
+		$("div#courseResultsArea").html("");
+		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
+		$.post('/a.php?p=Suggest',function(d){
+			
+			
+			if(getAjaxStatus(d)){
+				// Everything went well
+				$("div#courseResultsArea").html(getAjaxData(d));
+			}else{
+				alert(getAjaxFailureReason(d));
+			}
+		});
+	});
+
+
+
+	//*****************ADD tag count*****************//
+	$(document).on('click', 'div.panel-bottom div.row div.col-md-11 div.btn-group button.btn-default', function(){
+
+
+		var $course_id = $(this).parent('div.btn-group').parent('div.col-md-11').parent('div.row').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+		var $tag_id = $(this).siblings('input#tag_id').val();
+		var $tag_name = $(this).children(".tagName").html();
+		var $tag_count = $(this).children(".tagCount").html();
+		var $final_position = $(this).children(".tagCount");
+		var $num = 1;//adding one vote here.
+
+		var $buttonItself = $(this);
+		//PERHAPS ALLOW TO RETRACT VOTE in the future by passing in -1, and deleting the initial entry in the table.
+		//$(this).css({"background-color": '#FF4500'});
+		$.post('/a.php?p=AddTag', {course_id: $course_id, tag_id: $tag_id, tag_name: $tag_name,num: $num} ,function(d) { 
+			if(!getAjaxStatus(d)){//If you voted twice, error will be here.
+				$buttonItself.css({"background-color": '#FF4500'});
+				$final_position.html(parseInt($tag_count)-1);
+			}else{
+				$final_position.html(parseInt($tag_count)+1);
+				$buttonItself.css({"background-color": 'green'});
+				//$buttonItself.animate({backgroundColor: '#00C957'}, 'slow');
+				//$buttonItself.animate({backgroundColor: '#AAAAAA'}, 'slow');
+			}	
+		});
+	});
+
+	
+		
+		//Close help option 1
 });
 </script>
 
 <div class="col-md-5" id="sidebar">
 	<div class="list-group" >
+		
 		<ul id="list-took">
-			<li class="list-group-item" >
+			<li class="list-group-item" id="description">
 				<!--<div class = "side-options">
 					<span class="badge XButton">X</span>
 				</div>-->
 				<span>
-					Press "Took" on classes you've taken. Search for them using search bar below.
+					Press "Took" on classes you've taken.
 				</span>
 			</li>
 			<!-- not sure of how styling this be.<br>-->
-			
+			<div class = "tookList">
 			{{#usersCourses}}
 			<li class="list-group-item" style="background-color:#e5ffe5">
 				<input type="hidden" id="course_id" value="{{id}}" />
@@ -230,7 +257,9 @@ $(document).ready(function(){
 				<span class="badge">{{number}}</span>
 			</li>
 			{{/usersCourses}}
+			</div>
 		</ul>
+
 		<div class="input-group" id="classSearch">
 			<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
 		</div>
@@ -239,13 +268,14 @@ $(document).ready(function(){
 		<br>
 		
 		<ul id="list-add">
-			<li class="list-group-item" >
+			<li class="list-group-item" id="description">
 				<span>
-					Press "Add" on courses after pressing on suggest button below.
+					Press "Add" on courses you want to take next semester.
 				</span>
 			</li>
 			
 			<!--<div class="arrow-down" style="border-top: 20px solid #2e6da4;"></div>-->
+			<div class = "addList">
 			{{#futureUsersCourses}}
 			<li class="list-group-item" style="background-color:#e5f2ff">
 				<input type="hidden" id="course_id" value="{{id}}" />
@@ -259,9 +289,10 @@ $(document).ready(function(){
 				<span class="badge">{{number}}</span>
 			</li>
 			{{/futureUsersCourses}}
-			
+			</div
 		
 		</ul>
+		
 		<div class = "btn-container-suggestr">
 			<button type="button" class="btn btn-primary">Suggest</button>
 		</div>
@@ -288,7 +319,7 @@ $(document).ready(function(){
 			<div class="panel-default" id="courseResultsArea">
 				<div class="panel-heading">
 					<div class = "resultsInfo">
-							<span>{{numResults}}</span><span> results based on course history</span>
+							<span>{{description}}</span> (<span>{{numResults}} Results</span>)
 					</div>
 				</div>
 				{{#allCourses}}

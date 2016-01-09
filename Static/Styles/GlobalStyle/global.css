@@ -177,6 +177,15 @@ div.panel.panel-default {
 div.list-group ul {
 	margin-bottom:0;
 }
+/*Class history containers*/
+
+div.addList {
+
+}
+
+div.tookList {
+
+}
 
 /*custom buttons*/
 .btn-container-suggestr {

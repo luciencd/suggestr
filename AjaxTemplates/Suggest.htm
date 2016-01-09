@@ -1,10 +1,10 @@
 <div class="panel-heading">
 	<div class = "resultsInfo">
-		<span>{{numResults}}</span><span> results based on course history</span>
+		<span>{{description}}</span> (<span>{{numResults}} Results</span>)
 	</div>
 </div>
 
-{{#courseResults}}
+{{#allCourses}}
 <div class="single-course">
 	<div class="panel-heading">
 		<!-- perhaps move course_id one position up -->
@@ -48,4 +48,4 @@
 	</div>
 	-->
 </div>
-{{/courseResults}}
+{{/allCourses}}
