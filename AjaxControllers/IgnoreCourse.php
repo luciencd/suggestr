@@ -2,7 +2,7 @@
 
 class IgnoreCourseController extends AjaxController {
 	public function process($get,$post) {
-		$_COOKIE['sessionId'] = 1;
+		
 
 
 		if(!isset($post['course_id'])||!is_numeric($post['course_id'])||

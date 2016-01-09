@@ -2,14 +2,14 @@
 //Working on tags.
 class AddTagController extends AjaxController {
 	public function process($get,$post) {
-		$_COOKIE['sessionId'] = 1;
+		
 		//Checking the inputs //Currently sessions don't work.
-		/*if(!isset($post['tag_id'])||!is_numeric($post['tag_id'])||
+		if(!isset($post['tag_id'])||!is_numeric($post['tag_id'])||
 			!isset($post['course_id'])||!is_numeric($post['course_id'])||
 		   !isset($_COOKIE['sessionId'])||!is_numeric($_COOKIE['sessionId'])){
 			$this->failureReason = 'Sorry, there was an error.';
 			return false;
-		}*/
+		}
 
 		//Check if the vote is positive or negative(future version)
 

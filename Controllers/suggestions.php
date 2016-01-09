@@ -1,5 +1,4 @@
 <?php
-
 class Student {
     public $id = "";
     public $major = "";
@@ -313,6 +312,4 @@ class Database {
         return mysqli_num_rows($result);
     }
 }
-
 ?>
-    

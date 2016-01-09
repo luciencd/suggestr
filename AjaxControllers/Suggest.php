@@ -9,7 +9,7 @@ require_once('Controllers/suggestions.php');
 class SuggestController extends AjaxController {
 	public $template = "Suggest";//Identical to search one.
 	public function process($get,$post) {
-		$_COOKIE['sessionId'] = 1;//Remove this once we solved sessionId
+		//Remove this once we solved sessionId
 		
 		$Data = new Database();//Find a way to make this local to suggestr.php or something.
 		

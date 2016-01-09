@@ -68,6 +68,7 @@ if(isset($_GET['SUGGESTR_PAGE']) &&
 // Ok. Now we render the appropriate controller.
 //echo "<h4>suggestr.php b4 controller</h4>";
 $controller;
+ob_start();
 if(!$isAjax){
 	if(!array_key_exists($_GET['SUGGESTR_PAGE'],$router)) {
 		header($_GET["SUGGESTR_PAGE"]." 404 Not Found");

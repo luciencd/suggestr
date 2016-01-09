@@ -3,7 +3,7 @@
 class SearchController extends AjaxController {
 	public $template = "Search";
 	public function process($get,$post) {
-		$_COOKIE['sessionId'] = 1;//Remove this once we solved sessionId
+		//Remove this once we solved sessionId
 		
 		//$Data = new Database();//not sure if this follows mvc protocol.
 		//Removing 

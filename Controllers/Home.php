@@ -7,9 +7,9 @@ class HomeController extends PageController {
 	public $pageTemplate = "Home";
 
 	public function process($get, $post) {
-		$_COOKIE['sessionId'] = 1;
+		//$_COOKIE['sessionId'] = 1;
 		$this->pageData["Title"] = "Home";
-		
+		$this->pageData["session"] = $_COOKIE['sessionId'];
 		//Generate the data from mysql.
 
 		//NEED TO FIGURE OUT WHY COOKIE IS NOT WORKING. 
