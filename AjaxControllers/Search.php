@@ -34,7 +34,7 @@ class SearchController extends AjaxController {
 		}
 		//$this->pageData['numResults'] = (String)count($courses);
 		//$this->pageData['term'] = $post['q'];
-		$this->pageData['courseResults'] = $courses;
+		//$this->pageData['courseResults'] = $courses;
 		return true;
 	}
 }

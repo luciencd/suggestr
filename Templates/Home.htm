@@ -1,6 +1,6 @@
 
 <script type="text/javascript">
-	$(function(){
+$(document).ready(function(){
 		// **************** POSTPONE COURSE FROM SESSION ****************
 		$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
 			// Hide/remove elements
@@ -52,7 +52,7 @@
 					
 					//Adding class css/html to left-hand
 					$("div#sidebar div.list-group ul#list-took")
-						.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;><input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+						.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 					
 					
 					$("div#sidebar div.list-group ul#list-took li.list-group-item:last").slideDown(400);
@@ -83,8 +83,10 @@
 					var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
 					//Can I get an AJAX call to return a particular class window based on certain values?
 					
+					//$("div#sidebar div.list-group ul#list-add")
+					//	.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 					$("div#sidebar div.list-group ul#list-add")
-						.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;"><input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+						.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 					
 					//Removing from right-side suggestions or search.
 					$("div#sidebar div.list-group ul#list-add li.list-group-item:last").slideDown(400);
@@ -94,7 +96,7 @@
 					});
 				}
 			});
-			$("div#classSearch input#classSearchField").val("");
+			//$("div#classSearch input#classSearchField").val("");
 			//doneTyping();
 			//Causes problem which resets suggestions!!
 			//Should probably reset suggestions.
@@ -150,8 +152,9 @@
 		
 		//******************RESET SUGGESTIONS BUTTON******************/
 		$(document).on('click', 'div.btn-container-suggestr', function(){
-			//alert("fuck");
-			$("div#courseResultsArea").html('<img src="image/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
+			alert("fuck");
+			$("div#courseResultsArea").html("");
+			$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
 			$.post('/a.php?p=Suggest',function(d){
 				
 				
@@ -224,8 +227,10 @@
 				<span class="badge">{{number}}</span>
 			</li>
 			{{/usersCourses}}
-			
 		</ul>
+		<div class="input-group" id="classSearch">
+					<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
+		</div>
 		
 		<div class="arrow-down" style="border-top: 20px solid#4cae4c;"></div>
 		<div class = "btn-container-suggestr">
@@ -271,14 +276,7 @@
 	<div class="container">
 		<div id="content">
 
-			<div class="input-group" id="classSearch">
-				<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
-				<!--<span class="input-group-addon" style = "cursor: pointer;">Search</span>-->
-				<!--<span class="input-group-addon" style = "cursor: pointer; background-color:#5bc0de;">Suggest!</span>-->
-				
-				
-				
-			</div>
+
 			
 			<div class="panel-default" id="courseResultsArea">
 
