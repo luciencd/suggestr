@@ -181,7 +181,7 @@ div.list-group ul {
 /*custom buttons*/
 .btn-container-suggestr {
 	text-align:center;
-	margin-bottom:10px;
+	
 }
 /*custom buttons*/
 .btn-container-yacs {
@@ -247,4 +247,5 @@ fieldset[disabled] .btn-sample.active {
 	border-right: 20px solid transparent;
 	
 	border-top: 20px solid #5bc0de;
+	
 }

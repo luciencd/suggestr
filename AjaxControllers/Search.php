@@ -32,9 +32,9 @@ class SearchController extends AjaxController {
 											));
 			}//will need to add tags. Make a new function taking in an array and returning the classes as an array in this form.
 		}
-		//$this->pageData['numResults'] = (String)count($courses);
-		//$this->pageData['term'] = $post['q'];
-		//$this->pageData['courseResults'] = $courses;
+		$this->pageData['numResults'] = (String)count($courses);
+		$this->pageData['term'] = $post['q'];
+		$this->pageData['courseResults'] = $courses;
 		return true;
 	}
 }

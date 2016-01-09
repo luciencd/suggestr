@@ -104,21 +104,23 @@ $(document).ready(function(){
 			
 	
 		// **************** REMOVE COURSE FROM SESSION ****************
-		$(document).on('click', 'div#sidebar div.list-group ul li.list-group-item span.XButton', function(){
-			$elem = $(this);
-			// Mark course as ignored in the model
-			$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
-
-				if(!getAjaxStatus(d)){
-					alert('Sorry, there was an error.');
-					//alert(d);
-				}else{
-					// Hide/remove elements
-					$elem.parent('li.list-group-item').slideUp(400, function(){
-						$(this).remove();
-						//doneTyping(); // Rerun the search in case new options are now avaliable...
-					});
-				}
+		$(document).ready(function(){
+			$(document).on('click', 'div#sidebar div.list-group ul li.list-group-item span.XButton', function(){
+				$elem = $(this);
+				// Mark course as ignored in the model
+				$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
+	
+					if(!getAjaxStatus(d)){
+						alert('Sorry, there was an error.');
+						//alert(d);
+					}else{
+						// Hide/remove elements
+						$elem.parent('li.list-group-item').slideUp(400, function(){
+							$(this).remove();
+							//doneTyping(); // Rerun the search in case new options are now avaliable...
+						});
+					}
+				});
 			});
 		});
 		// **************** SEARCH ****************
@@ -151,8 +153,8 @@ $(document).ready(function(){
 		}
 		
 		//******************RESET SUGGESTIONS BUTTON******************/
-		$(document).on('click', 'div.btn-container-suggestr', function(){
-			alert("fuck");
+		$(document).on('click', 'div.btn-container-suggestr button.btn-primary', function(){
+			
 			$("div#courseResultsArea").html("");
 			$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
 			$.post('/a.php?p=Suggest',function(d){
@@ -162,7 +164,7 @@ $(document).ready(function(){
 					// Everything went well
 					$("div#courseResultsArea").html(getAjaxData(d));
 				}else{
-					//alert(getAjaxFailureReason(d));
+					alert(getAjaxFailureReason(d));
 				}
 			});
 		});
@@ -209,7 +211,7 @@ $(document).ready(function(){
 					<span class="badge XButton">X</span>
 				</div>-->
 				<span>
-					Add courses you've already taken. Use the search bar on the right. 
+					Press "Took" on classes you've taken. Search for them using search bar below.
 				</span>
 			</li>
 			<!-- not sure of how styling this be.<br>-->
@@ -229,21 +231,20 @@ $(document).ready(function(){
 			{{/usersCourses}}
 		</ul>
 		<div class="input-group" id="classSearch">
-					<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
+			<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
 		</div>
 		
-		<div class="arrow-down" style="border-top: 20px solid#4cae4c;"></div>
-		<div class = "btn-container-suggestr">
-			<button type="button" class="btn btn-success">Suggest</button>
-		</div>
+		<!--<div class="arrow-down" style="border-top: 20px solid#4cae4c;"></div>-->
+		<br>
 		
 		<ul id="list-add">
 			<li class="list-group-item" >
 				<span>
-					Add courses you might want to take next semester! 
+					Press "Add" on courses after pressing on suggest button below.
 				</span>
 			</li>
 			
+			<!--<div class="arrow-down" style="border-top: 20px solid #2e6da4;"></div>-->
 			{{#futureUsersCourses}}
 			<li class="list-group-item" style="background-color:#e5f2ff">
 				<input type="hidden" id="course_id" value="{{id}}" />
@@ -257,14 +258,19 @@ $(document).ready(function(){
 				<span class="badge">{{number}}</span>
 			</li>
 			{{/futureUsersCourses}}
+			
 		
 		</ul>
+		<div class = "btn-container-suggestr">
+			<button type="button" class="btn btn-primary">Suggest</button>
+		</div>
 		
-		<div class="arrow-down" style="border-top: 20px solid #2e6da4;"></div>
-		
+
+		<!--
 		<div class = "btn-container-yacs">
 			<button type="button" class="btn btn-primary">YACS</button>
 		</div>
+		-->
 	</div>
 		
 	
@@ -279,7 +285,11 @@ $(document).ready(function(){
 
 			
 			<div class="panel-default" id="courseResultsArea">
-
+				<div class="panel-heading">
+					<div class = "resultsInfo">
+							<span>{{numResults}}</span><span> results based on course history</span>
+					</div>
+				</div>
 				{{#allCourses}}
 					<div class="single-course">
 						<div class="panel-heading">

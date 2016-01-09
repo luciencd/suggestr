@@ -86,7 +86,7 @@ class HomeController extends PageController {
 		}
 
 		//Populate webpage with all the different courses that were predicted.
-		//$this->pageData['numResults'] = (String)count($allNewCourses);
+		$this->pageData['numResults'] = (String)count($allNewCourses);
 		
 		$this->pageData['allCourses'] = $allNewCourses;
 		
