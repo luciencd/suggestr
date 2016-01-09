@@ -8,7 +8,7 @@ $CONFIG['app-path'] = "http://suggestr.mybluemix.net/";
 $CONFIG['db-address'] = "us-cdbr-iron-east-03.cleardb.net";
 $CONFIG['db-database'] = "ad_771f5ec54b7a0d1";
 $CONFIG['db-username'] = "b5777848a3bae2";
-$CONFIG['db-password'] = "c72c86dccf797bf";
+$CONFIG['db-password'] = "49997d416a17865";
 $CONFIG['smtp-host'] = "mail.suggestr.co";
 
 // Development mode overrides
@@ -35,7 +35,11 @@ if($CONFIG['development']) {
 }
 ini_set("SMTP",$CONFIG['smtp-host']);
 
+//create model here! technically in the controllers area but well figure it out.
 
 require_once(ROOT.'templating.php');
 require_once(ROOT.'ajax.php');
 require_once(ROOT.'database.php');
+
+
+//$Data = new Database();
