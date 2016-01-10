@@ -20,7 +20,9 @@ class Query{
 'sessions',
 'tagaction',
 'tags',
-'year')))
+'year',
+'sliders',
+'slideraction')))
 			$this->table = ucfirst($table);
 		else
 			throw new Exception("Unable to create Query instance!");
@@ -175,7 +177,9 @@ class Query{
 'sessions',
 'tagaction',
 'tags',
-'year'))){
+'year',
+'sliders',
+'slideraction'))){
 					return false;
 				}
 			}

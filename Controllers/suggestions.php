@@ -311,5 +311,48 @@ class Database {
 
         return mysqli_num_rows($result);
     }
+
+    function ratingPercentage($course_id, $slider_id){
+        /*
+        $query = new Query('slideraction');
+        $result = $query->select('*',array(array('course_id','=',$course_id),array('slider_id','=',$slider_id),array('vote','=',0)),'','',false);
+
+        $query2 = new Query('slideraction');
+        $result2 = $query2->select('*',array(array('course_id','=',$course_id),array('slider_id','=',$slider_id),array('vote','=',1)),'','',false);
+        */
+
+        //return (1+mysqli_num_rows($result))/(1+(mysqli_num_rows($result)+mysqli_num_rows($result2)));
+        return rand(0,10)/10;
+    }
+    
+    function rating($course_id){
+
+
+
+        $outputRating = array();
+        $query = new Query('sliders');
+        $result = $query->select('*',true,'','',false);
+
+        $ratingResults = array();
+
+        foreach($result as $row){
+            $rating_id = $row['id'];
+            $rating_name = $row['name'];
+            if(!isset($ratingResults[$rating_id])){
+                $ratingResults[$rating_id]['ratingName'] = $rating_name;
+                $ratingResults[$rating_id]['ratingId'] = $rating_id;
+                $ratingResults[$rating_id]['count'] = $this->ratingPercentage($course_id,$rating_id);
+            }
+        }
+
+        $ratingResultsArray = array();
+        foreach($ratingResults as $key => $value){
+            array_push($ratingResultsArray,array('percentage' => 100*$value['count'],
+                                                'ratingId' => $value['ratingId'],
+                                                'name' => $value['ratingName']));
+
+        }
+        return $ratingResultsArray;
+    }
 }
 ?>

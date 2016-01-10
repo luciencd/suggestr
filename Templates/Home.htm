@@ -240,6 +240,48 @@ $(document).ready(function(){
 		});
 	});
 
+	function makeGradientColor(color1, color2, percent) {
+	    var newColor = {};
+
+	    function makeChannel(a, b) {
+	        return(a + Math.round((b-a)*(percent/100)));
+	    }
+
+	    function makeColorPiece(num) {
+	        num = Math.min(num, 255);   // not more than 255
+	        num = Math.max(num, 0);     // not less than 0
+	        var str = num.toString(16);
+	        if (str.length < 2) {
+	            str = "0" + str;
+	        }
+	        return(str);
+	    }
+
+	    newColor.r = makeChannel(color1.r, color2.r);
+	    newColor.g = makeChannel(color1.g, color2.g);
+	    newColor.b = makeChannel(color1.b, color2.b);
+	    newColor.cssColor = "#" + 
+	                        makeColorPiece(newColor.r) + 
+	                        makeColorPiece(newColor.g) + 
+	                        makeColorPiece(newColor.b);
+	    return(newColor);
+	}
+
+	$('.slider-rating').each(function(){
+		var green = {r:0, g:255, b:0};
+		var red = {r:255, g:0, b:0};
+		//$('.slider-rating').css({"background-color":newColor.cssColor});
+
+
+		$elem = $(this);
+
+		var newColor = $elem.siblings('input.percentage').val();
+		var endColor = makeGradientColor(green, red, newColor).cssColor;
+
+		$elem.css({"background-color":endColor});
+	});
+	
+	//$('.slider-rating').css({"background-color":"green"});
 	
 		
 		//Close help option 1
@@ -372,25 +414,24 @@ $(document).ready(function(){
 						<div class="panel-body">
 							<div class="row">{{description}}</div>
 						</div>
-						<!--
-						<div class="panel-bottom" style="visibility: hidden;">
-							
-							<div class="row">
-								<div class="col-md-11">
-									{{#allTags}}
 
-									<div class="btn-group" id="tag-button" role="group">
-										<input type="hidden" id="tag_id" value="{{tagId}}" />
-										<button type="button" class="btn btn-default">
-											<span class = "tagName">{{tagName}}</span> 
-											<span class = "tagCount">{{count}}</span>
-										</button>
-									</div>
-									{{/allTags}}
+
+						<div class = "panel-bottom">
+							{{#ratings}}
+							<div class = "slider">
+								
+
+								<div class="slider-rating" style="width:{{percentage}}%"><span>{{name}}</span>
 								</div>
+								<input type="hidden" class="percentage" value="{{percentage}}">
 							</div>
-							
-						</div>-->
+							{{/ratings}}
+						</div>
+
+
+
+
+						
 						
 					</div>
 					<!-- needs spacing here-->
