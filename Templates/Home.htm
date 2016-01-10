@@ -247,7 +247,14 @@ $(document).ready(function(){
 </script>
 
 <div class="col-md-5" id="sidebar">
-	<div class="list-group" >
+	<div class = "list-group" id="questions">
+		<div class="form-group"> 
+		  <input type="text" class="form-control" id="major" placeholder="Input Major">
+		</div>
+	</div>
+	
+	
+	<div class="list-group" id="classes">
 		
 		<ul id="list-took">
 			<li class="list-group-item" id="description">
@@ -257,6 +264,13 @@ $(document).ready(function(){
 				<span>
 					Press "Took" on classes you've taken.
 				</span>
+			</li>
+			
+			
+			<li class="list-group-item">
+				<div class="input-group" id="classSearch">
+					<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
+				</div>
 			</li>
 			<!-- not sure of how styling this be.<br>-->
 			<div class = "tookList">
@@ -276,10 +290,7 @@ $(document).ready(function(){
 			</div>
 		</ul>
 
-		<div class="input-group" id="classSearch">
-			<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
-		</div>
-		
+
 		<!--<div class="arrow-down" style="border-top: 20px solid#4cae4c;"></div>-->
 		<br>
 		
