@@ -65,7 +65,7 @@ div.info-bar-2{
 }
 
 
-.list-group {
+#questions.list-group {
 	margin-top: 125px;
 	border-radius: 0px;
 	position: fixed;
@@ -73,6 +73,13 @@ div.info-bar-2{
 	width: 41.66666667%;
 }
 
+#classes.list-group {
+	margin-top: 205px;
+	border-radius: 0px;
+	position: fixed;
+	
+	width: 41.66666667%;
+}
 .sidebar {
 	border-radius: 0px;
 	overflow: scroll;
