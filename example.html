@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="icon" href="./images/favicon.ico">
+
+	<title>Suggestr</title>
+	
+	<!-- JQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+	<!-- Supporting Scripts -->
+	<script type="text/javascript" src="/Static/JS/GlobalJS/universalFunctions.js"></script>
+
+	<!-- Latest compiled and minified bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" href="/Static/Styles/GlobalStyle/global.css"> 
+</head>
+
+<body>
+	<div class="tutorial">
+		
+	</div>
+	<div class="page-header">
+		<h1>Suggestr</h1>
+		<h4>Helpful course suggestions based on your course history.</h4>
+		<!--<div class="class-list-title1">Course History</div>
+		<div class="class-list-title2">Course Suggestions</div>-->
+	</div>
+
+	<div class="row" id="page-body">
+		
+<script type="text/javascript">
+$(document).ready(function(){
+	// **************** POSTPONE COURSE FROM SESSION ****************
+	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
+		// Hide/remove elements
+
+		$(this).parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
+			$(this).remove();
+		});
+	});
+	/*
+	// **************** IGNORE COURSE FROM SESSION ****************
+	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
+		$elem = $(this);
+		// Mark course as ignored in the model
+		$.post('/a.php?p=IgnoreCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
+			if(!getAjaxStatus(d)){
+				alert('Sorry, there was an error.');
+			}else{
+				// Hide/remove elements
+
+				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
+					$(this).remove();
+				});
+
+			}
+		});
+		// Clear search box
+		$("div#content div#classSearch input#classSearchField").val("");
+		//doneTyping();
+	});*/
+	
+	// **************** TOOK COURSE TO SESSION ****************
+	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
+		$elem = $(this);
+		//alert($('div.panel-heading input#course_id').val());
+		// Mark course as ignored in the model
+		//alert()
+		$.post('/a.php?p=TookCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
+			if(!getAjaxStatus(d)){
+				alert('Sorry, there was an error.');
+			}else{
+				// Hide/remove elements
+				
+
+				// Add course to left-hand list of courses
+				//getting variables from right-hand
+				var id = $elem.siblings('input#course_id').val().trim();
+				var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
+				var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
+				
+				//Adding class css/html to left-hand
+				$("div#sidebar div.list-group ul#list-took div.tookList")
+					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+				
+				
+				$("div#sidebar div.list-group ul#list-took div.tookList li.list-group-item:last").slideDown(400);
+				
+				//Removing class from right panel,(suggestion and search area)
+				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
+					$(this).remove();
+				});
+			}
+		});
+	});
+		
+	// **************** ADD COURSE TO SESSION ****************
+	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-primary', function(){
+		$elem = $(this);
+		//alert($('div.panel-heading input#course_id').val());
+		// Mark course as ignored in the model
+		//alert()
+		$.post('/a.php?p=AddCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
+			if(!getAjaxStatus(d)){
+				alert('Sorry, there was an error.');
+			}else{
+				// Hide/remove elements
+				
+
+				// Add course to left-hand list of courses
+				var id = $elem.siblings('input#course_id').val().trim();
+				var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
+				var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
+				//Can I get an AJAX call to return a particular class window based on certain values?
+				
+				//$("div#sidebar div.list-group ul#list-add")
+				//	.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+				$("div#sidebar div.list-group ul#list-add div.addList")
+					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+				
+				//Removing from right-side suggestions or search.
+				$("div#sidebar div.list-group ul#list-add div.addList li.list-group-item:last").slideDown(400);
+
+				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
+					$(this).remove();
+				});
+			}
+		});
+	});
+
+	$('div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success').mouseenter(function() {
+			$elem = $(this);
+
+			$('ul#list-took li#description').css("background-color","#e5ffe5");
+		}).mouseleave(function(){
+			$elem = $(this);
+
+			$('ul#list-took li#description').css("background-color","#fff");
+		});
+	
+	$('div.panel-heading div.row div.col-md-5 div.btn-group button.btn-primary').mouseenter(function() {
+			$elem = $(this);
+
+			$('ul#list-add li#description').css("background-color","#e5f2ff");
+		}).mouseleave(function(){
+			$elem = $(this);
+
+			$('ul#list-add li#description').css("background-color","#fff");
+		});
+		
+
+	// **************** REMOVE COURSE FROM SESSION ****************
+	
+	$(document).on('click', 'div#sidebar div.list-group ul li.list-group-item span.XButton', function(){
+		$elem = $(this);
+		// Mark course as ignored in the model
+		$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
+
+			if(!getAjaxStatus(d)){
+				alert('Sorry, there was an error.');
+				//alert(d);
+			}else{
+				// Hide/remove elements
+				$elem.parent('li.list-group-item').slideUp(400, function(){
+					$(this).remove();
+					//doneTyping(); // Rerun the search in case new options are now avaliable...
+				});
+			}
+		});
+	});
+	
+	// **************** SEARCH ****************
+	//setup before functions
+	var typingTimer;                //timer identifier
+	var doneTypingInterval = 100;  //time in ms, 5 second for example
+	var $input = $('input#classSearchField');
+
+	//on keyup, start the countdown
+	$input.on('keyup', function () {
+		clearTimeout(typingTimer);
+		typingTimer = setTimeout(doneTyping, doneTypingInterval);
+
+		
+	});
+
+	//on keydown, clear the countdown 
+	$input.on('keydown', function () {
+	  clearTimeout(typingTimer);
+	});
+
+	//user is "finished typing," do something
+	function doneTyping (){
+		$("div#courseResultsArea").html("");
+		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
+		$.post('/a.php?p=Search', {q: $input.val()}, function(d){
+			if(getAjaxStatus(d)){
+				// Everything went well
+				if($input.val() === ''){
+					$("div#courseResultsArea").html('');
+				}else{
+					$("div#courseResultsArea").html(getAjaxData(d));
+				}
+				
+			}else{
+				//alert(getAjaxFailureReason(d));
+			}
+		});
+	}
+	
+	//******************RESET SUGGESTIONS BUTTON******************/
+	$(document).on('click', 'div.btn-container-suggestr button.btn-primary', function(){
+		
+		$("div#courseResultsArea").html("");
+		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
+		$.post('/a.php?p=Suggest',function(d){
+			
+			
+			if(getAjaxStatus(d)){
+				// Everything went well
+				$("div#courseResultsArea").html(getAjaxData(d));
+			}else{
+				alert(getAjaxFailureReason(d));
+			}
+		});
+	});
+	
+	
+	$(document).on('click', 'div.btn-container-reset button.btn-info', function(){
+		
+		$.post('/a.php?p=Reset',function(d){
+			
+			alert("Sent");
+			if(getAjaxStatus(d)){
+				// Everything went well
+				alert("worked");
+			}else{
+				alert(getAjaxFailureReason(d));
+			}
+		});
+	
+	});
+
+
+
+	//*****************ADD tag count*****************//
+	$(document).on('click', 'div.panel-bottom div.row div.col-md-11 div.btn-group button.btn-default', function(){
+
+
+		var $course_id = $(this).parent('div.btn-group').parent('div.col-md-11').parent('div.row').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+		var $tag_id = $(this).siblings('input#tag_id').val();
+		var $tag_name = $(this).children(".tagName").html();
+		var $tag_count = $(this).children(".tagCount").html();
+		var $final_position = $(this).children(".tagCount");
+		var $num = 1;//adding one vote here.
+
+		var $buttonItself = $(this);
+		//PERHAPS ALLOW TO RETRACT VOTE in the future by passing in -1, and deleting the initial entry in the table.
+		//$(this).css({"background-color": '#FF4500'});
+		$.post('/a.php?p=AddTag', {course_id: $course_id, tag_id: $tag_id, tag_name: $tag_name,num: $num} ,function(d) { 
+			if(!getAjaxStatus(d)){//If you voted twice, error will be here.
+				$buttonItself.css({"background-color": '#FF4500'});
+				$final_position.html(parseInt($tag_count)-1);
+			}else{
+				$final_position.html(parseInt($tag_count)+1);
+				$buttonItself.css({"background-color": 'green'});
+				//$buttonItself.animate({backgroundColor: '#00C957'}, 'slow');
+				//$buttonItself.animate({backgroundColor: '#AAAAAA'}, 'slow');
+			}	
+		});
+	});
+	
+	
+	//QUESTIONS!!
+	
+	$(document).on("click",".major",function(){
+		var X=$(this).attr('id');
+		if(X===1)	{
+			$(".submenu").hide();
+			$(this).attr('id', '0'); 
+		}else{
+			$(".submenu").show();
+			$(this).	attr('id', '1');
+		}
+	});
+	
+	//Mouse click on sub menu
+	$(".submenu").mouseup(function(){
+		return false;
+	});
+	
+	//Mouse click on my account link
+	$(".account").mouseup(function() {
+		return false;
+	});
+	
+	
+	//Document Click
+	$(document).mouseup(function(){
+		$(".submenu").hide();
+		$(".major").attr('id', '');
+	});
+
+	
+		
+		//Close help option 1
+});
+</script>
+
+<div class="col-md-5" id="sidebar">
+	<div class = "list-group" id="questions">
+		<!--QUESTIONS-->
+		<!--<div class ="list-group-item">
+			<span>
+				Answer these questions about yourself.
+			</span>
+		</div>-->
+		<!--<div class = "questions">-->
+			
+			<div class="form-group"> 
+			  <input type="text" class="form-control" id="major" placeholder="Input Major">
+			</div>
+			
+		<!--</div>-->
+	</div>
+	
+	
+	
+	<div class="list-group" id="classes">
+	
+		
+		<!--SEARCHBAR-->
+		
+		
+		
+		<ul id="list-took">
+			<li class="list-group-item" id="description">
+				<!--<div class = "side-options">
+					<span class="badge XButton">X</span>
+				</div>-->
+				<span>
+					Press "Took" on classes you've taken.
+				</span>
+			</li>
+			
+			<li class="list-group-item">
+				<div class="input-group" id="classSearch">
+					<input type="text" id="classSearchField" class="form-control" placeholder="Search for courses by typing part of the name or title" autocomplete="off">
+				</div>
+			
+			</li>
+			
+			<!-- not sure of how styling this be.<br>-->
+			<div class = "tookList">
+			<li class="list-group-item" style="background-color:#e5ffe5">
+				<input type="hidden" id="course_id" value="35997" />
+				<span class="badge XButton">X</span>
+				<!-- How to make this look better. Also, class should be unique no?
+				<span class="badge">ADD TAG</span>-->
+				
+				
+
+				General Psychology
+				<span class="badge">1200</span>
+			</li>
+			<li class="list-group-item" style="background-color:#e5ffe5">
+				<input type="hidden" id="course_id" value="36316" />
+				<span class="badge XButton">X</span>
+				<!-- How to make this look better. Also, class should be unique no?
+				<span class="badge">ADD TAG</span>-->
+				
+				
+
+				Calculus Ii
+				<span class="badge">1020</span>
+			</li>
+			<li class="list-group-item" style="background-color:#e5ffe5">
+				<input type="hidden" id="course_id" value="35483" />
+				<span class="badge XButton">X</span>
+				<!-- How to make this look better. Also, class should be unique no?
+				<span class="badge">ADD TAG</span>-->
+				
+				
+
+				Computer Science I
+				<span class="badge">1100</span>
+			</li>
+			</div>
+		</ul>
+
+		
+		
+		<!--<div class="arrow-down" style="border-top: 20px solid#4cae4c;"></div>-->
+		<br>
+		
+		<ul id="list-add">
+			<li class="list-group-item" id="description">
+				<span>
+					Press "Add" on courses you want to take next semester.
+				</span>
+			</li>
+			
+			<!--<div class="arrow-down" style="border-top: 20px solid #2e6da4;"></div>-->
+			<div class = "addList">
+			</div
+		
+		</ul>
+		
+		<div class = "btn-container-suggestr">
+			<button type="button" class="btn btn-primary">Suggest</button>
+		</div>
+		
+
+		
+		<!--<div class = "btn-container-reset">
+			<button type="button" class="btn btn-info">RESET</button>
+		</div>-->
+		
+	</div>
+		
+	
+</div> <!-- /Sidebar -->
+
+
+
+<div class="col-md-7">
+	<div class="container">
+		<div id="content">
+
+
+			
+			<div class="panel-default" id="courseResultsArea">
+				<div class="panel-heading">
+					<div class = "resultsInfo">
+							<span>Here are suggestions based on your course history!</span> (<span>40 Results</span>)
+					</div>
+				</div>
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35500" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1010</span> <span>Calculus I</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35500" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">Functions, limits, continuity, derivatives, implicit differentiation, related rates, maxima and minima, elementary transcendental functions, introduction to definite integral with applications to area and volumes of revolution.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35505" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1150</span> <span>Honors Physics I</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35505" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row"></div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35721" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1140</span> <span>Minds And Machines</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35721" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">This course is an introduction to the philosophy of mind and cognitive science. Students meet in small sections to have class discussions and debates about questions like: What are minds? Are minds physical or non-physical? Do we have free will? Does our reliance on technology turn us into cyborgs? How close are we to building an intelligent robot or machine? Do we want to? Students will learn how make a philosophical argument, and how to express them in writing or through an oral presentation.  This course is communication intensive.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36236" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1200</span> <span>Data Structures</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36236" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">Programming concepts: functions, parameter passing, pointers, arrays, strings, structs, classes, templates. Mathematical tools: sets, functions, and relations, order notation, complexity of algorithms, proof by induction. Data structures and their representations: data abstraction and internal representation, sequences, trees, binary search trees, associative structures. Algorithms: searching and sorting, generic algorithms, iterative and recursive algorithms. Methods of testing correctness and measuring performance.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35952" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1100</span> <span>Physics I</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35952" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">The first semester of a two-semester sequence of interactive courses. Topics include linear and angular kinematics and dynamics, work and energy, momentum and collisions, forces and fields, gravitation, oscillatory motion, waves, sound and interference.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36040" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1200</span> <span>Physics Ii</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36040" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row"></div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36254" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1200</span> <span>Introductory Economics</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36254" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">Every society faces the question of choosing how to use its natural and human resources to produce goods and services and how to distribute these resources among its people. This course studies how these choices are made in markets. It also explains the determinants of total output, employment, and inflation. Attention may also be given to special topics such as the environment, trade, and population.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36303" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2010</span> <span>Multivariable Calculus And Matrix Algebra</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36303" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row"></div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35466" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1010</span> <span>Introduction To Biology</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35466" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">Introduction to biological systems. Discussion of problems associated with biological organization, scaling, and hierarchy. Major topics covered include evolution, genetics, molecular biology and biotechnology, and ecology. The course considers the biological components of various societal and individual problems. Taught in Web-based, interactive studio mode with emphasis on biological simulations, problem solving, and peer teaching methods.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36000" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2800</span> <span>Introduction To Sports Psychology</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36000" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">An introduction to psychology as applied to sport; the topics covered include history of sport behavior, principles of learning and their application, anxiety and arousal, motivation, leadership, cohesion, audience effects, aggression, personality assessment, female athletes, youth in sport, coach behavior, and physical activity for all.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35565" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1100</span> <span>Introduction To Engineering Analysis</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35565" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">An integrated development of linear algebra and statics emphasizing engineering applications and also incorporating computer exercises involving matrix techniques and calculations using available software packages.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36097" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2730</span> <span>Social Psychology</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36097" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">This is a survey course covering theories, methods, and empirical research on personal and situational factors influencing social behavior. Topics covered include social perception, the construction of social reality, decision making, group influences on behavior, and attitudes. This is a communication-intensive course.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36139" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2200</span> <span>Foundations Of Computer Science</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36139" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">This course introduces important mathematical and theoretical tools for computer science, including topics from set theory, combinatorics, and probability theory, and then proceeds to automata theory, the Turing Machine model of computation, and notions of computational complexity. The course will emphasize formal reasoning and proof techniques.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36370" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2600</span> <span>Moral Development</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36370" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">An analysis of psychological research on how our common sense moral beliefs develop from early childhood through old age, and their application to daily problems. A major focus is on the conflict between themes of justice or individual rights and caring compassion and its relation to gender differences (the Kohlberg/Gilligan debate).</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35943" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2140</span> <span>Introduction To Logic</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35943" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">Introduction to first-order logic as a tool to be used in engineering, computer science, philosophy, etc., and as procedural knowledge helpful in puzzle-solving environments (e.g., standardized tests). A hands-on laboratory component is included.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35801" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1200</span> <span>Basic Drawing</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35801" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">An introductory course in drawing designed to develop seeing ability and means of expressing visual ideas through graphic skills. The course consists of exercises in drawing  from observation and studies from the history of art.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35486" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1400</span> <span>Engineering Communications</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35486" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">This is an undergraduate introductory course covering basic concepts and skills in engineering communication. Topics include technical writing, project planning and proposal writing, data visualization, system modeling and simulation, engineering graphics and CAD, and effective uses of software tools.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35430" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1971</span> <span>Democracy As Democratism</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35430" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">No description</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35873" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>4965</span> <span>Rcos</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35873" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">No description</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36309" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2400</span> <span>Introduction To Differential Equations</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36309" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">First-order differential equations, second-order linear equations, eigenvalues and eigenvectors of matrices, systems of first-order equations, stability and qualitative properties of nonlinear autonomous systems in the plane, Fourier series, separation of variables for partial differential equations.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35497" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1100</span> <span>Introduction To Management</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35497" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">This is a required first course for management majors and minors. In a case-based format, it emphasizes broad, basic principles of managerial functions and processes using an interdisciplinary approach to goal-oriented situations of private and public organizations. This is a communication-intensive course.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35578" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>4330</span> <span>Theoretical Mechanics</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35578" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row"></div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35586" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1110</span> <span>Science, Technology, And Society</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35586" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">An introduction to the social, historical, and ethical influences on modern science and technology. Cases include development of the atomic bomb, mechanization of the workplace, Apollo space program, and others. Readings are drawn from history, fiction, and social sciences; films and documentary videos highlight questions about the application of scientific knowledge to human affairs. The class is designed to give students freedom to develop and express their own ideas. This is a communication-intensive course.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36043" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1040</span> <span>Art For Interactive Media</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36043" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">This course combines an introduction to traditional visual arts and digital media and serves as a foundation for work in game design and interactive art. Using studio projects that incorporate physical media, digital imaging and computer code, students develop their formal vocabulary, observational skills, and their understanding of issues in visual and interactive arts.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36332" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1300</span> <span>Engineering Processes</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36332" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">The use of basic machine tools such as lathes, milling machines, drill presses, band saws, and grinders, including micrometers, vernier calipers, and other devices of use in a machine shop or laboratory. Welding techniques and tool making are also considered.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36394" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1520</span> <span>Sociology</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36394" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">A study of the principles and concepts of sociology and their application to the study of society and self. Students are introduced to the scope, materials, and methods of sociology. The issues and problems to be studied come from basic social institutions such as the family, science, and religion. Other topics may include love, crime, political economy, power, population growth, social class, and minority and ethnic relations. This is a communication-intensive course.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35519" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1940</span> <span>Perception/ Action Research</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35519" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">No description</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35819" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1030</span> <span>Digital Filmmaking</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35819" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">This is a hands-on introduction to film making.  Students study a selection of great films; and learn how to make movies using lightweight field production equipment. Throughout the course students produce a variety of short videos in different genres, and develop their critical capacity for analyzing cinema and other forms of motion picutre storytelling. The class ends with a mini film festival where everyone presents their work.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35766" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1110</span> <span>Chemistry I With Advanced Lab</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35766" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row"></div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35717" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1100</span> <span>Chemistry I</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35717" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">Principles of chemistry, with particular focus on atomic and molecular structure and bonding, periodicity, basic thermodynamic principles, introduction to acid-base chemistry and elementarychemical equilibrium, and introduction to organic chemistry. Students cannot get credit for both this course and CHEM 1110.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36093" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2120</span> <span>Introduction To Cell And Molecular Biology</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36093" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">Structural and functional relationships of cells are discussed with regard to similarities among all living organisms. Introduction to cellular biochemistry, metabolism and energy flow, cellular and Mendelian genetics, and the chemical basis of heredity. The laboratory exercises illustrate current concepts in cellular and molecular biology.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35681" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1015</span> <span>Introduction To Biology Laboratory</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35681" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">The goal of this laboratory course is to learn about biology through hands-on, project-based lab activities that engage students in actual biology experiments and procedures - learning biology by actually doing biology.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36124" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2500</span> <span>Computer Organization</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36124" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">Introduction to computer organization, assembler language, and operating systems. Computer systems organization: processors, memory, I/O. Digital logic: gates, Boolean algebra, digital logic circuits, memory, buses. Microprogramming. Machine level: instruction formats, addressing modes, instruction types, flow of control. Operating systems: virtual memory, virtual I/O instructions, processes, interprocess communication. Numeric representation. Assembler language: the assembly process, macros, linking, loading. Advanced architectures: RISC architectures, parallel architectures.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36330" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2010</span> <span>Managerial Economics</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36330" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">Applies the microeconomic theory of the firm to price, cost, and output decisions of business enterprises under different market structures. Regression analysis of demand and cost, linear programming of production and simulation analysis of risk, and capital budgeting are also presented.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35900" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1510</span> <span>Introduction To Communication Theory</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35900" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">This course introduces students to basic topics in communication theory, including interpersonal, small group, organizational, and mass communication. Students will study a variety of theories related to these topics and will also study the cultural impact of new communication technologies and contemporary media systems.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36103" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>2520</span> <span>Introduction To Game Design</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36103" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">This course looks at the mathematics of game theory from a psychological perspective and serves as a primer in video game design. The psychology of players and designers are discussed, as well as the cognitive processes that people use when solving game-related puzzles. Additional topics include logic, human frailty, role playing, artificial intelligence, kinesics, theater, and human-computer interaction.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36120" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1200</span> <span>Engineering Graphics And Cad</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36120" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">An introduction to the techniques for creating solid models of engineering designs. Topics include three-dimensional modeling of parts and assemblies, visualization, orthographic and isometric free-hand sketching, and computer-generated design documentation.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="36080" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1110</span> <span>Science, Technology, And Society</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="36080" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">An introduction to the social, historical, and ethical influences on modern science and technology. Cases include development of the atomic bomb, mechanization of the workplace, Apollo space program, and others. Readings are drawn from history, fiction, and social sciences; films and documentary videos highlight questions about the application of scientific knowledge to human affairs. The class is designed to give students freedom to develop and express their own ideas. This is a communication-intensive course.</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35580" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>4050</span> <span>Computability And Complexity</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35580" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row"></div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+					<div class="single-course">
+						<div class="panel-heading">
+							<!-- perhaps move course_id one position up -->
+							<input type="hidden" id="course_id" value="35716" />
+							<div class="row">
+								<div class="col-md-7">
+									<h3 class="panel-title"><span>1961</span> <span>How To Change The World</span></h3>
+								</div>
+								<div class="col-md-5">
+									<div class="btn-group" role="group">
+										<input type="hidden" id="course_id" value="35716" />
+										<button type="button" class="btn btn-success">Took</button>
+										<button type="button" class="btn btn-primary">Add</button>
+										<button type="button" class="btn btn-danger">Ignore</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">No description</div>
+						</div>
+						<!--
+						<div class="panel-bottom" style="visibility: hidden;">
+							
+							<div class="row">
+								<div class="col-md-11">
+
+									<div class="btn-group" id="tag-button" role="group">
+										<input type="hidden" id="tag_id" value="" />
+										<button type="button" class="btn btn-default">
+											<span class = "tagName"></span> 
+											<span class = "tagCount"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>-->
+						
+					</div>
+					<!-- needs spacing here-->
+			</div>
+		</div>
+	</div>
+</div> <!-- /col-md-7 -->
+	</div>
+</body>
+</html>
