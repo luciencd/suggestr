@@ -274,6 +274,7 @@ class Database {
     function courseFrequency($course_id){
         //Should I be using ORMs to do this?
         //Replace with query.
+        //Doesn't actually end up adding time.
         $statement = "SELECT Count FROM courseFrequency WHERE course_id =".$course_id;
         $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
 
@@ -335,6 +336,8 @@ class Database {
     }
 
     function courseTagFrequency($course_id, $tag_id){
+
+        
         $query = new Query('tagaction');
         $result = $query->select('*',array(array('course_id','=',$course_id),array('tag_id','=',$tag_id)),'','',false);
 
