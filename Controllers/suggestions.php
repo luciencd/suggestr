@@ -58,12 +58,13 @@ class Student {
 class Database {
     public $StudentList = array();
     public $ClassList = array();
+    public $RatingsList = array();
 
     function __construct(){
         
 
         $this->loadAllStudents();
-        //$this->loadAllClasses();
+        $this->loadAllRatings();
     }
     /*
     function loadAllClasses(){
@@ -79,6 +80,7 @@ class Database {
     }*/
     ##requires: id is a session id in the database.
     ##returns: 
+
     function loadAllStudents(){
 
         $query = new Query('action');
@@ -113,8 +115,35 @@ class Database {
         }
 
     }
+    //Preprocesses all the ratings from the slideractions Table.
+    //Grabs all the data from the 
+    function loadAllRatings(){
+        $query = new Query('slideraction');
+        $result = $query->select('*','','','',false);
 
+        
+        foreach($result as $row){
+            
+            if(isset($this->RatingsList[$row['course_id']][$row['slider_id']])){
+                
+                $this->RatingsList[$row['course_id']][$row['slider_id']][0] += 1;
+                $this->RatingsList[$row['course_id']][$row['slider_id']][1] += $row['vote'];
 
+                
+            }else{
+                $this->RatingsList[$row['course_id']][$row['slider_id']][0] = 1;
+                $this->RatingsList[$row['course_id']][$row['slider_id']][1] = $row['vote'];
+            }
+
+        }
+        //echo $this->RatingsList[35483][3][1];
+        foreach($this->RatingsList as &$key){
+            foreach($key as &$a){
+                $avg = $a[1]/$a[0];
+                $a[0] = $avg;
+            }
+        }
+    }
     //GET FUNCTIONS.
     
     //Checks whether a student exists or not.
@@ -194,6 +223,7 @@ class Database {
         arsort($scores);
 
         $likelyClasses = array();
+        
         foreach($scores as $first => $second){
             $score = $second[0];
             $classes = $second[1];
@@ -215,7 +245,7 @@ class Database {
                 }
             }
         }
-
+        
         arsort($likelyClasses);
         /*array_filter($likelyClasses,function($k, $v){
             return !in_array($v,$coursesTaken);
@@ -313,7 +343,14 @@ class Database {
     }
 
     function ratingPercentage($course_id, $slider_id){
-        
+        //echo "<h2>ratingPercentage:</h2> ";
+        //echo "<h2>".$course_id+" "+$slider_id+"</h2>";
+        if(isset($this->RatingsList[$course_id][$slider_id][0])){
+            return $this->RatingsList[$course_id][$slider_id][0];
+        }else{
+            return 0;
+        }
+        /*
         $query = new Query('slideraction');
         $result = $query->select('*',array(array('course_id','=',$course_id),array('slider_id','=',$slider_id)),'','',false);
         $sum = 0.0;
@@ -322,7 +359,7 @@ class Database {
         }
 
         return $sum/Count($result);
-        //return rand(0,10)/10;
+        //return rand(0,10)/10;*/
     }
     
     function rating($course_id){
