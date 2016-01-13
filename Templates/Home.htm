@@ -240,6 +240,37 @@ $(document).ready(function(){
 		});
 	});
 
+
+	//RATINGS!!!!11one
+
+	$(document).on('click', 'div.panel-bottom div.slider', function(e){
+		var offset = $(this).offset();
+		var width = $(this).width();
+
+		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+		var $slider_id = $(this).children('input#slider_id').val();
+		var $slider_num = (e.pageX - offset.left)/(width);
+		//alert($course_id + " " + $slider_id + " " + $slider_num);
+		$elem = $(this);
+		$.post('/a.php?p=AddRating', {course_id: $course_id, slider_id: $slider_id, slider_num: $slider_num} ,function(d) { 
+			//Sets input-wise the percentage to the one you set.
+			$elem.children('input.percentage').val($slider_num*100);
+			
+
+			//Must make into function. Used this in other part.
+			var green = {r:255, g:0, b:0};
+			var red = {r:0, g:255, b:0};
+			var newColor = $elem.children('input.percentage').val();
+			var endColor = makeGradientColor(green, red, newColor).cssColor;
+
+			//Changing the actual slider to rescemble what you voted it to be.
+			$elem.children('.slider-rating').css({"background-color":endColor});
+			$elem.children('.slider-rating').css({"width":(e.pageX - offset.left)+"px"});
+
+
+		});
+	});
+
 	function makeGradientColor(color1, color2, percent) {
 	    var newColor = {};
 
@@ -268,8 +299,8 @@ $(document).ready(function(){
 	}
 
 	$('.slider-rating').each(function(){
-		var green = {r:0, g:255, b:0};
-		var red = {r:255, g:0, b:0};
+		var green = {r:255, g:0, b:0};
+		var red = {r:0, g:255, b:0};
 		//$('.slider-rating').css({"background-color":newColor.cssColor});
 
 
@@ -281,10 +312,9 @@ $(document).ready(function(){
 		$elem.css({"background-color":endColor});
 	});
 	
-	//$('.slider-rating').css({"background-color":"green"});
+
+
 	
-		
-		//Close help option 1
 });
 </script>
 
@@ -421,8 +451,10 @@ $(document).ready(function(){
 							<div class = "slider">
 								
 
-								<div class="slider-rating" style="width:{{percentage}}%"><span>{{name}}</span>
+								<div class="slider-rating" style="width:{{percentage}}%">
+									<span>{{slider_name}}</span>
 								</div>
+								<input type="hidden" id="slider_id" value="{{slider_id}}">
 								<input type="hidden" class="percentage" value="{{percentage}}">
 							</div>
 							{{/ratings}}

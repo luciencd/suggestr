@@ -180,6 +180,9 @@ div.panel.panel-default {
 	background-color: white;
 }
 
+div.panel.panel-bottom {
+	border:1px solid black;
+}
 
 div.list-group ul {
 	margin-bottom:0;
@@ -268,9 +271,10 @@ fieldset[disabled] .btn-sample.active {
 
 /*SLIDER*/
 .slider {
-	width:33%;
+	width:33.33%;
 	float:left;
-	border-radius:2px;
+	border-right:1px solid black;
+
 }
 .slider-rating {
 	background-color:black;
