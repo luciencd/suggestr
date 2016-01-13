@@ -273,7 +273,8 @@ fieldset[disabled] .btn-sample.active {
 .slider {
 	width:33.33%;
 	float:left;
-	border-right:1px solid black;
+	/*border-right:1px solid black;
+	border-bottom-right-radius:5px;*/
 
 }
 .slider-rating {
