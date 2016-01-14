@@ -1,11 +1,11 @@
 <?php
-
+require_once('Controllers/suggestions.php');
 class SearchController extends AjaxController {
 	public $template = "Search";
 	public function process($get,$post) {
 		//Remove this once we solved sessionId
 		
-		//$Data = new Database();//not sure if this follows mvc protocol.
+		$Data = new Database();//not sure if this follows mvc protocol.
 		//Removing 
 		//$student = $Data->getStudent($_COOKIE['sessionId']);
 		
@@ -28,7 +28,8 @@ class SearchController extends AjaxController {
 											  'department_id' => $course->get('department_id'),
 											  'number' => $course->get('number'),
 											  'description' => ((strlen($course->get('description'))==0)?'No description':$course->get('description')),
-											  'allTags' => array(array())/*$Data->courseTags($course->get('id'))*/ //Should contain 5 tags.
+											  'allTags' => array(array()),/*$Data->courseTags($course->get('id'))*/ //Should contain 5 tags.
+											  'ratings' => $Data->rating($course->get('id'))
 											));
 			}//will need to add tags. Make a new function taking in an array and returning the classes as an array in this form.
 		}
