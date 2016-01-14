@@ -170,6 +170,7 @@ $(document).ready(function(){
 					$("div#courseResultsArea").html('');
 				}else{
 					$("div#courseResultsArea").html(getAjaxData(d));
+					resetSliderColors();
 				}
 				
 			}else{
@@ -189,6 +190,7 @@ $(document).ready(function(){
 			if(getAjaxStatus(d)){
 				// Everything went well
 				$("div#courseResultsArea").html(getAjaxData(d));
+				resetSliderColors();
 			}else{
 				alert(getAjaxFailureReason(d));
 			}
@@ -242,32 +244,49 @@ $(document).ready(function(){
 
 
 	//RATINGS!!!!11one
+	//Visually showing what happens when you mess with sliders.
+	$('div.panel-bottom div.slider').mousemove(function(e){
+		var offset = $(this).offset();
+		var width = $(this).width();
+		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+		var $slider_id = $(this).children('input#slider_id').val();
+		var $slider_num = (e.pageX - offset.left)/(width);
+		var $slider_rating = $(this).children('div.slider-rating');
+
+
+		$slider_rating.css({"width":(e.pageX - offset.left)+"px"});
+		sliderColorize($slider_rating,$slider_num*100);
+	});
+
+	$('div.panel-bottom div.slider').mouseleave(function(e){
+		var offset = $(this).offset();
+		var width = $(this).width();
+		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+		var $slider_id = $(this).children('input#slider_id').val();
+		var $slider_num = (e.pageX - offset.left)/(width);
+		var $percentage = $(this).children('input.percentage').val();
+		var $slider_rating = $(this).children('div.slider-rating');
+
+
+		$slider_rating.css({"width":$percentage+"%"});
+		sliderColorize($slider_rating,$percentage);
+	});
+
 
 	$(document).on('click', 'div.panel-bottom div.slider', function(e){
 		var offset = $(this).offset();
 		var width = $(this).width();
-
 		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
 		var $slider_id = $(this).children('input#slider_id').val();
 		var $slider_num = (e.pageX - offset.left)/(width);
-		//alert($course_id + " " + $slider_id + " " + $slider_num);
+
 		$elem = $(this);
+		$elem.children('input.percentage').val($slider_num*100);
+		$elem.children('.slider-rating').css({"width":(e.pageX - offset.left)+"px"});
+		sliderColorize($elem);
 		$.post('/a.php?p=AddRating', {course_id: $course_id, slider_id: $slider_id, slider_num: $slider_num} ,function(d) { 
 			//Sets input-wise the percentage to the one you set.
-			$elem.children('input.percentage').val($slider_num*100);
 			
-
-			//Must make into function. Used this in other part.
-			var green = {r:255, g:0, b:0};
-			var red = {r:0, g:255, b:0};
-			var newColor = $elem.children('input.percentage').val();
-			var endColor = makeGradientColor(green, red, newColor).cssColor;
-
-			//Changing the actual slider to rescemble what you voted it to be.
-			$elem.children('.slider-rating').css({"background-color":endColor});
-			$elem.children('.slider-rating').css({"width":(e.pageX - offset.left)+"px"});
-
-
 		});
 	});
 
@@ -297,22 +316,23 @@ $(document).ready(function(){
 	                        makeColorPiece(newColor.b);
 	    return(newColor);
 	}
-
-	$('.slider-rating').each(function(){
-		var green = {r:255, g:0, b:0};
-		var red = {r:0, g:255, b:0};
-		//$('.slider-rating').css({"background-color":newColor.cssColor});
-
-
-		$elem = $(this);
-
-		var newColor = $elem.siblings('input.percentage').val();
-		var endColor = makeGradientColor(green, red, newColor).cssColor;
-
-		$elem.css({"background-color":endColor});
-	});
+	function resetSliderColors(){
+		$('.slider-rating').each(function(){
+			sliderColorize($(this),$(this).siblings('input.percentage').val());
+		});
+	}
 	
 
+	function sliderColorize(elem,val){
+		var green = {r:255, g:0, b:0};
+		var red = {r:0, g:255, b:0};
+
+		var endColor = makeGradientColor(green, red, val).cssColor;
+
+		elem.css({"background-color":endColor});
+	}
+	
+	resetSliderColors();
 
 	
 });

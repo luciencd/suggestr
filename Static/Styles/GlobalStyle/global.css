@@ -126,7 +126,7 @@ div.info-bar-2{
 .panel-bottom {
 	background-color:#CDC0B0;
 	border-radius:0px 0px 5px 5px;
-	height:20px;
+	height:21px;
 }
 
 .panel-body {
@@ -273,6 +273,8 @@ fieldset[disabled] .btn-sample.active {
 .slider {
 	width:33.33%;
 	float:left;
+	/*border: 1px solid black;*/
+	border-radius:5px;
 	/*border-right:1px solid black;
 	border-bottom-right-radius:5px;*/
 
@@ -280,6 +282,7 @@ fieldset[disabled] .btn-sample.active {
 .slider-rating {
 	background-color:black;
 	color:white;
+	/*text-align:center;*/
 }
 
 
