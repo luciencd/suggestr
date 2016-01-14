@@ -9,27 +9,6 @@ $(document).ready(function(){
 			$(this).remove();
 		});
 	});
-	/*
-	// **************** IGNORE COURSE FROM SESSION ****************
-	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
-		$elem = $(this);
-		// Mark course as ignored in the model
-		$.post('/a.php?p=IgnoreCourse', {course_id: $('div.panel-heading input#course_id').val()}, function(d){
-			if(!getAjaxStatus(d)){
-				alert('Sorry, there was an error.');
-			}else{
-				// Hide/remove elements
-
-				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
-					$(this).remove();
-				});
-
-			}
-		});
-		// Clear search box
-		$("div#content div#classSearch input#classSearchField").val("");
-		//doneTyping();
-	});*/
 	
 	// **************** TOOK COURSE TO SESSION ****************
 	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
@@ -42,8 +21,6 @@ $(document).ready(function(){
 				alert('Sorry, there was an error.');
 			}else{
 				// Hide/remove elements
-				
-
 				// Add course to left-hand list of courses
 				//getting variables from right-hand
 				var id = $elem.siblings('input#course_id').val().trim();
@@ -84,8 +61,6 @@ $(document).ready(function(){
 				var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
 				//Can I get an AJAX call to return a particular class window based on certain values?
 				
-				//$("div#sidebar div.list-group ul#list-add")
-				//	.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 				$("div#left-panel div.list-group ul#list-add div.addList")
 					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 				
@@ -98,6 +73,7 @@ $(document).ready(function(){
 			}
 		});
 	});
+
 
 	$('div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success').mouseenter(function() {
 			$elem = $(this);
@@ -139,19 +115,40 @@ $(document).ready(function(){
 			}
 		});
 	});
-	
+	// **************** GETTING QUESTION! *****************
+	var typingTimer;                //timer identifier
+	var doneTypingInterval = 200;  //time in ms, 5 second for example
+	var $input = $('div#questions');
+
+	//on keyup, start the countdown
+	$(input).children('input.form-control').on('keyup', function () {
+		alert('keyup');
+		clearTimeout(typingTimer);
+		typingTimer = setTimeout(doneTypingQuestion, doneTypingInterval);
+	});
+
+	//on keydown, clear the countdown 
+	$(input).children('input.form-control').on('keydown', function () {
+	  clearTimeout(typingTimer);
+	});
+
+	function doneTypingQuestion(){
+		//Change character
+		$.post('/a.php?p=AddSessionAspect', {table: "session",column: $input.children("input.form-control").id(),value: $input.children("input.form-control").val()}, function(d){
+			alert(getAjaxStatus(d))
+
+		});
+	}
 	// **************** SEARCH ****************
 	//setup before functions
-	var typingTimer;                //timer identifier
-	var doneTypingInterval = 100;  //time in ms, 5 second for example
-	var $input = $('input#classSearchField');
+	typingTimer;                //timer identifier
+	doneTypingInterval = 100;  //time in ms, 5 second for example
+	$input = $('input#classSearchField');
 
 	//on keyup, start the countdown
 	$input.on('keyup', function () {
 		clearTimeout(typingTimer);
 		typingTimer = setTimeout(doneTyping, doneTypingInterval);
-
-		
 	});
 
 	//on keydown, clear the countdown 
