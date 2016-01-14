@@ -51,11 +51,11 @@ $(document).ready(function(){
 				var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
 				
 				//Adding class css/html to left-hand
-				$("div#sidebar div.list-group ul#list-took div.tookList")
+				$("div#left-panel div.list-group ul#list-took div.tookList")
 					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 				
 				
-				$("div#sidebar div.list-group ul#list-took div.tookList li.list-group-item:last").slideDown(400);
+				$("div#left-panel div.list-group ul#list-took div.tookList li.list-group-item:last").slideDown(400);
 				
 				//Removing class from right panel,(suggestion and search area)
 				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
@@ -86,11 +86,11 @@ $(document).ready(function(){
 				
 				//$("div#sidebar div.list-group ul#list-add")
 				//	.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
-				$("div#sidebar div.list-group ul#list-add div.addList")
+				$("div#left-panel div.list-group ul#list-add div.addList")
 					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 				
 				//Removing from right-side suggestions or search.
-				$("div#sidebar div.list-group ul#list-add div.addList li.list-group-item:last").slideDown(400);
+				$("div#left-panel div.list-group ul#list-add div.addList li.list-group-item:last").slideDown(400);
 
 				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
 					$(this).remove();
@@ -357,7 +357,7 @@ $(document).ready(function(){
 });
 </script>
 
-<div class="col-md-5" id="sidebar">
+<div class="col-md-5" id="left-panel">
 	<div class = "list-group" id="questions">
 		<div class="form-group"> 
 		  <input type="text" class="form-control" id="major" placeholder="Input Major">
@@ -464,7 +464,7 @@ $(document).ready(function(){
 
 
 
-<div class="col-md-7">
+<div class="col-md-7" id = "right-panel">
 	<div class="container">
 		<div id="content">
 

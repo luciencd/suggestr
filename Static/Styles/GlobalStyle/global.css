@@ -21,8 +21,29 @@
 .row {
 	margin: 0px;
 }
+/*SCROLLING PANEL*/
 
+#left-panel, #right-panel {
+    overflow-y: scroll
+}
+div#left-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100%
+}
 
+div#right-panel {
+	position: absolute;
+    left: 50%;
+    top: 0;
+    float: right;
+    width: 50%;
+    height: 100%
+}
+
+/*SCROLLING PANEL^*/
 
 div.class-list-title1 {
 	display:inline-block;
@@ -68,17 +89,16 @@ div.info-bar-2{
 #questions.list-group {
 	margin-top: 125px;
 	border-radius: 0px;
-	position: fixed;
+	/*position: fixed;*/
 	
-	width: 41.66666667%;
+	
 }
 
 #classes.list-group {
-	margin-top: 205px;
-	border-radius: 0px;
-	position: fixed;
 	
-	width: 41.66666667%;
+	border-radius: 0px;
+	/*position: fixed;*/
+	
 }
 .sidebar {
 	border-radius: 0px;
@@ -290,6 +310,6 @@ fieldset[disabled] .btn-sample.active {
 	height:20px;
 }
 .stats .slider-rating {
-	
+
 }
 
