@@ -122,7 +122,7 @@ $(document).ready(function(){
 
 	// **************** REMOVE COURSE FROM SESSION ****************
 	
-	$(document).on('click', 'div#sidebar div.list-group ul li.list-group-item span.XButton', function(){
+	$(document).on('click', 'div#left-panel div.list-group ul li.list-group-item span.XButton', function(){
 		$elem = $(this);
 		// Mark course as ignored in the model
 		$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
