@@ -410,11 +410,11 @@ class Database {
             //0 because its easiness slider.
             //because 1 is easiest, and 0 hardest, we must flip this number by substracting by one.
             //Then, we must add .1 to all classes.
-            $sumDifficulty += (.1+1-$this->ratingPercentage($course_id,1))*$this->courseCredits($course_id);//each class should have a base difficulty of 10%
+            $sumDifficulty += .1+(1-$this->ratingPercentage($course_id,1));//each class should have a base difficulty of 10%
             $sumCredits += $this->courseCredits($course_id);
         }
 
-        $sumDifficulty /= $sumCredits;// max credits is 21. Need to adjust for classes with more/less credits.
+        $sumDifficulty /= 4;// max credits is 21. Need to adjust for classes with more/less credits.
         //$sumDifficulty += $sumCredits;
         if($sumDifficulty >= 1 ){
             return .99;
