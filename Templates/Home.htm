@@ -358,12 +358,12 @@ $(document).ready(function(){
 		if(val > 50){
 			var red = {r:255, g:0, b:0};
 			var yellow = {r:255, g:255,b:0};
-			var endColor = makeGradientColor(red, yellow, (val-50)*2).cssColor;
+			var endColor = makeGradientColor(yellow, red, (val-50)*2).cssColor;
 			elem.css({"background-color":endColor});
 		}else if(val <= 50){
 			var yellow = {r:255, g:255,b:0};
 			var green = {r:0, g:255, b:0};
-			var endColor = makeGradientColor(yellow, green, val*2).cssColor;
+			var endColor = makeGradientColor(green, yellow, val*2).cssColor;
 			elem.css({"background-color":endColor});
 		}
 	}
