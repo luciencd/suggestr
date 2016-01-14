@@ -255,7 +255,7 @@ $(document).ready(function(){
 
 
 		$slider_rating.css({"width":(e.pageX - offset.left)+"px"});
-		sliderColorize($slider_rating,$slider_num*100);
+		sliderColorizeUp($slider_rating,$slider_num*100);
 	});
 
 	$('div.panel-bottom div.slider').mouseleave(function(e){
@@ -269,7 +269,7 @@ $(document).ready(function(){
 
 
 		$slider_rating.css({"width":$percentage+"%"});
-		sliderColorize($slider_rating,$percentage);
+		sliderColorizeUp($slider_rating,$percentage);
 	});
 
 
@@ -283,7 +283,7 @@ $(document).ready(function(){
 		$elem = $(this);
 		$elem.children('input.percentage').val($slider_num*100);
 		$elem.children('.slider-rating').css({"width":(e.pageX - offset.left)+"px"});
-		sliderColorize($elem);
+		sliderColorizeUp($elem);
 		$.post('/a.php?p=AddRating', {course_id: $course_id, slider_id: $slider_id, slider_num: $slider_num} ,function(d) { 
 			//Sets input-wise the percentage to the one you set.
 			
@@ -306,7 +306,7 @@ $(document).ready(function(){
 	        }
 	        return(str);
 	    }
-
+	    //alert("alert: "+color1.r);
 	    newColor.r = makeChannel(color1.r, color2.r);
 	    newColor.g = makeChannel(color1.g, color2.g);
 	    newColor.b = makeChannel(color1.b, color2.b);
@@ -317,17 +317,36 @@ $(document).ready(function(){
 	    return(newColor);
 	}
 	function resetSliderColors(){
-		$('.slider-rating').each(function(){
-			sliderColorize($(this),$(this).siblings('input.percentage').val());
+		
+		//Passing by reference issues.d
+
+		$('div.panel-bottom div.slider div.slider-rating').each(function(){
+
+			sliderColorizeUp($(this),$(this).siblings('input.percentage').val());
 		});
+		$('ul.stats li.list-group-item div.slider div.slider-rating').each(function(){
+
+
+
+			sliderColorizeDown($(this),$(this).siblings('input.percentage').val());
+		});
+		return false;
 	}
 	
+	//repaints specific element in a gradient from color1 to color2 based on val (0 to 1)
+	function sliderColorizeUp(elem,val){
 
-	function sliderColorize(elem,val){
-		var green = {r:255, g:0, b:0};
-		var red = {r:0, g:255, b:0};
+		var color1 = {r:255, g:0, b:0};
+		var color2 = {r:0, g:255, b:0};
+		var endColor = makeGradientColor(color1, color2, val).cssColor;
 
-		var endColor = makeGradientColor(green, red, val).cssColor;
+		elem.css({"background-color":endColor});
+	}
+	function sliderColorizeDown(elem,val){
+
+		var color1 = {r:0, g:255, b:0};
+		var color2 = {r:255, g:0, b:0};
+		var endColor = makeGradientColor(color1, color2, val).cssColor;
 
 		elem.css({"background-color":endColor});
 	}
@@ -415,8 +434,24 @@ $(document).ready(function(){
 		<div class = "btn-container-suggestr">
 			<button type="button" class="btn btn-primary">Suggest</button>
 		</div>
-		
-
+		<br>
+		<ul class = "stats">
+			<li class = "list-group-item">
+				<span>Statistics on courses added.</span>
+			</li>
+			<li class = "list-group-item" style="background-color:#ffffe5;">
+				<div class = "slider" style= "width:80%;float:right;"><!-- really need to change the style here
+					Really not getting this inheritance stuff here.-->
+					
+					<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;color:white; height:20px">
+					</div>
+					<!-- in this case, id will be flipped to make do --> 
+					<input type="hidden" class="percentage" value="{{percentage}}">
+				</div>
+				<span>Difficulty:</span>
+			</li>
+			
+		</ul>
 		
 		<!--<div class = "btn-container-reset">
 			<button type="button" class="btn btn-info">RESET</button>

@@ -285,4 +285,11 @@ fieldset[disabled] .btn-sample.active {
 	/*text-align:center;*/
 }
 
+/*Stats + slider*/
+.stats {
+	height:20px;
+}
+.stats .slider-rating {
+	
+}
 

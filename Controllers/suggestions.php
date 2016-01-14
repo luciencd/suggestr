@@ -171,7 +171,11 @@ class Database {
         return $result->get('name');
         
     }
-
+    //Returns number of credits in a course.
+    function courseCredits($course_id){
+        //Will edit later.
+        return 4;
+    }
     //returns the amount of students currently in the database.
     function numStudents(){
         return count($this->StudentList);
@@ -264,6 +268,8 @@ class Database {
 
 
     }
+
+
     /* Gives you frequency of a particular class. 
     The amount of times students have taken a course.
     @param: $id : int, the session id of a given student
@@ -353,17 +359,8 @@ class Database {
         if(isset($this->RatingsList[$course_id][$slider_id][0])){
             return $this->RatingsList[$course_id][$slider_id][0];
         }else{
-            return 0;
+            return 0.5;
         }
-        /*
-        $query = new Query('slideraction');
-        $result = $query->select('*',array(array('course_id','=',$course_id),array('slider_id','=',$slider_id)),'','',false);
-        $sum = 0.0;
-        foreach($result as $row){
-            $sum += $row['vote'];
-        }*/
-
-        //return $sum/Count($result);
     }
     
     function rating($course_id){
@@ -394,6 +391,33 @@ class Database {
 
         }
         return $ratingResultsArray;
+    }
+
+    //Takes in an associative array of courses
+    //$coursesSemester : an array of course_id's
+    //takes the average of the 
+    //Returns : a rating between 0 and 1 in floating point rep.
+    //always divides by 5,
+    //May be interesting to compare difficulty to previous semesters and adjust based on whether you can take it...
+    function semesterDifficulty($coursesSemester){
+        //This system is currently not the best. must improve it somewhat.
+        $sumDifficulty = 0.0;
+        $sumCredits = 0.0;
+        foreach($coursesSemester as $course_id){
+            //0 because its easiness slider.
+            //because 1 is easiest, and 0 hardest, we must flip this number by substracting by one.
+            //Then, we must add .1 to all classes.
+            $sumDifficulty += (.1+1-$this->ratingPercentage($course_id,1))*$this->courseCredits($course_id);//each class should have a base difficulty of 10%
+            $sumCredits += $this->courseCredits($course_id);
+        }
+        $sumDifficulty /= $sumCredits;// max credits is 21. Need to adjust for classes with more/less credits.
+        //$sumDifficulty += $sumCredits;
+        if($sumDifficulty >= 1 ){
+            return .99;
+        }else if($sumDifficulty <= 0 ){
+            return .02;
+        }
+        return $sumDifficulty;
     }
 }
 ?>

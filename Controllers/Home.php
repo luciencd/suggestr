@@ -155,6 +155,9 @@ class HomeController extends PageController {
 
 		$this->pageData['futureUsersCourses'] = $usersCourses;
 		//Pushes all the new courses to the ADDING LIST view.
+
+
+		$this->pageData['percentage'] = 100*$Data->semesterDifficulty($idsAlreadyAdded);
 		
 	}
 }
