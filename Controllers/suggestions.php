@@ -400,6 +400,9 @@ class Database {
     //always divides by 5,
     //May be interesting to compare difficulty to previous semesters and adjust based on whether you can take it...
     function semesterDifficulty($coursesSemester){
+        if(Count($coursesSemester) == 0){
+            return 0.01;
+        }
         //This system is currently not the best. must improve it somewhat.
         $sumDifficulty = 0.0;
         $sumCredits = 0.0;
@@ -410,12 +413,13 @@ class Database {
             $sumDifficulty += (.1+1-$this->ratingPercentage($course_id,1))*$this->courseCredits($course_id);//each class should have a base difficulty of 10%
             $sumCredits += $this->courseCredits($course_id);
         }
+
         $sumDifficulty /= $sumCredits;// max credits is 21. Need to adjust for classes with more/less credits.
         //$sumDifficulty += $sumCredits;
         if($sumDifficulty >= 1 ){
             return .99;
         }else if($sumDifficulty <= 0 ){
-            return .02;
+            return .01;
         }
         return $sumDifficulty;
     }
