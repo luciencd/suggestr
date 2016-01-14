@@ -320,6 +320,7 @@ $(document).ready(function(){
 		
 		//Passing by reference issues.d
 
+
 		$('div.panel-bottom div.slider div.slider-rating').each(function(){
 
 			sliderColorizeUp($(this),$(this).siblings('input.percentage').val());
@@ -333,22 +334,38 @@ $(document).ready(function(){
 		return false;
 	}
 	
-	//repaints specific element in a gradient from color1 to color2 based on val (0 to 1)
+	//repaints specific element in a gradient from color1 to color2 based on val (0 to 100)
 	function sliderColorizeUp(elem,val){
+		
+		if(val < 50){
+			var red = {r:255, g:0, b:0};
+			var yellow = {r:255, g:255,b:0};
+			var endColor = makeGradientColor(red, yellow, val*2).cssColor;
+			elem.css({"background-color":endColor});
+		}else if(val >= 50){
+			var yellow = {r:255, g:255,b:0};
+			var green = {r:0, g:255, b:0};
+			var endColor = makeGradientColor(yellow, green, (val-50)*2).cssColor;
+			elem.css({"background-color":endColor});
+		}
+		
 
-		var color1 = {r:255, g:0, b:0};
-		var color2 = {r:0, g:255, b:0};
-		var endColor = makeGradientColor(color1, color2, val).cssColor;
-
-		elem.css({"background-color":endColor});
+		
+		
 	}
 	function sliderColorizeDown(elem,val){
 
-		var color1 = {r:0, g:255, b:0};
-		var color2 = {r:255, g:0, b:0};
-		var endColor = makeGradientColor(color1, color2, val).cssColor;
-
-		elem.css({"background-color":endColor});
+		if(val > 50){
+			var red = {r:255, g:0, b:0};
+			var yellow = {r:255, g:255,b:0};
+			var endColor = makeGradientColor(red, yellow, (val-50)*2).cssColor;
+			elem.css({"background-color":endColor});
+		}else if(val <= 50){
+			var yellow = {r:255, g:255,b:0};
+			var green = {r:0, g:255, b:0};
+			var endColor = makeGradientColor(yellow, green, val*2).cssColor;
+			elem.css({"background-color":endColor});
+		}
 	}
 	
 	resetSliderColors();
@@ -443,7 +460,7 @@ $(document).ready(function(){
 				<div class = "slider" style= "width:80%;float:right;"><!-- really need to change the style here
 					Really not getting this inheritance stuff here.-->
 					
-					<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;color:white; height:20px">
+					<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;color:black; height:20px">
 					</div>
 					<!-- in this case, id will be flipped to make do --> 
 					<input type="hidden" class="percentage" value="{{percentage}}">
