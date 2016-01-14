@@ -275,6 +275,8 @@ class Database {
         //Should I be using ORMs to do this?
         //Replace with query.
         //Doesn't actually end up adding time.
+       
+        
         $statement = "SELECT Count FROM courseFrequency WHERE course_id =".$course_id;
         $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
 
@@ -346,8 +348,8 @@ class Database {
     }
 
     function ratingPercentage($course_id, $slider_id){
-        //echo "<h2>ratingPercentage:</h2> ";
-        //echo "<h2>".$course_id+" "+$slider_id+"</h2>";
+
+        //Preprocessing the array takes half the time.
         if(isset($this->RatingsList[$course_id][$slider_id][0])){
             return $this->RatingsList[$course_id][$slider_id][0];
         }else{
@@ -359,10 +361,9 @@ class Database {
         $sum = 0.0;
         foreach($result as $row){
             $sum += $row['vote'];
-        }
+        }*/
 
-        return $sum/Count($result);
-        //return rand(0,10)/10;*/
+        //return $sum/Count($result);
     }
     
     function rating($course_id){
