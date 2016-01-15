@@ -312,6 +312,7 @@ class Query{
 		$a = array();
 		while($row=mysqli_fetch_assoc($result)){
 			$a[$row['Field']] = '';
+			//echo "<h3> a: ".$row['Field']."</h3>";
 		}
 		return $a;
 	}

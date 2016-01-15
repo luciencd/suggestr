@@ -116,54 +116,54 @@ $(document).ready(function(){
 		});
 	});
 	// **************** GETTING QUESTION! *****************
-	var typingTimer;                //timer identifier
-	var doneTypingInterval = 200;  //time in ms, 5 second for example
-	var $input = $('div#questions');
+	var typingTimer1;                //timer identifier
+	var doneTypingInterval1 = 200;  //time in ms, 5 second for example
+	var $input1 = $('div#questions div.form-group input.form-control');
 
 	//on keyup, start the countdown
-	$(input).children('input.form-control').on('keyup', function () {
-		alert('keyup');
-		clearTimeout(typingTimer);
-		typingTimer = setTimeout(doneTypingQuestion, doneTypingInterval);
+	$input1.on('keyup', function () {
+		//alert('keyup');
+		clearTimeout(typingTimer1);
+		typingTimer1 = setTimeout(doneTypingQuestion, doneTypingInterval1);
 	});
 
 	//on keydown, clear the countdown 
-	$(input).children('input.form-control').on('keydown', function () {
-	  clearTimeout(typingTimer);
+	$input1.on('keydown', function () {
+	  clearTimeout(typingTimer1);
 	});
 
 	function doneTypingQuestion(){
 		//Change character
-		$.post('/a.php?p=AddSessionAspect', {table: "session",column: $input.children("input.form-control").id(),value: $input.children("input.form-control").val()}, function(d){
-			alert(getAjaxStatus(d))
-
+		//alert('asspect');
+		$.post('/a.php?p=AddSessionAspect', {table: "session",column: $input1.attr('id'),value: $input1.val()}, function(d){
+			//alert(getAjaxStatus(d));
 		});
 	}
 	// **************** SEARCH ****************
 	//setup before functions
-	typingTimer;                //timer identifier
-	doneTypingInterval = 100;  //time in ms, 5 second for example
-	$input = $('input#classSearchField');
+	var typingTimer2;                //timer identifier
+	var doneTypingInterval2 = 100;  //time in ms, 5 second for example
+	var $input2 = $('input#classSearchField');
 
 	//on keyup, start the countdown
-	$input.on('keyup', function () {
+	$input2.on('keyup', function () {
 		clearTimeout(typingTimer);
-		typingTimer = setTimeout(doneTyping, doneTypingInterval);
+		typingTimer2 = setTimeout(doneTyping, doneTypingInterval2);
 	});
 
 	//on keydown, clear the countdown 
-	$input.on('keydown', function () {
-	  clearTimeout(typingTimer);
+	$input2.on('keydown', function () {
+	  clearTimeout(typingTimer2);
 	});
 
 	//user is "finished typing," do something
 	function doneTyping (){
 		$("div#courseResultsArea").html("");
 		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
-		$.post('/a.php?p=Search', {q: $input.val()}, function(d){
+		$.post('/a.php?p=Search', {q: $input2.val()}, function(d){
 			if(getAjaxStatus(d)){
 				// Everything went well
-				if($input.val() === ''){
+				if($input2.val() === ''){
 					$("div#courseResultsArea").html('');
 				}else{
 					$("div#courseResultsArea").html(getAjaxData(d));
@@ -374,7 +374,7 @@ $(document).ready(function(){
 <div class="col-md-5" id="left-panel">
 	<div class = "list-group" id="questions">
 		<div class="form-group"> 
-		  <input type="text" class="form-control" id="major" placeholder="Input Major">
+		  <input type="text" class="form-control" id="department_id" placeholder="Input Major">
 		</div>
 	</div>
 	
