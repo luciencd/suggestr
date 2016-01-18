@@ -1,24 +1,30 @@
 <script type="text/javascript">
-$(document).ready(function(){
-	// **************** POSTPONE COURSE FROM SESSION ****************
-	$(document).on('click', 'div.control-panel', function(){
-		// Hide/remove elements
-		alert('major relations');
-		$.post('/a.php?p=MajorConnections', function(d){
 
+$(document).ready(function(){
+	alert('start');
+	
+	$(document).on('click', 'div.control-panel button#majorrelations', function(){
+		// Hide/remove elements
+		alert('major relations1');
+		$.post('/a.php?p=MajorRelations', function(d){
+			alert('major relations2');
 		});
 	});
-}
-</script>
-<div class = "control-panel">
-	<form action="model-factors">
-		<input type="checkbox" name="major" value="major">Major<br>
-		<input type="checkbox" name="vehicle" value="Bike">Course Frequency<br>
-	</form>
-	<button class="btn btn-default" type="submit">Analyze</button>
-	<button class="btn btn-default" type="submit">Major Relations</button>
-</div>
+});
 
+</script>
+<link rel="stylesheet" href="/Static/Styles/GlobalStyle/ml.css"> 
+
+<div class="col-md-5" id="left-panel">
+	<div class = "control-panel">
+		<form action="model-factors">
+			<input type="checkbox" name="major" value="major">Major<br>
+			<input type="checkbox" name="vehicle" value="Bike">Course Frequency<br>
+		</form>
+		<button class="btn btn-default" id = "analyze" type="submit">Analyze</button>
+		<button class="btn btn-default" id = "majorrelations" type="submit">Major Relations</button>
+	</div>
+</div>
 
 {{#analysis}}
 <div class = "fitness-view">

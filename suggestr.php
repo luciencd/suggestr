@@ -23,6 +23,7 @@ if(!isset($_GET['AJAX']))
 // The values in the router array are controller names
 $router = array();
 $router["/home"] = "Home";
+$router["/ml"] = "ML";
 
 // API Router
 // The keys in the router array are page URLs
@@ -55,6 +56,11 @@ if(!isset($_GET['SUGGESTR_PAGE']) || $_GET['SUGGESTR_PAGE'] != "login/") {
 }
 */
 // Redirect to the user's page if no page is specified (we already know that the user is logged in).
+//echo $_GET['SUGGESTR_PAGE'];
+
+//***********HOW TO get to work this without default***/
+//$_GET['SUGGESTR_PAGE'] = '/ml';
+
 if($_GET['SUGGESTR_PAGE']=='')
 	$_GET['SUGGESTR_PAGE'] = 'home/';
 
@@ -74,6 +80,7 @@ $controller;
 ob_start();
 if(!$isAjax){
 	if(!array_key_exists($_GET['SUGGESTR_PAGE'],$router)) {
+		
 		header($_GET["SUGGESTR_PAGE"]." 404 Not Found");
 		$_SYSTEM["SUGGESTR_PAGE"] = "404 - Page Not Found";
 		$controller = GetController("error");
@@ -88,6 +95,9 @@ if(!$isAjax){
 	// Running user_isadmin sets them.
 	// Note we don't care if the user is or is not an admin
 	//user_isadmin();
+
+	//Basically $_GET['SUGGESTR_PAGE'] tells the controller to display the home.htm
+	//and to render it with home.php
 	
 	$method = str_replace("ajax/","",$_GET['SUGGESTR_PAGE']);
 	if(!array_key_exists($method,$Ajaxrouter)) {

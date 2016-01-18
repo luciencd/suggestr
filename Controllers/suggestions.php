@@ -443,11 +443,32 @@ class Database {
 
 
 
-    function updateMajorRelations($){
+    function updateMajorRelations(){
         $query = new Query('departments');
         $result = $query->select('*',true,'','',false);
 
-        foreach($result as $)
+        foreach($result as $source){
+            foreach($result as $target){
+                $searchArray = array(array('source_id',$source->get('id')),array('target_id',$target->get('id')));
+
+                $action = new MajorRelations();
+
+                try{
+                    $action.findByXs($searchArray);
+                }catch(Exception $e){
+                    $action->set('source_id', $source);
+                    $action->set('target_id', $target);
+                }
+
+                if($source === $target){
+                    $action->set('value', 1.0);
+                }else{
+                    $action->set('value', 0.0);
+                }
+                
+                $action->save();
+            }
+        }
     }
 }
 ?>

@@ -1,0 +1,12 @@
+div.control-panel {
+
+	background-color:gray;
+	margin-top:125px;
+}
+div#left-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 41.666%;
+    height: 100%
+}
