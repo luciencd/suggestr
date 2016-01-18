@@ -19,7 +19,8 @@ class ORM{ /* Object-relational mapping class */
 'tags',
 'year',
 'sliders',
-'slideraction')))
+'slideraction',
+'majorrelations')))
 			throw new Exception('Table name invalid!');
 		$this->table = $table;
 		$this->query = new Query($this->table);
@@ -265,6 +266,11 @@ class Sliders extends ORM{
 class SliderAction extends ORM{
 	public function __construct(){
 		parent::__construct('slideraction');
+	}
+}
+class MajorRelations extends ORM{
+	public function __construct(){
+		parent::__construct('majorrelations');
 	}
 }
 ?>

@@ -423,5 +423,31 @@ class Database {
         }
         return $sumDifficulty;
     }
+
+
+    //Given a list of base courses courses we didn't know about, and courses that we predicted,
+    //And gives a rating on how the courses suggested contain coursesExpected.
+    //Returns a float number
+    //
+    function fitness($coursesExpected, $coursesSuggested){
+        
+        $totalFitness = 0.0;
+
+        //adds 1/the rank of the course in the list.
+        foreach($coursesExpected as $course){
+            $totalFitness += 1/(array_search($course,$coursesSuggested));
+        }
+
+        return $totalFitness;
+    }
+
+
+
+    function updateMajorRelations($){
+        $query = new Query('departments');
+        $result = $query->select('*',true,'','',false);
+
+        foreach($result as $)
+    }
 }
 ?>

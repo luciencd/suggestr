@@ -1,0 +1,31 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	// **************** POSTPONE COURSE FROM SESSION ****************
+	$(document).on('click', 'div.control-panel', function(){
+		// Hide/remove elements
+		alert('major relations');
+		$.post('/a.php?p=MajorConnections', function(d){
+
+		});
+	});
+}
+</script>
+<div class = "control-panel">
+	<form action="model-factors">
+		<input type="checkbox" name="major" value="major">Major<br>
+		<input type="checkbox" name="vehicle" value="Bike">Course Frequency<br>
+	</form>
+	<button class="btn btn-default" type="submit">Analyze</button>
+	<button class="btn btn-default" type="submit">Major Relations</button>
+</div>
+
+
+{{#analysis}}
+<div class = "fitness-view">
+	<span>
+		fitness results
+	</span>
+	<span>fitness levels for {{num}} sessions is {{fitness}}
+	</span>
+</div>
+{{/analysis}}
