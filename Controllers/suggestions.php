@@ -59,12 +59,14 @@ class Database {
     public $StudentList = array();
     public $ClassList = array();
     public $RatingsList = array();
+    public $MajorList = array();
 
     function __construct(){
         
 
         $this->loadAllStudents();
         $this->loadAllRatings();
+        $this->loadAllMajors();
     }
     /*
     function loadAllClasses(){
@@ -93,7 +95,7 @@ class Database {
 
             $id = $row['session_id'];
             $course = $row['course_id'];
-            $major = $row['major'];
+            $major = $row['major_id'];
             $year = $row['year'];
             $choice = $row['choice'];
             
@@ -144,7 +146,18 @@ class Database {
             }
         }
     }
+
+    function loadAllMajors(){
+        $query = new Query('departments');
+        $result = $query->select('*','','','',false);
+        foreach($result as $row){
+            $major_id = $row['id'];
+            $major_name = $row['name'];
+            $this->MajorList[$major_name] = $major_id;
+        }
+    }
     //GET FUNCTIONS.
+
     
     //Checks whether a student exists or not.
     function studentExists($student_id){
@@ -171,6 +184,7 @@ class Database {
         return $result->get('name');
         
     }
+
     //Returns number of credits in a course.
     function courseCredits($course_id){
         //Will edit later.
@@ -444,31 +458,64 @@ class Database {
 
 
     function updateMajorRelations(){
-        $query = new Query('departments');
-        $result = $query->select('*',true,'','',false);
+        //$query = new Query('departments');
+        //$result = $query->select('*',true,'','',false);
 
-        foreach($result as $source){
-            foreach($result as $target){
-                $searchArray = array(array('source_id',$source->get('id')),array('target_id',$target->get('id')));
+        //$result2 = $query->select('*',true,'','',false);
+
+        /*foreach($result as $source){
+            foreach($result2 as $target){
+                $searchArray = array(array('source_id',$source['id']),array('target_id',$target['id']));
 
                 $action = new MajorRelations();
 
-                try{
-                    $action.findByXs($searchArray);
-                }catch(Exception $e){
-                    $action->set('source_id', $source);
-                    $action->set('target_id', $target);
-                }
+                //if(!$action.findByXs($searchArray)){
+                $action->set('source_id', $source['id']);
+                $action->set('target_id', $target['id']);
+                //} 
+                
+                $action->save();
+            }
+        }*/
+        foreach($this->StudentList as $student){
+            $source_id = $student->getMajor();
+            //written out.
+            //echo $major;
+            //$department = new Department();
+            //$department = findByXs(array(array('name',$major)));
+            //This isn't working here.
+            //names are meant to be unique.
+            //$major_id = $department->get('id');
 
-                if($source === $target){
-                    $action->set('value', 1.0);
-                }else{
-                    $action->set('value', 0.0);
-                }
+            //$major_id = $this->MajorList[$major];
+            
+            
+
+
+            $classes = $student->getTaken();
+
+            foreach($classes as $course){
+
+                $result = new Course();
+                $result->findById($course);
+                $target_id = $result->get('department_id');
+
+                
+                
+                $searchArray = array(array('source_id',$source_id),array('target_id',$target_id));
+                
+                $action = new MajorRelations();
+                
+                //$action->findByXs($searchArray);
+                
+                //$count = $action->get('count');
+                $action->set('count', 11);
+                
                 
                 $action->save();
             }
         }
+
     }
 }
 ?>

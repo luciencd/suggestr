@@ -10,6 +10,10 @@ class TookCourseController extends AjaxController {
 			$this->failureReason = 'Sorry, there was an error.';
 			return false;
 		}
+		$session = new Session();
+		$session->findById($_COOKIE['sessionId']);
+		$major_id = $session->get('department_id');
+
 		$query = new Query('action');
 		// Select all the courses that are in this user's session and have this course id
 		$result = $query->select('*', array(array('course_id', '=', $post['course_id']), 
@@ -23,6 +27,7 @@ class TookCourseController extends AjaxController {
 		$action = new Action();
 		$action->set('course_id', $post['course_id']);
 		$action->set('session_id', $_COOKIE['sessionId']);
+		$action->set('major_id',$major_id);
 		$action->set('choice', 1);
 		$action->save();
 		return true;

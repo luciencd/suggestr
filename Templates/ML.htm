@@ -2,12 +2,14 @@
 
 $(document).ready(function(){
 	alert('start');
+	$course_id = "ass";
 	
 	$(document).on('click', 'div.control-panel button#majorrelations', function(){
 		// Hide/remove elements
 		alert('major relations1');
-		$.post('/a.php?p=MajorRelations', function(d){
-			alert('major relations2');
+		$.post('/a.php?p=MajorRelations',{course_id: $course_id}, function(d){
+			
+			alert(getAjaxStatus(d));
 		});
 	});
 });

@@ -26,6 +26,7 @@ class AddSessionAspectController extends AjaxController {
 		
 		// Now add this course to the user's model
 		$session = new Session();
+		
 		$session->findById($_COOKIE['sessionId']);
 		$session->set($post['column'], ucwords($department_id));
 		$session->set("department_name", $department_id); // Just so that the ORM class thinks something's dirty and allows entry of an empty row
