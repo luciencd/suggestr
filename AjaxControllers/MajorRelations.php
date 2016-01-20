@@ -5,11 +5,13 @@ class MajorRelationsController extends AjaxController {
 	public $template = "MajorRelations";//Identical to search one.
 
 	public function process($get,$post) {
-		$Data = new Database();//Find a way to make this local to suggestr.php or something.
+
+		//header('Content-Type: application/json');
+		echo json_encode(array('foo' => 'bar'));
+
+
+
 		
-		$Data->updateMajorRelations();
-		//return false;
-		return true;
 	}
 }
 

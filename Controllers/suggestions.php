@@ -24,6 +24,9 @@ class Student {
     function getTaken(){
         return $this->taken;
     }
+    function getAdded(){
+        return $this->added;
+    }
     
     
     function setMajor($_major){
@@ -295,7 +298,7 @@ class Database {
         //Should I be using ORMs to do this?
         //Replace with query.
         //Doesn't actually end up adding time.
-       
+        
         
         $statement = "SELECT Count FROM courseFrequency WHERE course_id =".$course_id;
         $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
@@ -458,6 +461,7 @@ class Database {
 
 
     function updateMajorRelations(){
+        //echo "<h4>updating</h4>";
         //$query = new Query('departments');
         //$result = $query->select('*',true,'','',false);
 
@@ -477,6 +481,10 @@ class Database {
                 $action->save();
             }
         }*/
+        /*
+
+         
+        
         foreach($this->StudentList as $student){
             $source_id = $student->getMajor();
             //written out.
@@ -489,32 +497,33 @@ class Database {
 
             //$major_id = $this->MajorList[$major];
             
-            
-
-
             $classes = $student->getTaken();
 
             foreach($classes as $course){
 
+
                 $result = new Course();
                 $result->findById($course);
                 $target_id = $result->get('department_id');
+                //echo "source:".$source_id." ".$target_id;
+                //if(is_numeric($target_id) && is_numeric($source_id) && $target_id!=0 &&$source_id!=0){
+
+                $query = new Query('majorrelations');
+                $result = $query->select('*',array(array('source_id','=',$source_id),array('target_id','=',$target_id)),'',1,false);
+
+
+                while($first = mysqli_fetch_array($result)){
+                    $count = $first['count'];
+                }
 
                 
+                        
+                $query->update(array(array('count',$count)),array(array('source_id','=',$source_id),array('target_id','=',$target_id)));
+                       
                 
-                $searchArray = array(array('source_id',$source_id),array('target_id',$target_id));
-                
-                $action = new MajorRelations();
-                
-                //$action->findByXs($searchArray);
-                
-                //$count = $action->get('count');
-                $action->set('count', 11);
-                
-                
-                $action->save();
             }
         }
+        return false;*/
 
     }
 }

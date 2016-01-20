@@ -1,15 +1,34 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-	alert('start');
-	$course_id = "ass";
+	//alert('start');
+	//$course_id = "ass";
 	
 	$(document).on('click', 'div.control-panel button#majorrelations', function(){
 		// Hide/remove elements
-		alert('major relations1');
-		$.post('/a.php?p=MajorRelations',{course_id: $course_id}, function(d){
-			
-			alert(getAjaxStatus(d));
+		//alert('major relations1');
+		
+		$.ajax({
+			url:'/a.php?p=MajorRelations',
+			type: 'POST',
+			dataType: 'json',
+			//data: {test: '1'},
+			success: function(data)
+			{	
+				//alert(data);
+				var work = $.parseJSON(data);
+				//alert(work.foo);
+				//alert(data['foo']);
+				/*for(var key in data){
+					alert(key);
+					alert(data[key]);
+				}*/
+				
+			},
+			error: function (data){
+				alert("ERROR: ");
+			}
+
 		});
 	});
 });

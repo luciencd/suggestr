@@ -490,21 +490,23 @@ $(document).ready(function(){
 							<span>{{description}}</span> (<span>{{numResults}} Results</span>)
 					</div>
 				</div>
+				<br>
 				{{#allCourses}}
 					<div class="single-course">
 						<div class="panel-heading">
 							<!-- perhaps move course_id one position up -->
 							<input type="hidden" id="course_id" value="{{id}}" />
 							<div class="row">
-								<div class="col-md-7">
+								<div class="col-md-9">
 									<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
 								</div>
-								<div class="col-md-5">
+								<div class="col-md-3">
 									<div class="btn-group" role="group">
-										<input type="hidden" id="course_id" value="{{id}}" />
+										
 										<button type="button" class="btn btn-success">Took</button>
+										<input type="hidden" id="course_id" value="{{id}}" />
 										<button type="button" class="btn btn-primary">Add</button>
-										<button type="button" class="btn btn-danger">Ignore</button>
+										<!--<button type="button" class="btn btn-danger">Ignore</button>-->
 									</div>
 								</div>
 							</div>

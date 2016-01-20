@@ -139,20 +139,26 @@ div.info-bar-2{
     
 }
 .panel-heading {
-	background-color:#FFEFDB;
+	background-color:white;/*#FFEFDB;*/
 	border-radius:5px 5px 0px 0px;
+	border-bottom-color:#ddd;
 }
 
-.panel-bottom {
-	background-color:#CDC0B0;
-	border-radius:0px 0px 5px 5px;
-	height:21px;
-}
+
 
 .panel-body {
-	background-color:#EEDFCC;
+	background-color:#F9FFFF;/*#EEDFCC;*/
+	border-bottom-color:#ddd;
 }
+.panel-bottom {
+	background-color:#F5FFFA;/*#CDC0B0;*/
+	border-radius:0px 0px 5px 5px;
+	height:21px;
 
+}
+.panel-title {
+	margin-top: 8px;
+}
 
 body{
 	background-color: #EFEFEF;
