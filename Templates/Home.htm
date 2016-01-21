@@ -147,7 +147,7 @@ $(document).ready(function(){
 
 	//on keyup, start the countdown
 	$input2.on('keyup', function () {
-		clearTimeout(typingTimer);
+		clearTimeout(typingTimer2);
 		typingTimer2 = setTimeout(doneTyping, doneTypingInterval2);
 	});
 
@@ -374,7 +374,7 @@ $(document).ready(function(){
 <div class="col-md-5" id="left-panel">
 	<div class = "list-group" id="questions">
 		<div class="form-group"> 
-		  <input type="text" class="form-control" id="department_id" placeholder="Input Major">
+		  <input type="text" class="form-control" id="department_id" placeholder="Input Major" value="{{major}}">
 		</div>
 	</div>
 	
