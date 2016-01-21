@@ -11,22 +11,24 @@ $(document).ready(function(){
 	});
 	
 	// **************** TOOK COURSE TO SESSION ****************
-	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success', function(){
+	$(document).on('click', 'div.single-course button.btn-success', function(){
 		$elem = $(this);
-		//alert($('div.panel-heading input#course_id').val());
+
+		$course = $(this).parents("div.single-course");
+
+		var id = $course.find('input#course_id').val();
+		var number = $course.find('input#number').val();
+		var name = $course.find('input#name').val();
+
 		// Mark course as ignored in the model
-		//alert()
-		$.post('/a.php?p=TookCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
+		
+		$.post('/a.php?p=TookCourse', {course_id:id}, function(d){
 			if(!getAjaxStatus(d)){
 				alert('Sorry, there was an error.');
 			}else{
 				// Hide/remove elements
 				// Add course to left-hand list of courses
-				//getting variables from right-hand
-				var id = $elem.siblings('input#course_id').val().trim();
-				var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
-				var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
-				
+	
 				//Adding class css/html to left-hand
 				$("div#left-panel div.list-group ul#list-took div.tookList")
 					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
@@ -35,30 +37,28 @@ $(document).ready(function(){
 				$("div#left-panel div.list-group ul#list-took div.tookList li.list-group-item:last").slideDown(400);
 				
 				//Removing class from right panel,(suggestion and search area)
-				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
-					$(this).remove();
+				$course.slideUp(400, function(){
+					$course.remove();
 				});
 			}
 		});
 	});
 		
 	// **************** ADD COURSE TO SESSION ****************
-	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-primary', function(){
+	$(document).on('click', 'div.panel-heading button.btn-primary', function(){
 		$elem = $(this);
-		//alert($('div.panel-heading input#course_id').val());
-		// Mark course as ignored in the model
-		//alert()
-		$.post('/a.php?p=AddCourse', {course_id: $elem.siblings('input#course_id').val().trim()}, function(d){
+		$course = $(this).parents("div.single-course");
+
+		var id = $course.find('input#course_id').val();
+		var number = $course.find('input#number').val();
+		var name = $course.find('input#name').val();
+
+		$.post('/a.php?p=AddCourse', {course_id: id}, function(d){
 			if(!getAjaxStatus(d)){
 				alert('Sorry, there was an error.');
 			}else{
-				// Hide/remove elements
-				
-
+				// Hide/remove element
 				// Add course to left-hand list of courses
-				var id = $elem.siblings('input#course_id').val().trim();
-				var number = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:first').text().trim();
-				var name = $elem.parent('div.btn-group').parent('div.col-md-5').siblings('div.col-md-7').children('h3').children('span:last').text().trim();
 				//Can I get an AJAX call to return a particular class window based on certain values?
 				
 				$("div#left-panel div.list-group ul#list-add div.addList")
@@ -67,15 +67,15 @@ $(document).ready(function(){
 				//Removing from right-side suggestions or search.
 				$("div#left-panel div.list-group ul#list-add div.addList li.list-group-item:last").slideDown(400);
 
-				$elem.parent('div.btn-group').parent('div.col-md-5').parent('div.row').parent('div.panel-heading').parent('div.single-course').slideUp(400, function(){
-					$(this).remove();
+				$course.slideUp(400, function(){
+					$course.remove();
 				});
 			}
 		});
 	});
 
-
-	$('div.panel-heading div.row div.col-md-5 div.btn-group button.btn-success').mouseenter(function() {
+	//HOVERING OVER buttons make them shine a color.
+	$('div.panel-heading button.btn-success').mouseenter(function() {
 			$elem = $(this);
 
 			$('ul#list-took li#description').css("background-color","#e5ffe5");
@@ -85,7 +85,7 @@ $(document).ready(function(){
 			$('ul#list-took li#description').css("background-color","#fff");
 		});
 	
-	$('div.panel-heading div.row div.col-md-5 div.btn-group button.btn-primary').mouseenter(function() {
+	$('div.panel-heading button.btn-primary').mouseenter(function() {
 			$elem = $(this);
 
 			$('ul#list-add li#description').css("background-color","#e5f2ff");
@@ -496,15 +496,16 @@ $(document).ready(function(){
 						<div class="panel-heading">
 							<!-- perhaps move course_id one position up -->
 							<input type="hidden" id="course_id" value="{{id}}" />
+							<input type="hidden" id="number" value="{{number}}" />
+							<input type="hidden" id="name" value="{{name}}"/>
 							<div class="row">
 								<div class="col-md-9">
 									<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
 								</div>
 								<div class="col-md-3">
 									<div class="btn-group" role="group">
-										
 										<button type="button" class="btn btn-success">Took</button>
-										<input type="hidden" id="course_id" value="{{id}}" />
+
 										<button type="button" class="btn btn-primary">Add</button>
 										<!--<button type="button" class="btn btn-danger">Ignore</button>-->
 									</div>
