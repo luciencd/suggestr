@@ -118,7 +118,7 @@ $(document).ready(function(){
 	// **************** GETTING QUESTION! *****************
 	var typingTimer1;                //timer identifier
 	var doneTypingInterval1 = 200;  //time in ms, 5 second for example
-	var $input1 = $('div#questions div.form-group input.form-control');
+	var $input1 = $('div.single-question div.form-group input.form-control');
 
 	//on keyup, start the countdown
 	$input1.on('keyup', function () {
@@ -133,10 +133,12 @@ $(document).ready(function(){
 	});
 
 	function doneTypingQuestion(){
-		//Change character
-		//alert('asspect');
-		$.post('/a.php?p=AddSessionAspect', {table: "session",column: $input1.attr('id'),value: $input1.val()}, function(d){
-			//alert(getAjaxStatus(d));
+
+		var $table = $input1.parent('div.form-group').siblings('input.table').val();
+		var $id = $input1.attr('id');
+		var $column = $input1.parent('div.form-group').siblings('input.column').val();
+		var $value = $input1.parent('div.form-group').siblings('input.value').val();
+		$.post('/a.php?p=AddSessionAspect', {table: $table,id: $id,column: $column,value: $value}, function(d){
 		});
 	}
 	// **************** SEARCH ****************
@@ -372,15 +374,50 @@ $(document).ready(function(){
 </script>
 
 <div class="col-md-5" id="left-panel">
-	<div class = "list-group" id="questions">
-		<div class="form-group"> 
-		  <input type="text" class="form-control" id="department_id" placeholder="Input Major" value="{{major}}">
-		</div>
-	</div>
-	
-	
 	<div class="list-group" id="classes">
-		
+
+		<!-- need someone to fix this bullshit -->
+		<ul id="list-questions">
+			<li class="list-group-item" id="questions">
+				<span>
+					Fill out these questions to the best of your knowledge.
+				</span>
+			</li>
+			<!-- Make this into a mustache array-->
+
+			<li class = "list-group-item" style = "display:table;">
+
+				<div class = "single-question" id = "major" style="display:table-cell;">
+					<!-- shit to modify in a given table-->
+					<input type="hidden" id = "table" value = "session">
+					<input type="hidden" id = "id"  value = "{{session}}">
+					<input type="hidden" id = "column"  value = "major_name">
+
+					<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;">
+						<span>Major</span>
+					</div>
+					<div class = "form-group"> 
+					  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="department_id" placeholder="Input Major" value="{{major}}">
+					</div>
+				</div>
+
+				<div class = "single-question" id = "year" style="display:table-cell;">
+					<input type="hidden" id = "table" value = "session">
+					<input type="hidden" id = "id"  value = "{{session}}">
+					<input type="hidden" id = "column" value = "year_id">
+
+					<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;">
+						<span>Year</span>
+					</div>
+					<div class = "form-group"> 
+					  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="year_id" placeholder="Input Year" value="{{year}}">
+					</div>
+				</div>
+			</div>
+		</ul>
+
+
+
 		<ul id="list-took">
 			<li class="list-group-item" id="description">
 				<span>
@@ -407,7 +444,7 @@ $(document).ready(function(){
 				</li>
 				{{/usersCourses}}
 			</div>
-			
+
 			<li class="list-group-item" id="took-bottom"></li>
 
 		</ul>
@@ -444,9 +481,7 @@ $(document).ready(function(){
 		
 		</ul>
 		
-		<div class = "btn-container-suggestr">
-			<button type="button" class="btn btn-primary">Suggest</button>
-		</div>
+		
 		<br>
 		<ul class = "stats">
 			<li class = "list-group-item">
@@ -484,11 +519,19 @@ $(document).ready(function(){
 
 			
 			<div class="panel-default" id="courseResultsArea">
-				<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;">
-					<div class = "resultsInfo">
-							<span>{{description}}</span> (<span>{{numResults}} Results</span>)
+				<div class = "suggest-control" style="display: table;width:100%;">
+					
+					<div class = "btn-container-suggestr" style="display: table-cell;">
+						<button type="button" class="btn btn-primary">Suggest</button>
 					</div>
+					<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;">
+						<div class = "resultsInfo">
+							<span>{{description}}</span> (<span>{{numResults}} Results</span>)
+						</div>
+					</div>
+
 				</div>
+				
 				<br>
 				{{#allCourses}}
 					<div class="single-course">

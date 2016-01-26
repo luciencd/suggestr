@@ -86,13 +86,7 @@ div.info-bar-2{
 }
 
 
-#questions.list-group {
-	margin-top: 125px;
-	border-radius: 0px;
-	/*position: fixed;*/
-	
-	
-}
+
 
 #classes.list-group {
 	
@@ -217,36 +211,34 @@ div.list-group ul {
 }
 /*Class history containers*/
 
-div.addList {
-
+ul#list-questions{
+	margin-top: 125px;
+	position:relative;
 }
 
-div.tookList {
 
-}
+
 li#took-bottom{
-	position:absolute;
-	bottom:0;
-	left:0;
+	/*position:absolute;*/
+	
 	width:100%;	
+	margin-top:50px;
 }
 
 ul#list-took {
-	height:150px;
+	
 	position:relative;
 	background-color:#E5FFE5;
 }
 
 
+
 li#add-bottom{
-	position:absolute;
-	bottom:0;
-	left:0;
+	margin-top:50px;
 	width:100%;	
 }
 
 ul#list-add {
-	height:150px;
 	position:relative;
 	background-color:#e5f2ff;
 }
@@ -254,8 +246,7 @@ ul#list-add {
 
 /*custom buttons*/
 .btn-container-suggestr {
-	text-align:center;
-	
+
 }
 /*custom buttons*/
 .btn-container-yacs {

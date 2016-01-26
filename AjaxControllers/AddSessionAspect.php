@@ -11,13 +11,20 @@ class AddSessionAspectController extends AjaxController {
 			return false;
 		}
 		
-		$query = new Query('departments');
-		$result = $query->select('*', array(array('name', '=', $post['value'])), '', 2,true);
+		//In case we need to get the id of the major from a name.
+		if($post['column'] == "major_name"){
 
-
-		if(Count($result) > 0){
-			$department_id = $result[0]->get('id');
+			//work out special cases.
+			$query = new Query('departments');
+			$result = $query->select('*', array(array('name', '=', $post['value'])), '', 2,true);
+			if(Count($result) > 0){
+				$department_id = $result[0]->get('id');
+			}	
 		}
+		
+
+
+		
 		
 		
 		// Now add this course to the user's model
