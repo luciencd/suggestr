@@ -383,9 +383,6 @@ $(document).ready(function(){
 		
 		<ul id="list-took">
 			<li class="list-group-item" id="description">
-				<!--<div class = "side-options">
-					<span class="badge XButton">X</span>
-				</div>-->
 				<span>
 					Press "Took" on classes you've taken.
 				</span>
@@ -399,20 +396,20 @@ $(document).ready(function(){
 			</li>
 			<!-- not sure of how styling this be.<br>-->
 			<div class = "tookList">
-			{{#usersCourses}}
-			<li class="list-group-item" style="background-color:#e5ffe5">
-				<input type="hidden" id="course_id" value="{{id}}" />
-				<span class="badge XButton">X</span>
-				<!-- How to make this look better. Also, class should be unique no?
-				<span class="badge">ADD TAG</span>-->
-				
-				
-
-				{{name}}
-				<span class="badge">{{number}}</span>
-			</li>
-			{{/usersCourses}}
+				{{#usersCourses}}
+				<li class="list-group-item" style="background-color:#e5ffe5">
+					<input type="hidden" id="course_id" value="{{id}}" />
+					<span class="badge XButton">X</span>
+					<!-- How to make this look better. Also, class should be unique no?
+					<span class="badge">ADD TAG</span>-->
+					{{name}}
+					<span class="badge">{{number}}</span>
+				</li>
+				{{/usersCourses}}
 			</div>
+			
+			<li class="list-group-item" id="took-bottom"></li>
+
 		</ul>
 
 
@@ -441,7 +438,9 @@ $(document).ready(function(){
 				<span class="badge">{{number}}</span>
 			</li>
 			{{/futureUsersCourses}}
-			</div
+			</div>
+
+			<li class="list-group-item" id="add-bottom"></li>
 		
 		</ul>
 		
@@ -485,7 +484,7 @@ $(document).ready(function(){
 
 			
 			<div class="panel-default" id="courseResultsArea">
-				<div class="panel-heading">
+				<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;">
 					<div class = "resultsInfo">
 							<span>{{description}}</span> (<span>{{numResults}} Results</span>)
 					</div>

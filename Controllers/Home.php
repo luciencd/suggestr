@@ -15,23 +15,24 @@ class HomeController extends PageController {
 
 		//NEED TO FIGURE OUT WHY COOKIE IS NOT WORKING. 
 		//Need to get Major id from session.
-		$Session = new Session();
-		$Session->findById($_COOKIE['sessionId']);
-		$major_input = $Session->get('major_input');
-		$major_id = $Session->get('major_id');
-		
-		if($major_id != 0){
-			$this->pageData["major"] = $major_input;
-			/*This don't actually matter doe
-			$Department = new Department();
-			$Department->findById($major_id);
-			$major_name = $Department->get('name');*/
+		if(isset($_COOKIE['sessionId'])){
+			$Session = new Session();
+			$Session->findById($_COOKIE['sessionId']);
+			$major_input = $Session->get('major_input');
+			$major_id = $Session->get('major_id');
 			
-			//$this->pageData["major_icon"] = "<icon showing success!>"
-		}else{
-			//$this->pageData["major_icon"] = "<icon showing fail>"
+			if($major_id != 0){
+				$this->pageData["major"] = $major_input;
+				/*This don't actually matter doe
+				$Department = new Department();
+				$Department->findById($major_id);
+				$major_name = $Department->get('name');*/
+				
+				//$this->pageData["major_icon"] = "<icon showing success!>"
+			}else{
+				//$this->pageData["major_icon"] = "<icon showing fail>"
+			}
 		}
-		
 		
 		//ADD YEAR LATER.
 		//FINAL INFO

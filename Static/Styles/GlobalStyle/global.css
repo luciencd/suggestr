@@ -213,6 +213,7 @@ div.panel.panel-bottom {
 
 div.list-group ul {
 	margin-bottom:0;
+	
 }
 /*Class history containers*/
 
@@ -223,6 +224,33 @@ div.addList {
 div.tookList {
 
 }
+li#took-bottom{
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:100%;	
+}
+
+ul#list-took {
+	height:150px;
+	position:relative;
+	background-color:#E5FFE5;
+}
+
+
+li#add-bottom{
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:100%;	
+}
+
+ul#list-add {
+	height:150px;
+	position:relative;
+	background-color:#e5f2ff;
+}
+
 
 /*custom buttons*/
 .btn-container-suggestr {
@@ -322,4 +350,5 @@ fieldset[disabled] .btn-sample.active {
 .stats .slider-rating {
 
 }
+
 
