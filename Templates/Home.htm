@@ -119,26 +119,29 @@ $(document).ready(function(){
 	var typingTimer1;                //timer identifier
 	var doneTypingInterval1 = 200;  //time in ms, 5 second for example
 	var $input1 = $('div.single-question div.form-group input.form-control');
-
+	var $event;
 	//on keyup, start the countdown
 	$input1.on('keyup', function () {
 		//alert('keyup');
+		$event = $(this);
 		clearTimeout(typingTimer1);
-		typingTimer1 = setTimeout(doneTypingQuestion, doneTypingInterval1);
+		typingTimer1 = setTimeout(doneTypingQuestion(), doneTypingInterval1);
 	});
 
 	//on keydown, clear the countdown 
 	$input1.on('keydown', function () {
+	  $event = $(this);
 	  clearTimeout(typingTimer1);
 	});
 
 	function doneTypingQuestion(){
-
-		var $table = $input1.parent('div.form-group').siblings('input.table').val();
-		var $id = $input1.attr('id');
-		var $column = $input1.parent('div.form-group').siblings('input.column').val();
-		var $value = $input1.parent('div.form-group').siblings('input.value').val();
-		$.post('/a.php?p=AddSessionAspect', {table: $table,id: $id,column: $column,value: $value}, function(d){
+		
+		var table = $event.parents('div.single-question').find('input#table').val();
+		var id = $event.parents('div.single-question').find('input#id').val();
+		var column = $event.parents('div.single-question').find('input#column').val();
+		var value = $event.val();
+		//alert(table+" "+id+ " "+column+" "+value);
+		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
 		});
 	}
 	// **************** SEARCH ****************
