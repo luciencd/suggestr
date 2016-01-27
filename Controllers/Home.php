@@ -18,23 +18,25 @@ class HomeController extends PageController {
 		if(isset($_COOKIE['sessionId'])){
 			$Session = new Session();
 			$Session->findById($_COOKIE['sessionId']);
-			$major_input = $Session->get('major_input');
 			$major_id = $Session->get('major_id');
-			
+			$year_id = $Session->get('year_id');
 			if($major_id != 0){
-				$this->pageData["major"] = $major_input;
-				/*This don't actually matter doe
+				//This don't actually matter doe
 				$Department = new Department();
 				$Department->findById($major_id);
-				$major_name = $Department->get('name');*/
-				
+				$major_name = $Department->get('name');
+				$this->pageData['major_name'] = $major_name;
 				//$this->pageData["major_icon"] = "<icon showing success!>"
 			}else{
 				//$this->pageData["major_icon"] = "<icon showing fail>"
 			}
+			//ADDING YEAR HERE:
+			$this->pageData['year_id'] = $year_id;
 		}
 		
-		//ADD YEAR LATER.
+		
+
+
 		//FINAL INFO
 	
 

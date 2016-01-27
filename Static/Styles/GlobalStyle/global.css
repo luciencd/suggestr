@@ -202,13 +202,12 @@ div.panel.panel-default {
 
 div.panel.panel-bottom {
 	border:1px solid black;
-
 }
 
 div.list-group ul {
 	margin-bottom:0;
-	
 }
+
 /*Class history containers*/
 
 ul#list-questions{
@@ -218,12 +217,6 @@ ul#list-questions{
 
 
 
-li#took-bottom{
-	/*position:absolute;*/
-	
-	width:100%;	
-	margin-top:50px;
-}
 
 ul#list-took {
 	
@@ -231,12 +224,12 @@ ul#list-took {
 	background-color:#E5FFE5;
 }
 
-
-
-li#add-bottom{
+li#bottom-container{
+	width:100%;
 	margin-top:50px;
-	width:100%;	
 }
+
+
 
 ul#list-add {
 	position:relative;

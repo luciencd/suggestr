@@ -1,6 +1,22 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+	function setMargins(){
+		
+		
+		if($('div#left-panel ul#list-took div.tookList > li.list-group-item').length === 0){
+			$('div#left-panel ul#list-took li#bottom-container.list-group-item').css("margin-top","50px");
+		}else{
+			$('div#left-panel ul#list-took li#bottom-container.list-group-item').css("margin-top","0px");
+		}
+
+		if($('div#left-panel ul#list-add div.addList > li.list-group-item').length === 0){
+			$('div#left-panel ul#list-add li#bottom-container.list-group-item').css("margin-top","50px");
+		}else{
+			$('div#left-panel ul#list-add li#bottom-container.list-group-item').css("margin-top","0px");
+		}
+		
+	}
 	// **************** POSTPONE COURSE FROM SESSION ****************
 	$(document).on('click', 'div.panel-heading div.row div.col-md-5 div.btn-group button.btn-danger', function(){
 		// Hide/remove elements
@@ -30,16 +46,18 @@ $(document).ready(function(){
 				// Add course to left-hand list of courses
 	
 				//Adding class css/html to left-hand
-				$("div#left-panel div.list-group ul#list-took div.tookList")
+				
+				$("div#left-panel div.tookList")
 					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 				
 				
-				$("div#left-panel div.list-group ul#list-took div.tookList li.list-group-item:last").slideDown(400);
+				$("div#left-panel div.tookList li.list-group-item:last").slideDown(400);
 				
 				//Removing class from right panel,(suggestion and search area)
 				$course.slideUp(400, function(){
 					$course.remove();
 				});
+				setMargins();
 			}
 		});
 	});
@@ -61,15 +79,19 @@ $(document).ready(function(){
 				// Add course to left-hand list of courses
 				//Can I get an AJAX call to return a particular class window based on certain values?
 				
-				$("div#left-panel div.list-group ul#list-add div.addList")
+				$("div#left-panel div.addList")
 					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 				
-				//Removing from right-side suggestions or search.
-				$("div#left-panel div.list-group ul#list-add div.addList li.list-group-item:last").slideDown(400);
+				
+				$("div#left-panel div.addList li.list-group-item:last").slideDown(400);
 
+				//Removing from right-side suggestions or search.
 				$course.slideUp(400, function(){
 					$course.remove();
 				});
+				
+				setMargins();
+				
 			}
 		});
 	});
@@ -98,8 +120,10 @@ $(document).ready(function(){
 
 	// **************** REMOVE COURSE FROM SESSION ****************
 	
-	$(document).on('click', 'div#left-panel div.list-group ul li.list-group-item span.XButton', function(){
+	$(document).on('click', 'div#left-panel span.XButton', function(){
 		$elem = $(this);
+		//add margin-top if no more courses.
+
 		// Mark course as ignored in the model
 		$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
 
@@ -108,12 +132,19 @@ $(document).ready(function(){
 				//alert(d);
 			}else{
 				// Hide/remove elements
+				
 				$elem.parent('li.list-group-item').slideUp(400, function(){
 					$(this).remove();
 					//doneTyping(); // Rerun the search in case new options are now avaliable...
 				});
+
+
+				
 			}
+			//Issues here, it doesn't update the margin properly...
+			setMargins();
 		});
+		
 	});
 	// **************** GETTING QUESTION! *****************
 	var typingTimer1;                //timer identifier
@@ -371,6 +402,7 @@ $(document).ready(function(){
 	}
 	
 	resetSliderColors();
+	setMargins();
 
 	
 });
@@ -388,7 +420,7 @@ $(document).ready(function(){
 			</li>
 			<!-- Make this into a mustache array-->
 
-			<li class = "list-group-item" style = "display:table;">
+			<li class = "list-group-item" style = "display:table;width:100%;">
 
 				<div class = "single-question" id = "major" style="display:table-cell;">
 					<!-- shit to modify in a given table-->
@@ -396,11 +428,11 @@ $(document).ready(function(){
 					<input type="hidden" id = "id"  value = "{{session}}">
 					<input type="hidden" id = "column"  value = "major_name">
 
-					<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;">
+					<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;border-bottom:0px;">
 						<span>Major</span>
 					</div>
 					<div class = "form-group"> 
-					  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="department_id" placeholder="Input Major" value="{{major}}">
+					  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="department_id" placeholder="Input Major" value="{{major_name}}">
 					</div>
 				</div>
 
@@ -409,13 +441,14 @@ $(document).ready(function(){
 					<input type="hidden" id = "id"  value = "{{session}}">
 					<input type="hidden" id = "column" value = "year_id">
 
-					<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;">
+					<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;border-bottom:0px;">
 						<span>Year</span>
 					</div>
 					<div class = "form-group"> 
-					  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="year_id" placeholder="Input Year" value="{{year}}">
+					  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="year_id" placeholder="Input Year" value="{{year_id}}">
 					</div>
 				</div>
+
 			</div>
 		</ul>
 
@@ -447,8 +480,9 @@ $(document).ready(function(){
 				</li>
 				{{/usersCourses}}
 			</div>
+			<!-- Make more aesthetically pleasing-->
 
-			<li class="list-group-item" id="took-bottom"></li>
+			<li class="list-group-item" id="bottom-container"></li>
 
 		</ul>
 
@@ -480,7 +514,7 @@ $(document).ready(function(){
 			{{/futureUsersCourses}}
 			</div>
 
-			<li class="list-group-item" id="add-bottom"></li>
+			<li class="list-group-item" id="bottom-container"></li>
 		
 		</ul>
 		
@@ -501,6 +535,7 @@ $(document).ready(function(){
 				</div>
 				<span>Difficulty:</span>
 			</li>
+			<li class="list-group-item" id="bottom-container"></li>
 			
 		</ul>
 		
