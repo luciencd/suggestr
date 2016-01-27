@@ -222,6 +222,7 @@ ul#list-took {
 	
 	position:relative;
 	background-color:#E5FFE5;
+	border-radius:5px 5px 5px 5px;
 }
 
 li#bottom-container{
@@ -234,6 +235,7 @@ li#bottom-container{
 ul#list-add {
 	position:relative;
 	background-color:#e5f2ff;
+	border-radius:5px 5px 5px 5px;
 }
 
 
