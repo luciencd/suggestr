@@ -1,48 +1,63 @@
-<div class = "panel-heading">
-	<div class = "btn-container-suggestr">
+
+
+
+			
+<div class = "suggest-control" style="display: table;width:100%;">
+	
+	<div class = "btn-container-suggestr" style="display: table-cell;">
 		<button type="button" class="btn btn-primary">Suggest</button>
 	</div>
-	<div class = "resultsInfo">
-		<span>{{description}}</span> (<span>{{numResults}} Results</span>)
+	<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;">
+		<div class = "resultsInfo">
+			<span>{{description}}</span> (<span>{{numResults}} Results</span>)
+		</div>
 	</div>
-</div>
 
+</div>
+<br>
 {{#allCourses}}
-<div class="single-course">
-	<div class="panel-heading">
-		<!-- perhaps move course_id one position up -->
-		<input type="hidden" id="course_id" value="{{id}}" />
-		<input type="hidden" id="number" value="{{number}}" />
-		<input type="hidden" id="name" value="{{name}}"/>
-		<div class="row">
-			<div class="col-md-7">
-				<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
-			</div>
-			<div class="col-md-5">
-				<div class="btn-group" role="group">
-					<input type="hidden" id="course_id" value="{{id}}" />
-					<button type="button" class="btn btn-success">Took</button>
-					<button type="button" class="btn btn-primary">Add</button>
+	<div class="single-course">
+		<div class="panel-heading">
+			<!-- perhaps move course_id one position up -->
+			<input type="hidden" id="course_id" value="{{id}}" />
+			<input type="hidden" id="number" value="{{number}}" />
+			<input type="hidden" id="name" value="{{name}}"/>
+			<div class="row">
+				<div class="col-md-9">
+					<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
+				</div>
+				<div class="col-md-3">
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-success">Took</button>
+
+						<button type="button" class="btn btn-primary">Add</button>
+						<!--<button type="button" class="btn btn-danger">Ignore</button>-->
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="panel-body">
-		<div class="row">{{description}}</div>
-	</div>
-	<div class = "panel-bottom">
-		{{#ratings}}
-		<div class = "slider">
-			
-
-			<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;">
-				<span>{{slider_name}}</span>
-			</div>
-			<input type="hidden" id="slider_id" value="{{slider_id}}">
-			<input type="hidden" class="percentage" value="{{percentage}}">
+		<div class="panel-body">
+			<div class="row">{{description}}</div>
 		</div>
-		{{/ratings}}
+
+
+		<div class = "panel-bottom">
+			{{#ratings}}
+			<div class = "slider">
+				<!-- Working on making this look better-->
+				<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
+					<span>{{slider_name}}</span>
+				</div>-->
+				<!--<div class = ""-->
+				<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;">
+					<span>{{slider_name}}</span>
+				</div>
+				<input type="hidden" id="slider_id" value="{{slider_id}}">
+				<input type="hidden" class="percentage" value="{{percentage}}">
+			</div>
+			{{/ratings}}
+		</div>
 	</div>
-</div>
+	<!-- needs spacing here-->
 {{/allCourses}}

@@ -278,27 +278,28 @@ $(document).ready(function(){
 
 	//RATINGS!!!!11one
 	//Visually showing what happens when you mess with sliders.
-	$('div.panel-bottom div.slider').mousemove(function(e){
+	$(document).on('mousemove', 'div.panel-bottom div.slider', function(e){
+		
 		var offset = $(this).offset();
 		var width = $(this).width();
 		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
 		var $slider_id = $(this).children('input#slider_id').val();
 		var $slider_num = (e.pageX - offset.left)/(width);
-		var $slider_rating = $(this).children('div.slider-rating');
+		var $slider_rating = $(this).children('.slider-rating');
 
 
 		$slider_rating.css({"width":(e.pageX - offset.left)+"px"});
 		sliderColorizeUp($slider_rating,$slider_num*100);
 	});
 
-	$('div.panel-bottom div.slider').mouseleave(function(e){
+	$(document).on('mouseleave', 'div.panel-bottom div.slider',function(e){
 		var offset = $(this).offset();
 		var width = $(this).width();
 		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
 		var $slider_id = $(this).children('input#slider_id').val();
 		var $slider_num = (e.pageX - offset.left)/(width);
 		var $percentage = $(this).children('input.percentage').val();
-		var $slider_rating = $(this).children('div.slider-rating');
+		var $slider_rating = $(this).children('.slider-rating');
 
 
 		$slider_rating.css({"width":$percentage+"%"});
@@ -601,8 +602,11 @@ $(document).ready(function(){
 						<div class = "panel-bottom">
 							{{#ratings}}
 							<div class = "slider">
-								
-
+								<!-- Working on making this look better-->
+								<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
+									<span>{{slider_name}}</span>
+								</div>-->
+								<!--<div class = ""-->
 								<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;">
 									<span>{{slider_name}}</span>
 								</div>

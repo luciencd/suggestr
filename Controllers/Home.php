@@ -126,7 +126,7 @@ class HomeController extends PageController {
 
 
 		*/
-		//////////
+		////////// LEFT SIDE ////////////
 		
 		// Select all of the courses that this user HAS TAKEN IN THE PAST
 		$query = new Query('action');
