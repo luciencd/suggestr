@@ -360,22 +360,14 @@ class Database {
 
         foreach($likelyClasses as $id => $data){
             //echo $this->getClassNameById($id)."->".$data[1]." * 1 /".($data[0]);
-            $likelyClasses_weighted[$id] = $data[1] * (1/$data[0]);
+
+            //Balancing out the huge courses with the small ones.
+            $likelyClasses_weighted[$id] = $data[1] * (1/log($data[0]+1));
         }
 
         arsort($likelyClasses_weighted);
-        /*array_filter($likelyClasses,function($k, $v){
-            return !in_array($v,$coursesTaken);
 
-        },ARRAY_FILTER_USE_BOTH);*/
-        /*
-        foreach($classes as $class){
-            if(in_array($class,$coursesTaken)){
-                unset($class);
-            }
-        }*/
         $end = microtime(true);
-        //echo 'Generating course Suggestions took ' . ($end-$start) . ' seconds!<br>';
         
         return $likelyClasses_weighted;
 

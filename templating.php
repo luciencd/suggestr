@@ -21,7 +21,17 @@ function Render($templ, $objects, $useMain=true) {
 	$objects["BaseURL"] = $GLOBALS['CONFIG']['app-path'];
 	$inner = $template->render($templ, $objects);
 	$objects["BaseContent"] = $inner;
-	if(!isset($_COOKIE['sessionId'])){ // Check if this user already has a session
+	$needNewSession = true;
+	if(isset($_COOKIE['sessionId'])){
+		$session = new Session();
+		try{
+			$session->findById($_COOKIE['sessionId']);
+			$needNewSession = false;
+		} catch(Exception $e){
+		
+		}
+	}
+	if($needNewSession){ // Check if this user already has a session
 		// Generate the next user id from the table
 		//echo "set cookie";
 		$query = new Query('sessions');
@@ -42,6 +52,8 @@ function Render($templ, $objects, $useMain=true) {
 		}else
 			throw new Exception("Error Processing New Session.", 1);
 	}else{
+		
+		
 		//echo 'cookie alreay set template'.$_COOKIE['sessionId'];
 	}
 	$objects["sessionId"] = $_COOKIE['sessionId']; // Make the session ID avaliable to all controllers.
