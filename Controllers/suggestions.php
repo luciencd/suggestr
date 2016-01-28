@@ -106,6 +106,29 @@ class Database {
 
             $id = $row['session_id'];
             $course = $row['course_id'];
+            if($row['major']){
+                /*
+                $dept = new Department();
+                try{
+                    $dept->findByXs(array(array('name',$row['major'])));
+                    $session = new Session();
+                    try{
+                        $session->findById($id);
+                    }catch(Exception $e){
+                        $session = new Session();
+                        $session->set('id',$id);
+                    }
+                    
+                    $session->set('major_id',$dept->get('id'));
+                    $session->set('major_input',$dept->get('name'));
+                    $session->save();
+                }catch(Exception $e){
+                    
+                }*/
+                
+
+                
+            }
             //$major = $row['major_id'];
             //$year = $row['year'];
             $choice = $row['choice'];
@@ -131,7 +154,10 @@ class Database {
         $result = $query->select('*',true,'','',false);
         while($row = mysqli_fetch_array($result)){
             $id = $row['id'];
+
             $major = $row['major_id'];
+            
+            
             $year = $row['year_id'];
             $student = $this->getStudent($id);
             $student->setMajor($major);
@@ -286,17 +312,17 @@ class Database {
         //Remember that if Arts majors never choose a class, they will never change the rating
         //and it will stick to those who actually are in that class.
         if(isset($this->RelationsList[$m1][$m2])){
-            $number = $this->RelationsList[$m1][$m2]/(1-$this->RelationsList[$m1][$m1]);
+            $number = $this->RelationsList[$m1][$m2]/(0.00001+1-$this->RelationsList[$m1][$m1]);
             //echo "num :".$number." )";
-            if($number < .2){
-                return .2;
+            if($number < .1){
+                return .1;
             }else{
                 return $number;
             }
             
 
         }else{
-            return 0;//
+            return 0.5;//if the thing never got set in the database.
         }
     }
 
@@ -316,39 +342,52 @@ class Database {
         foreach($this->StudentList as $otherStudent){
 
             $otherStudentTaken = $otherStudent->getTaken();
-            if((abs(Count($coursesTaken) - Count($otherStudentTaken)) < 6)){
+            //if((abs(Count($coursesTaken) - Count($otherStudentTaken)) < 6)){
                 $score = $this->jaccardIndex($coursesTaken,$otherStudentTaken);
-                $scores[$otherStudent->getId()] = array($score,$otherStudentTaken);
-            }
+                $scores[$otherStudent->getId()] = array($otherStudent,$score,$otherStudentTaken);
+                //echo " (".$otherStudent->getId().",".$score.") ";
+            //}
             
         }
-        arsort($scores);
+
+        //arsort($scores);
 
         $likelyClasses = array();
         $MAX_CLASSES = 40;
         $source_major = $student->getMajor();
         foreach($scores as $first => $second){
-            $score = $second[0];
-            $classes = $second[1];
+            $otherStudent = $second[0];
+            $score = $second[1];
+            $classes = $second[2];
+            $otherStudent_major = $otherStudent->getMajor();
+
+            //echo $otherStudent_major.'<br>';
             //echo $score.'<br>';
-            if($score > .1 and count($likelyClasses) < $MAX_CLASSES){
+            $sum = 0;
+            if($score >= 0 and $otherStudent_major !=0){
                 foreach($classes as $class){
                     if(!in_array($class,$coursesTaken)){//If this is a hashtable, don't think this matters
                         $target_major = $this->getClassMajorById($class);
-
+                        //echo $score;
                         if(isset($likelyClasses[$class])){
                             //Weird function need to analyse this.
 
-                            $likelyClasses[$class][1] += $score*$this->majorSimilarity($source_major,$target_major);//How to shrink amount of queries.
-                            $likelyClasses[$class][0] +=1;
+                            $likelyClasses[$class][1] += $score;
+                            $likelyClasses[$class][2] += $this->majorSimilarity($source_major,$target_major);
+                            $likelyClasses[$class][3] += $this->majorSimilarity($source_major,$otherStudent_major);//How to shrink amount of queries.
+                            $likelyClasses[$class][0] += 1.0;
+                            $sum++;
                             //$likelyClasses[$class] += $score*(1/log($this->courseFrequency($class)+5));//Multiply by classification modifier
                             //The more common a class is, the less it matters.
                         }else{
                             $newArray = array();
 
-                            $newArray[1] = $score*$this->majorSimilarity($source_major,$target_major);//How to shrink amount of queries.
-                            $newArray[0] = 1;
+                            $newArray[1] = $score;
+                            $newArray[2] = $this->majorSimilarity($source_major,$target_major);
+                            $newArray[3] = $this->majorSimilarity($source_major,$otherStudent_major);//How to shrink amount of queries.
+                            $newArray[0] = 1.0;
                             $likelyClasses[$class] = $newArray;
+                            $sum++;
                             //$likelyClasses[$class] = $score*(1/log($this->courseFrequency($class)+5));
                             
                         }
@@ -359,10 +398,38 @@ class Database {
         $likelyClasses_weighted = array();
 
         foreach($likelyClasses as $id => $data){
-            //echo $this->getClassNameById($id)."->".$data[1]." * 1 /".($data[0]);
+            //echo "(".$this->getClassNameById($id)."[".$data[0].",".$data[1]/$data[0].",".$data[2]/$data[0].",".$data[3]/$data[0]."])";
 
             //Balancing out the huge courses with the small ones.
-            $likelyClasses_weighted[$id] = $data[1] * (1/log($data[0]+1));
+            //$likelyClasses_weighted[$id] = $data[1] * (1/log($data[0]+1,2));
+            $likelyClasses_weighted[$id] = $data[0];
+
+            //if($data[0] > 1)
+            $net = array();
+
+            //BASIC NEURAL NET HERE.
+            $net[0] = 1;
+            $net[1] = 1;
+            $net[2] = 1;
+            $net[3] = 1;
+
+
+            if(count($coursesTaken) < 4){
+                $net[0] = 10;
+                $net[1] =.01;
+                $net[2] = 20;
+                $net[3] = 20;
+                
+                
+            }else if(count($coursesTaken) >=4 and count($coursesTaken)<=8){
+                $net[0] = 3;
+                $net[1] = 5;
+                $net[2] = 2;
+                $net[3] = 10;
+            }
+            //echo ($data[0])." ";
+            $likelyClasses_weighted[$id] = (($net[1]*$data[1]+$net[2]*$data[2]+$net[3]*$data[3]+$net[0]*$data[0])/($net[1]+$net[2]+$net[3]+$net[0]))/(1+log($data[0],10));
+            //echo $likelyClasses_weighted[$id]."<br>";
         }
 
         arsort($likelyClasses_weighted);
