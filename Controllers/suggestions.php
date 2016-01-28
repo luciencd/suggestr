@@ -71,9 +71,9 @@ class Database {
         
         $this->loadAllClasses();
         $this->loadAllStudents();
-        $this->loadAllRatings();
         $this->loadAllMajors();
         $this->loadAllRelations();
+        $this->loadAllRatings();
     }
     
     function loadAllClasses(){
@@ -84,7 +84,10 @@ class Database {
             $id = $course['id'];
             $department_id = $course['department_id'];
             $courseName = $course['name'];
+
+
             $this->ClassList[$id] = array('name' => $courseName,'department_id'=>$department_id);
+            
         }
 
     }
@@ -133,7 +136,7 @@ class Database {
             $student = $this->getStudent($id);
             $student->setMajor($major);
             $student->setYear($year);
-
+            $this->StudentList[$id] = $student;
         }
 
     }
@@ -145,8 +148,14 @@ class Database {
 
         
         foreach($result as $row){
-            $source_major = $row['session_id'];
-            $target_major = $row['course_id'];
+            /*
+            Probably not best practice here. fix it eventually.
+            */
+            $source_major = $this->getStudent($_COOKIE['sessionId'])->getMajor();
+            $target_major = $this->getStudent($row['session_id'])->getMajor();
+            //$target_major = $this->getClassMajorById($row['course_id']);
+
+            //echo "(".$source_major." ".$target_major. "),";
             if(isset($this->RatingsList[$row['course_id']][$row['slider_id']])){
                 
                 $this->RatingsList[$row['course_id']][$row['slider_id']][0] += 1*$this->majorSimilarity($source_major,$target_major);
@@ -162,8 +171,13 @@ class Database {
         //echo $this->RatingsList[35483][3][1];
         foreach($this->RatingsList as &$key){
             foreach($key as &$a){
-                $avg = $a[1]/$a[0];
+                if($a[0]==0){
+                    $a[0] = 0.5;
+                }else{
+                    $avg = ($a[1])/($a[0]);
                 $a[0] = $avg;
+                }
+                
             }
         }
     }
@@ -256,12 +270,34 @@ class Database {
         
     }
 
+
+    //Given that you are of major $m1, what is the percentage of classes of major $m2 that you take at rpi.
     function majorSimilarity($m1,$m2){
-        $number = 0.1;
-        if(isset($this->RelationsList[$m1][$m2])){
-            $number = $this->RelationsList[$m1][$m2];
+        //Obviously, if the majors are the same it should return 1.
+        if($m1 == $m2){
+            return 1;
         }
-        return $number;
+
+
+
+        //Essentially 0 to 1... out of the classes a major takes, what percentage
+        //does another major's classes make a part of percentage-wise.
+
+        //Remember that if Arts majors never choose a class, they will never change the rating
+        //and it will stick to those who actually are in that class.
+        if(isset($this->RelationsList[$m1][$m2])){
+            $number = $this->RelationsList[$m1][$m2]/(1-$this->RelationsList[$m1][$m1]);
+            //echo "num :".$number." )";
+            if($number < .2){
+                return .2;
+            }else{
+                return $number;
+            }
+            
+
+        }else{
+            return 0;//
+        }
     }
 
     /* Gives you a list of suggested courses based on a list of courses 
@@ -299,14 +335,20 @@ class Database {
                 foreach($classes as $class){
                     if(!in_array($class,$coursesTaken)){//If this is a hashtable, don't think this matters
                         $target_major = $this->getClassMajorById($class);
+
                         if(isset($likelyClasses[$class])){
                             //Weird function need to analyse this.
 
-                            $likelyClasses[$class] += $score*$this->majorSimilarity($source_major,$target_major);//How to shrink amount of queries.
+                            $likelyClasses[$class][1] += $score*$this->majorSimilarity($source_major,$target_major);//How to shrink amount of queries.
+                            $likelyClasses[$class][0] +=1;
                             //$likelyClasses[$class] += $score*(1/log($this->courseFrequency($class)+5));//Multiply by classification modifier
                             //The more common a class is, the less it matters.
                         }else{
-                            $likelyClasses[$class] = $score*$this->majorSimilarity($source_major,$target_major);//How to shrink amount of queries.
+                            $newArray = array();
+
+                            $newArray[1] = $score*$this->majorSimilarity($source_major,$target_major);//How to shrink amount of queries.
+                            $newArray[0] = 1;
+                            $likelyClasses[$class] = $newArray;
                             //$likelyClasses[$class] = $score*(1/log($this->courseFrequency($class)+5));
                             
                         }
@@ -314,8 +356,14 @@ class Database {
                 }
             }
         }
-        
-        arsort($likelyClasses);
+        $likelyClasses_weighted = array();
+
+        foreach($likelyClasses as $id => $data){
+            //echo $this->getClassNameById($id)."->".$data[1]." * 1 /".($data[0]);
+            $likelyClasses_weighted[$id] = $data[1] * (1/$data[0]);
+        }
+
+        arsort($likelyClasses_weighted);
         /*array_filter($likelyClasses,function($k, $v){
             return !in_array($v,$coursesTaken);
 
@@ -329,7 +377,7 @@ class Database {
         $end = microtime(true);
         //echo 'Generating course Suggestions took ' . ($end-$start) . ' seconds!<br>';
         
-        return $likelyClasses;
+        return $likelyClasses_weighted;
 
 
     }
