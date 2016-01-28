@@ -11,12 +11,12 @@ $(document).ready(function(){
 		$.ajax({
 			url:'/a.php?p=MajorRelations',
 			type: 'POST',
-			dataType: 'json',
+			dataType: 'text',
 			//data: {test: '1'},
 			success: function(data)
 			{	
-				//alert(data);
-				var work = $.parseJSON(data);
+				alert(data);
+				//var work = $.parseJSON(data);
 				//alert(work.foo);
 				//alert(data['foo']);
 				/*for(var key in data){

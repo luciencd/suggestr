@@ -7,7 +7,10 @@ class MajorRelationsController extends AjaxController {
 	public function process($get,$post) {
 
 		//header('Content-Type: application/json');
-		echo json_encode(array('foo' => 'bar'));
+		//echo json_encode(array('foo' => 'bar'));
+
+		$Data = new Database();
+		$Data->updateMajorRelations();
 
 
 

@@ -8,6 +8,7 @@ class Student {
     public $yes = array();
     function __construct($id_){
         $this->id = $id_;
+
         ##Abstraction Function:
         ## unique id of given model in mysql
         ## session_id can be shared among many Student objects as it is same student.
@@ -37,6 +38,7 @@ class Student {
     }
 
     function getMajor(){
+
         return $this->major;
     }
     function getYear(){
@@ -63,26 +65,29 @@ class Database {
     public $ClassList = array();
     public $RatingsList = array();
     public $MajorList = array();
+    public $RelationsList = array(array());
 
     function __construct(){
         
-
+        $this->loadAllClasses();
         $this->loadAllStudents();
         $this->loadAllRatings();
         $this->loadAllMajors();
+        $this->loadAllRelations();
     }
-    /*
+    
     function loadAllClasses(){
         $query = new Query('courses');
-        $queryActions = $query->select('*',true,'ASC');//Need to return ordered by session_id
+        $queryActions = $query->select('*',true,'','',false);//Need to return ordered by session_id
         
-        foreach($queryActions as $action){
-            $id = $action->get('id');
-            $courseName = $action->get('name');
-            $this->ClassList[$id] = $courseName;
+        foreach($queryActions as $course){
+            $id = $course['id'];
+            $department_id = $course['department_id'];
+            $courseName = $course['name'];
+            $this->ClassList[$id] = array('name' => $courseName,'department_id'=>$department_id);
         }
 
-    }*/
+    }
     ##requires: id is a session id in the database.
     ##returns: 
 
@@ -98,8 +103,8 @@ class Database {
 
             $id = $row['session_id'];
             $course = $row['course_id'];
-            $major = $row['major_id'];
-            $year = $row['year'];
+            //$major = $row['major_id'];
+            //$year = $row['year'];
             $choice = $row['choice'];
             
             if (isset($this->StudentList[$id])) {
@@ -110,12 +115,24 @@ class Database {
             }else{
 
                 $CurrentStudent = new Student($id);
-                $CurrentStudent->setMajor($major);
-                $CurrentStudent->setYear($year);
+                //$CurrentStudent->setMajor($major);
+                //$CurrentStudent->setYear($year);
                 $CurrentStudent->addCourse($course,$choice);
 
             }
             $this->StudentList[$id] = $CurrentStudent;
+
+        }
+
+        $query = new Query('sessions');
+        $result = $query->select('*',true,'','',false);
+        while($row = mysqli_fetch_array($result)){
+            $id = $row['id'];
+            $major = $row['major_id'];
+            $year = $row['year_id'];
+            $student = $this->getStudent($id);
+            $student->setMajor($major);
+            $student->setYear($year);
 
         }
 
@@ -128,16 +145,17 @@ class Database {
 
         
         foreach($result as $row){
-            
+            $source_major = $row['session_id'];
+            $target_major = $row['course_id'];
             if(isset($this->RatingsList[$row['course_id']][$row['slider_id']])){
                 
-                $this->RatingsList[$row['course_id']][$row['slider_id']][0] += 1;
-                $this->RatingsList[$row['course_id']][$row['slider_id']][1] += $row['vote'];
+                $this->RatingsList[$row['course_id']][$row['slider_id']][0] += 1*$this->majorSimilarity($source_major,$target_major);
+                $this->RatingsList[$row['course_id']][$row['slider_id']][1] += $row['vote']*$this->majorSimilarity($source_major,$target_major);
 
                 
             }else{
-                $this->RatingsList[$row['course_id']][$row['slider_id']][0] = 1;
-                $this->RatingsList[$row['course_id']][$row['slider_id']][1] = $row['vote'];
+                $this->RatingsList[$row['course_id']][$row['slider_id']][0] = 1*$this->majorSimilarity($source_major,$target_major);
+                $this->RatingsList[$row['course_id']][$row['slider_id']][1] = $row['vote']*$this->majorSimilarity($source_major,$target_major);
             }
 
         }
@@ -154,10 +172,21 @@ class Database {
         $query = new Query('departments');
         $result = $query->select('*','','','',false);
         foreach($result as $row){
-            $major_id = $row['id'];
-            $major_name = $row['name'];
-            $this->MajorList[$major_name] = $major_id;
+            $id = $row['id'];
+            $name = $row['name'];
+            $amount = $row['amount'];
+            $this->MajorList[$id] = array('id'=>$id,'name'=>$name,'amount'=>$amount);
         }
+    }
+
+    function loadAllRelations(){
+        $query = new Query('majorrelations');
+        $result = $query->select('*','','','',false);
+        foreach($result as $row){
+            $this->RelationsList[$row['source_id']][$row['target_id']] = $row['score'];
+
+        }
+
     }
     //GET FUNCTIONS.
 
@@ -180,6 +209,14 @@ class Database {
         }
     }
 
+    function getClassMajorById($course_id){
+        if(isset($this->ClassList[$course_id]['department_id'])){
+            return $this->ClassList[$course_id]['department_id'];
+        }else{
+            return -1;
+        }
+
+    }
     //Returns the name of a course from it's id.
     function getClassNameById($course_id){
         $result = new Course();
@@ -219,6 +256,14 @@ class Database {
         
     }
 
+    function majorSimilarity($m1,$m2){
+        $number = 0.1;
+        if(isset($this->RelationsList[$m1][$m2])){
+            $number = $this->RelationsList[$m1][$m2];
+        }
+        return $number;
+    }
+
     /* Gives you a list of suggested courses based on a list of courses 
     coming into the function.
     
@@ -227,7 +272,7 @@ class Database {
     @returns: $likelyClasses : an associative Array of courses to suggestion score
     map[course] => score.
     */
-    function getSuggestedCourses($coursesTaken){
+    function getSuggestedCourses($student, $coursesTaken){
         $start = microtime(true);
 
 
@@ -244,21 +289,24 @@ class Database {
         arsort($scores);
 
         $likelyClasses = array();
-        
+        $MAX_CLASSES = 40;
+        $source_major = $student->getMajor();
         foreach($scores as $first => $second){
             $score = $second[0];
             $classes = $second[1];
             //echo $score.'<br>';
-            if($score > .1){
+            if($score > .1 and count($likelyClasses) < $MAX_CLASSES){
                 foreach($classes as $class){
                     if(!in_array($class,$coursesTaken)){//If this is a hashtable, don't think this matters
+                        $target_major = $this->getClassMajorById($class);
                         if(isset($likelyClasses[$class])){
                             //Weird function need to analyse this.
-                            $likelyClasses[$class] += $score;//How to shrink amount of queries.
+
+                            $likelyClasses[$class] += $score*$this->majorSimilarity($source_major,$target_major);//How to shrink amount of queries.
                             //$likelyClasses[$class] += $score*(1/log($this->courseFrequency($class)+5));//Multiply by classification modifier
                             //The more common a class is, the less it matters.
                         }else{
-                            $likelyClasses[$class] = $score;//How to shrink amount of queries.
+                            $likelyClasses[$class] = $score*$this->majorSimilarity($source_major,$target_major);//How to shrink amount of queries.
                             //$likelyClasses[$class] = $score*(1/log($this->courseFrequency($class)+5));
                             
                         }
@@ -462,40 +510,37 @@ class Database {
 
     function updateMajorRelations(){
         //echo "<h4>updating</h4>";
-        //$query = new Query('departments');
-        //$result = $query->select('*',true,'','',false);
+        
+        /*$query = new Query('departments');
+        $result = $query->select('*',true,'','',false);
 
-        //$result2 = $query->select('*',true,'','',false);
+        $result2 = $query->select('*',true,'','',false);
 
-        /*foreach($result as $source){
+        foreach($result as $source){
             foreach($result2 as $target){
                 $searchArray = array(array('source_id',$source['id']),array('target_id',$target['id']));
 
                 $action = new MajorRelations();
 
-                //if(!$action.findByXs($searchArray)){
+                
+                //$action->set('id', $source['id']);
                 $action->set('source_id', $source['id']);
                 $action->set('target_id', $target['id']);
-                //} 
+                
                 
                 $action->save();
             }
         }*/
-        /*
+        
+        //set major relations table back to 0.
+        $query = new Query('majorrelations');
+        $query->update(array(array('count',0)),array(array('id','!=',0)));
 
-         
+       
         
         foreach($this->StudentList as $student){
             $source_id = $student->getMajor();
-            //written out.
-            //echo $major;
-            //$department = new Department();
-            //$department = findByXs(array(array('name',$major)));
-            //This isn't working here.
-            //names are meant to be unique.
-            //$major_id = $department->get('id');
 
-            //$major_id = $this->MajorList[$major];
             
             $classes = $student->getTaken();
 
@@ -503,27 +548,47 @@ class Database {
 
 
                 $result = new Course();
-                $result->findById($course);
+                $result->findById($course);// 35555 in courses has dept id 134 for exmple
                 $target_id = $result->get('department_id');
+
                 //echo "source:".$source_id." ".$target_id;
-                //if(is_numeric($target_id) && is_numeric($source_id) && $target_id!=0 &&$source_id!=0){
+                if(is_numeric($target_id) && is_numeric($source_id) && $target_id>132 && $target_id<177 && $source_id>132 && $source_id<177){
+                    //echo "source(".$source_id.") target(".$target_id.")<br>";
+                    $MajorRelation = new MajorRelations();
+                    $MajorRelation->findByXs(array(array('source_id',$source_id),array('target_id',$target_id)));
+                    $amount = $MajorRelation->get('count');
+                    //echo "count: ".$amount."<br>";
+                    $MajorRelation->set('count',$amount+1);
+                    $MajorRelation->save();
+                    //$query = new Query('majorrelations');
+                    //$result = $query->select('*',array(array('source_id','=',$source_id),array('target_id','=',$target_id)),'',1,false);
 
-                $query = new Query('majorrelations');
-                $result = $query->select('*',array(array('source_id','=',$source_id),array('target_id','=',$target_id)),'',1,false);
+                    //$result
 
-
-                while($first = mysqli_fetch_array($result)){
-                    $count = $first['count'];
                 }
-
-                
                         
-                $query->update(array(array('count',$count)),array(array('source_id','=',$source_id),array('target_id','=',$target_id)));
+                //$query->update(array(array('count',$count)),array(array('source_id','=',$source_id),array('target_id','=',$target_id)));
                        
                 
             }
         }
-        return false;*/
+
+        // now get similarity ratings. simple. If 1/15 classes people take in cs is economics,
+        // the rating is 1/15.
+        echo "start";
+        $statement =  "UPDATE ";
+        $statement .= "MajorRelations m1 ";
+        $statement .= "INNER JOIN ";
+        $statement .= "(";
+        $statement .= "SELECT id,source_id,target_id,count,SUM(count) t_sum ";
+        $statement .= "FROM MajorRelations ";
+        $statement .= "group by source_id ";
+        $statement .= ") m2 on m1.source_id = m2.source_id ";
+        $statement .= "SET m1.score = m1.count/m2.t_sum";
+        echo $statement;
+        $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
+
+        return false;
 
     }
 }

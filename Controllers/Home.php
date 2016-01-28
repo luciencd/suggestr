@@ -8,30 +8,35 @@ class HomeController extends PageController {
 
 	public function process($get, $post) {
 		//$_COOKIE['sessionId'] = 1;
+		if(!isset($_COOKIE['sessionId'])){return;}
 		$this->pageData["Title"] = "Home";
+
 		$this->pageData["session"] = $_COOKIE['sessionId'];
 
-		//Generate the data from mysql.
 
-		//NEED TO FIGURE OUT WHY COOKIE IS NOT WORKING. 
-		//Need to get Major id from session.
-		if(isset($_COOKIE['sessionId'])){
-			$Session = new Session();
-			$Session->findById($_COOKIE['sessionId']);
-			$major_id = $Session->get('major_id');
-			$year_id = $Session->get('year_id');
-			if($major_id != 0){
-				//This don't actually matter doe
-				$Department = new Department();
-				$Department->findById($major_id);
-				$major_name = $Department->get('name');
-				$this->pageData['major_name'] = $major_name;
-				//$this->pageData["major_icon"] = "<icon showing success!>"
-			}else{
-				//$this->pageData["major_icon"] = "<icon showing fail>"
+		//Need to reset cookie if does not appear in database.
+		try{
+			if(isset($_COOKIE['sessionId'])){
+				$Session = new Session();
+				$Session->findById($_COOKIE['sessionId']);
+
+				$major_id = $Session->get('major_id');
+				$year_id = $Session->get('year_id');
+				if($major_id != 0){
+					//This don't actually matter doe
+					$Department = new Department();
+					$Department->findById($major_id);
+					$major_name = $Department->get('name');
+					$this->pageData['major_name'] = $major_name;
+					//$this->pageData["major_icon"] = "<icon showing success!>"
+				}else{
+					//$this->pageData["major_icon"] = "<icon showing fail>"
+				}
+				//ADDING YEAR HERE:
+				$this->pageData['year_id'] = $year_id;
 			}
-			//ADDING YEAR HERE:
-			$this->pageData['year_id'] = $year_id;
+		} catch (Exception $e){
+			$this->pageData["Title"] = "Error reset cache";
 		}
 		
 		
@@ -58,7 +63,7 @@ class HomeController extends PageController {
 		//Don't suggest squat if no courses are in history.
 		$JaccardCourses = array();
 		//if(Count($studentCourses) != 0){
-		$JaccardCourses = $Data->getSuggestedCourses($studentCourses);
+		$JaccardCourses = $Data->getSuggestedCourses($student,$studentCourses);
 		//}
 			
 		

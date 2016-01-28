@@ -268,7 +268,9 @@ class Query{
 	
 	public function update($changes, $where){
 		/*
+		 *  For example: $query->update(array(array('count',0)),array(array('id','!=',0)));
 		 *  $changes - an array of changes to make to the table.
+		 *      - for example: array(array('count','0'))
 		 * 	$where (not optional for security reasons)
 		 *		- a two-dimensional array of where statements.
 		 *		- for example: array(array('id', '!=', 100), array('firstname', '=', 'Leo'))
