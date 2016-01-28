@@ -174,35 +174,56 @@ class Database {
 
         
         foreach($result as $row){
+            
             /*
             Probably not best practice here. fix it eventually.
             */
             $source_major = $this->getStudent($_COOKIE['sessionId'])->getMajor();
             $target_major = $this->getStudent($row['session_id'])->getMajor();
+            //if($target_major > 132 and $target_major <178 and $source_major > 132 and $source_major <178){
             //$target_major = $this->getClassMajorById($row['course_id']);
 
             //echo "(".$source_major." ".$target_major. "),";
-            if(isset($this->RatingsList[$row['course_id']][$row['slider_id']])){
+            // arts taking calc 1
+            // ['arts'][.1,[.2,.2,.2,.2],4]['Mathematics'][]
+            if(isset($this->RatingsList[$row['course_id']][$row['slider_id']][$target_major])){
                 
-                $this->RatingsList[$row['course_id']][$row['slider_id']][0] += 1*$this->majorSimilarity($source_major,$target_major);
-                $this->RatingsList[$row['course_id']][$row['slider_id']][1] += $row['vote']*$this->majorSimilarity($source_major,$target_major);
+                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = $this->majorSimilarity($source_major,$target_major);
+                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] += $row['vote'];
+                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] += 1;
+                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
 
                 
             }else{
-                $this->RatingsList[$row['course_id']][$row['slider_id']][0] = 1*$this->majorSimilarity($source_major,$target_major);
-                $this->RatingsList[$row['course_id']][$row['slider_id']][1] = $row['vote']*$this->majorSimilarity($source_major,$target_major);
+                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = $this->majorSimilarity($source_major,$target_major);
+                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] = $row['vote'];
+                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] = 1;
+                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
             }
-
+            //}
+            //echo '<br>';
         }
+
         //echo $this->RatingsList[35483][3][1];
-        foreach($this->RatingsList as &$key){
-            foreach($key as &$a){
-                if($a[0]==0){
-                    $a[0] = 0.5;
-                }else{
-                    $avg = ($a[1])/($a[0]);
-                $a[0] = $avg;
+        foreach($this->RatingsList as $course => &$key){
+            foreach($key as $k => &$a){
+                $avg = 0.0;
+                $sum = 0.0;
+                foreach($a as $m => &$b){
+                    //echo "b[0]:".$b[0]." b[1]:".$b[1]." b[2]:".$b[2]."<br>";
+                    $avg += $b[0]*($b[1]/$b[2]);//
+                    $sum += $b[0];
+                    //echo $course."::".$this->getClassNameById($course)."(".$b[3]." -> ".$m." weight:".$b[0]." slider:".$b[1]/$b[2]."{".$b[1].",".$b[2]."})";
                 }
+                //$avg = $avg*$
+                //echo "(".$major." -> ".$sum." ".$avg.")";
+                //echo "FINAL: sum:".$sum.",avg:".$avg.",slider: ".$avg/$sum."<br>";
+                if($sum == 0){
+                    $a[0] = 0;
+                }else{
+                    $a[0] = $avg/$sum;
+                }
+                
                 
             }
         }
@@ -223,8 +244,9 @@ class Database {
         $query = new Query('majorrelations');
         $result = $query->select('*','','','',false);
         foreach($result as $row){
+            //echo '<br> score:'.$row['score'];
             $this->RelationsList[$row['source_id']][$row['target_id']] = $row['score'];
-
+            //echo ' relations:'.$this->RelationsList[$row['source_id']][$row['target_id']];
         }
 
     }
@@ -300,9 +322,9 @@ class Database {
     //Given that you are of major $m1, what is the percentage of classes of major $m2 that you take at rpi.
     function majorSimilarity($m1,$m2){
         //Obviously, if the majors are the same it should return 1.
-        if($m1 == $m2){
+        /*if($m1 == $m2){
             return 1;
-        }
+        }*/
 
 
 
@@ -312,17 +334,18 @@ class Database {
         //Remember that if Arts majors never choose a class, they will never change the rating
         //and it will stick to those who actually are in that class.
         if(isset($this->RelationsList[$m1][$m2])){
-            $number = $this->RelationsList[$m1][$m2]/(0.00001+1-$this->RelationsList[$m1][$m1]);
-            //echo "num :".$number." )";
-            if($number < .1){
-                return .1;
-            }else{
-                return $number;
+            $number = $this->RelationsList[$m1][$m2];///(0.00001+1-$this->RelationsList[$m1][$m1]);
+            //echo "<br><h4>num :";
+            //echo $number." )</h4>";
+            if($number == 0){
+                return .01;
             }
+            return $number;
+            
             
 
         }else{
-            return 0.5;//if the thing never got set in the database.
+            return .01;//if the thing never got set in the database.
         }
     }
 
