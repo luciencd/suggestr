@@ -1,13 +1,18 @@
 <?php
 ini_set('display_errors', 1);
 // Page Controller for the Index Page
-require_once('Controllers/suggestions.php');
+
 //error_reporting(0);
 class HomeController extends PageController {
 	public $pageTemplate = "Home";
 
 	public function process($get, $post) {
 		//$_COOKIE['sessionId'] = 1;
+		$Data = $GLOBALS['MODEL']['Data'];
+		$Data->load();
+		//$Data = $GLOBALS['MODEL']['Data'];
+
+
 		if(!isset($_COOKIE['sessionId'])){return;}
 		$this->pageData["Title"] = "Home";
 
@@ -44,14 +49,11 @@ class HomeController extends PageController {
 
 		//FINAL INFO
 	
-
-		
-		$Data = new Database();
 		
 		$student = $Data->getStudent($_COOKIE['sessionId']);
 		$studentCourses = $student->getTaken();
 
-		//echo " Session: ".$student->getId()." major: ".$student->getMajor()." year: ".$student->getYear();
+		echo " Session: ".$student->getId()." major: ".$student->getMajor()." year: ".$student->getYear();
 		
 		foreach($studentCourses as $course){
 	        $result = new Course();
@@ -186,7 +188,7 @@ class HomeController extends PageController {
 		//Pushes all the new courses to the ADDING LIST view.
 
 
-		$this->pageData['percentage'] = 100*$Data->semesterDifficulty($idsAlreadyAdded);
+		$this->pageData['percentage2'] = 100*$Data->semesterDifficulty($idsAlreadyAdded);
 		
 	}
 }

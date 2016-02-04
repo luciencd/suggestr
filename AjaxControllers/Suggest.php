@@ -4,14 +4,14 @@
  * NEED advice on how to make this MVC compatible. Currently it doesn't seem to be so.
  * Given that I require the model(suggestions.php), yet I have to reload all the data from initial refresh.
  */
-require_once('Controllers/suggestions.php');
+//require_once('Controllers/suggestions.php');
 
 class SuggestController extends AjaxController {
 	public $template = "Suggest";//Identical to search one.
 	public function process($get,$post) {
 		//Remove this once we solved sessionId
 		
-		$Data = new Database();//Find a way to make this local to suggestr.php or something.
+		$Data = $GLOBALS['MODEL']['Data'];//Find a way to make this local to suggestr.php or something.
 		
 		$student = $Data->getStudent($_COOKIE['sessionId']);
 		$studentCourses = $student->getTaken();

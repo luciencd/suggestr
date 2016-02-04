@@ -70,15 +70,16 @@ $(document).ready(function(){
 		var id = $course.find('input#course_id').val();
 		var number = $course.find('input#number').val();
 		var name = $course.find('input#name').val();
-
-		$.post('/a.php?p=AddCourse', {course_id: id}, function(d){
-			if(!getAjaxStatus(d)){
-				alert('Sorry, there was an error.');
-			}else{
-				// Hide/remove element
-				// Add course to left-hand list of courses
-				//Can I get an AJAX call to return a particular class window based on certain values?
+		
+		
+		$.ajax({
+			type:"POST",
+			url:'/a.php?p=AddCourse',
+			data: {'course_id': id},
+			dataType: "text",
+			success: function(d){
 				
+				//alert("success2: "+);
 				$("div#left-panel div.addList")
 					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 				
@@ -91,11 +92,37 @@ $(document).ready(function(){
 				});
 				
 				setMargins();
+			}
+		}).done(function(d){
+			//alert('done');
+			resetStatistics();
+		})
+		.fail(function(jqXHR, textStatus, errorThrown) {
+		    alert( "error" );
+		    //console.log("error");
+		    alert(textStatus);
+  			alert(errorThrown);
+		})
+		.always(function() {
+		    //alert( "complete" );
+		});
+		
+	});
+	function resetStatistics(){
+		$.post('/a.php?p=Slider', function(d){
+			if(getAjaxStatus(d)){
+				// Everything went well
+
+				$("div.statistics").html(getAjaxData(d));
+				sliderColorizeDown($("div.statistics div.slider-rating"),$("div.statistics").find('input.percent').val());
+
+				//NEED TO MAKE SEPARATE FUNCTION FOR COLORIZATION
 				
+			}else{
+				alert(getAjaxFailureReason(d));
 			}
 		});
-	});
-
+	}
 	//HOVERING OVER buttons make them shine a color.
 	$('div.panel-heading button.btn-success').mouseenter(function() {
 			$elem = $(this);
@@ -143,6 +170,7 @@ $(document).ready(function(){
 			}
 			//Issues here, it doesn't update the margin properly...
 			setMargins();
+			resetStatistics();
 		});
 		
 	});
@@ -359,7 +387,7 @@ $(document).ready(function(){
 
 			sliderColorizeUp($(this),$(this).siblings('input.percentage').val());
 		});
-		$('ul.stats li.list-group-item div.slider div.slider-rating').each(function(){
+		$('ul.stats div.statistics li.list-group-item div.slider div.slider-rating').each(function(){
 
 
 
@@ -525,18 +553,22 @@ $(document).ready(function(){
 			<li class = "list-group-item">
 				<span>Statistics on courses added.</span>
 			</li>
-			<li class = "list-group-item" style="background-color:#ffffe5;">
-				<div class = "slider" style= "width:80%;float:right;"><!-- really need to change the style here
-					Really not getting this inheritance stuff here.-->
+			<div class = "statistics">
+
+				<li class = "list-group-item" id="difficulty" style="background-color:#ffffe5;">
 					
-					<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;color:black; height:20px">
+					<div class = "slider" style= "width:80%;float:right;"><!-- really need to change the style here
+						Really not getting this inheritance stuff here.-->
+						
+						<div class="slider-rating" style="width:{{percentage2}}%;border-radius:5px;color:black; height:20px">
+						</div>
+						<!-- in this case, id will be flipped to make do --> 
+						<input type="hidden" class="percentage" value="{{percentage2}}">
 					</div>
-					<!-- in this case, id will be flipped to make do --> 
-					<input type="hidden" class="percentage" value="{{percentage}}">
-				</div>
-				<span>Difficulty:</span>
-			</li>
-			<li class="list-group-item" id="bottom-container"></li>
+					<span>Difficulty:</span>
+				</li>
+			</div>
+			<li class="list-group-item" id="bottom-container" style="margin-top:0px;"></li>
 			
 		</ul>
 		

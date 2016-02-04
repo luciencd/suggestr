@@ -31,6 +31,7 @@ $router["/ml"] = "ML";
 $Ajaxrouter = array();
 $Ajaxrouter["Search/"] = "Search";
 $Ajaxrouter["Suggest/"] = "Suggest";
+$Ajaxrouter["Slider/"] = "Slider";
 $Ajaxrouter["IgnoreCourse/"] = "IgnoreCourse";
 $Ajaxrouter["AddCourse/"] = "AddCourse";
 $Ajaxrouter["TookCourse/"] = "TookCourse";
@@ -75,7 +76,8 @@ if(isset($_GET['SUGGESTR_PAGE']) &&
 */
 
 // Ok. Now we render the appropriate controller.
-//echo "<h4>suggestr.php b4 controller</h4>";
+$Data = $GLOBALS['MODEL']['Data'];
+//echo "<h4>does data exist?</h4>"."<h4>".$Data->courseCredits(34)."</h4>";
 $controller;
 ob_start();
 if(!$isAjax){

@@ -69,12 +69,20 @@ class Database {
 
     function __construct(){
         
+        
+
+        //Make it so that it keeps track of last import id, and only imports stuff after those id's.
+        //
+    }
+    function load(){
         $this->loadAllClasses();
         $this->loadAllStudents();
         $this->loadAllMajors();
         $this->loadAllRelations();
         $this->loadAllRatings();
+        //echo "loaded";
     }
+
     
     function loadAllClasses(){
         $query = new Query('courses');
@@ -106,31 +114,6 @@ class Database {
 
             $id = $row['session_id'];
             $course = $row['course_id'];
-            if($row['major']){
-                /*
-                $dept = new Department();
-                try{
-                    $dept->findByXs(array(array('name',$row['major'])));
-                    $session = new Session();
-                    try{
-                        $session->findById($id);
-                    }catch(Exception $e){
-                        $session = new Session();
-                        $session->set('id',$id);
-                    }
-                    
-                    $session->set('major_id',$dept->get('id'));
-                    $session->set('major_input',$dept->get('name'));
-                    $session->save();
-                }catch(Exception $e){
-                    
-                }*/
-                
-
-                
-            }
-            //$major = $row['major_id'];
-            //$year = $row['year'];
             $choice = $row['choice'];
             
             if (isset($this->StudentList[$id])) {
@@ -139,25 +122,17 @@ class Database {
                 $CurrentStudent->addCourse($course,$choice);
 
             }else{
-
                 $CurrentStudent = new Student($id);
-                //$CurrentStudent->setMajor($major);
-                //$CurrentStudent->setYear($year);
                 $CurrentStudent->addCourse($course,$choice);
-
             }
             $this->StudentList[$id] = $CurrentStudent;
-
         }
 
         $query = new Query('sessions');
         $result = $query->select('*',true,'','',false);
         while($row = mysqli_fetch_array($result)){
             $id = $row['id'];
-
             $major = $row['major_id'];
-            
-            
             $year = $row['year_id'];
             $student = $this->getStudent($id);
             $student->setMajor($major);
@@ -438,15 +413,15 @@ class Database {
 
 
             if(count($coursesTaken) < 4){
-                $net[0] = 10;
+                $net[0] = 5;
                 $net[1] =.01;
                 $net[2] = 20;
                 $net[3] = 20;
                 
                 
             }else if(count($coursesTaken) >=4 and count($coursesTaken)<=8){
-                $net[0] = 3;
-                $net[1] = 5;
+                $net[0] = 1;
+                $net[1] = 15;
                 $net[2] = 2;
                 $net[3] = 10;
             }
@@ -458,7 +433,7 @@ class Database {
         arsort($likelyClasses_weighted);
 
         $end = microtime(true);
-        
+        //echo '<br><br><br><br><br><br><br><br><br><h3>END :'.$end-$start.'</h3>';
         return $likelyClasses_weighted;
 
 
@@ -595,6 +570,7 @@ class Database {
     //always divides by 5,
     //May be interesting to compare difficulty to previous semesters and adjust based on whether you can take it...
     function semesterDifficulty($coursesSemester){
+        //return Count($coursesSemester)/10.0;
         if(Count($coursesSemester) == 0){
             return 0.01;
         }

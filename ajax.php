@@ -23,6 +23,7 @@ function RenderAjax($templ, $objects) {
 	global $ajaxTemplate;
 	$objects["BaseURL"] = $GLOBALS['CONFIG']['app-path'];
 	$inner = $ajaxTemplate->render($templ, $objects);
+	//echo "RENDERING AJAX";
 	return $inner;
 }
 
@@ -46,7 +47,7 @@ class AjaxController {
 			}else{ // All that matters is that there was success (there's no template for this ajax call)
 				echo json_encode(array(
 					"success" => true,
-					"data" => ""
+					"data" => ""//RenderAjax($this->template,$this->pageData)  // I dont get what ajax templates have to do with this.//$this->template
 				));
 			}
 		}else{
