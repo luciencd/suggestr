@@ -53,7 +53,7 @@ class HomeController extends PageController {
 		$student = $Data->getStudent($_COOKIE['sessionId']);
 		$studentCourses = $student->getTaken();
 
-		echo " Session: ".$student->getId()." major: ".$student->getMajor()." year: ".$student->getYear();
+		//echo " Session: ".$student->getId()." major: ".$student->getMajor()." year: ".$student->getYear();
 		
 		foreach($studentCourses as $course){
 	        $result = new Course();
