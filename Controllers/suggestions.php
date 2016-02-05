@@ -362,7 +362,7 @@ class Database {
             //echo $otherStudent_major.'<br>';
             //echo $score.'<br>';
             $sum = 0;
-            if($score >= 0 and $otherStudent_major !=0){
+            if($score >= 0 /*and $otherStudent_major !=0*/){
                 foreach($classes as $class){
                     if(!in_array($class,$coursesTaken)){//If this is a hashtable, don't think this matters
                         $target_major = $this->getClassMajorById($class);

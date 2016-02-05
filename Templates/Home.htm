@@ -250,6 +250,7 @@ $(document).ready(function(){
 			
 			if(getAjaxStatus(d)){
 				// Everything went well
+				//alert(d);
 				$("div#courseResultsArea").html(getAjaxData(d));
 				resetSliderColors();
 			}else{
