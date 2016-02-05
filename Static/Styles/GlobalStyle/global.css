@@ -338,3 +338,18 @@ fieldset[disabled] .btn-sample.active {
 }
 
 
+div.footer {
+	position:absolute;
+	bottom:0px;
+	height:20px;
+	width:40.6%;
+	padding:0px 10px 0px 10px;
+	font-size:11px;
+	color:#808080;
+	background-color:white;
+	border-top: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	border-radius: 3px 3px 0px 0px;
+	text-align: center;
+}
+
