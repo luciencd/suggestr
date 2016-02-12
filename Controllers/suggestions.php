@@ -288,9 +288,11 @@ class Database {
     }
     //Returns the name of a course from it's id.
     function getClassNameById($course_id){
-        $result = new Course();
-        $result->findById($course_id);
-        return $result->get('name');
+        if(isset($this->courseList[$course_id]->controllerArray()['name'])){
+            return $this->courseList[$course_id]->controllerArray()['name'];
+        }else{
+            return "not a class";
+        }
     }
 
     //Returns array of object that you want will all features.
