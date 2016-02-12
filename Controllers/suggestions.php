@@ -1,4 +1,32 @@
 <?php
+class CourseObject {
+    public $id = "";
+    public $name = "";
+    public $number = "";
+    public $description = "";
+    public $department_id = "";
+
+    function __construct($id_,$name_,$number_,$description_,$department_id_){
+        $this->id = $id_;
+        $this->name = $name_;
+        $this->number = $number_;
+        $this->description = $description_;
+        $this->department_id = $department_id_;
+    }
+
+    function controllerArray(){
+        return array(
+            'id' => $this->id,
+            'name' => ucwords(strtolower($this->name)),
+            'description' => $this->description,
+            'department_id' => $this->department_id,
+            'number' => $this->number
+            );
+    }
+
+}
+
+
 class Student {
     public $id = "";
     public $major = "";
@@ -26,7 +54,7 @@ class Student {
         return $this->taken;
     }
     function getAdded(){
-        return $this->added;
+        return $this->yes;
     }
     
     
@@ -62,7 +90,7 @@ class Student {
 ##ADT {id  => Student()}
 class Database {
     public $StudentList = array();
-    public $ClassList = array();
+    public $courseList = array();
     public $RatingsList = array();
     public $MajorList = array();
     public $RelationsList = array(array());
@@ -70,9 +98,9 @@ class Database {
     function __construct(){
         
         
-
         //Make it so that it keeps track of last import id, and only imports stuff after those id's.
         //
+
     }
     function load(){
         $this->loadAllClasses();
@@ -92,10 +120,14 @@ class Database {
             $id = $course['id'];
             $department_id = $course['department_id'];
             $courseName = $course['name'];
+            $courseNumber = $course['number'];
+            $courseDescription = $course['description'];
 
 
-            $this->ClassList[$id] = array('name' => $courseName,'department_id'=>$department_id);
-            
+            //$this->courseList[$id] = array('name' => $courseName,'number'=> $courseNumber,'description' => $courseDescription,'department_id'=>$department_id);
+            $this->courseList[$id] = new CourseObject($id,$courseName,$courseNumber,$courseDescription,$department_id);
+            //$arrayList = $newCourse->controllerArray();
+            //echo $arrayList['name'];
         }
 
     }
@@ -247,8 +279,8 @@ class Database {
     }
 
     function getClassMajorById($course_id){
-        if(isset($this->ClassList[$course_id]['department_id'])){
-            return $this->ClassList[$course_id]['department_id'];
+        if(isset($this->courseList[$course_id]->controllerArray()['department_id'])){
+            return $this->courseList[$course_id]->controllerArray()['department_id'];
         }else{
             return -1;
         }
@@ -259,6 +291,19 @@ class Database {
         $result = new Course();
         $result->findById($course_id);
         return $result->get('name');
+    }
+
+    //Returns array of object that you want will all features.
+    //you need in outputting it on web app.
+
+    function getReturnArray($id,$type){
+        //Wrapper class for features in class.
+
+        if($type == "course"){
+            return $this->courseList[$id]->controllerArray();
+        }else if($type == "student"){
+            return $this->studentList[$id]->controllerArray();
+        }
         
     }
 

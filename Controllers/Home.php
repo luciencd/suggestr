@@ -60,56 +60,35 @@ class HomeController extends PageController {
 
 		///BOTTOM HERE SHOULD BE GETTING THINGS FROM MODEL not DIRECTLY FROM DB!
 		// Select all of the courses that this user HAS TAKEN IN THE PAST
-
-
-		$query = new Query('action');
-		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']),
-											array('choice', '=', 1)));//1 means taken
-		$idsAlreadyAdded = array();
-		foreach($result as $action){
-			array_push($idsAlreadyAdded, $action->get('course_id'));
-		}
-		
 		// Get all of the courses in this user's session
+		$idsAlreadyAdded = $student->getTaken();
 		$usersCourses = array();
 		foreach($idsAlreadyAdded as $courseId){
 			try{
-				$course = new Course();
-				$course->findById($courseId);
-				array_push($usersCourses, array('id' => $course->get('id'),
-											  'name' => ucwords(strtolower($course->get('name'))),
-											  'department_id' => $course->get('department_id'),
-											  'number' => $course->get('number')));
+				$cArray = $Data->getReturnArray($courseId,'course');
+				array_push($usersCourses, array('id' => $cArray['id'],
+											  'name' => $cArray['name'],
+											  'department_id' => $cArray['department_id'],
+											  'number' => $cArray['number']));
 			}catch(Exception $e){}
 		}
-
 		$this->pageData['usersCourses'] = $usersCourses;
 		//Pushes all the new courses to the HAS TAKEN part of the view.
 		
 		
 		// Select all of the courses that this user is already added
-		$query = new Query('action');
-		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']),
-											array('choice', '=', 0)));
-
-		$idsAlreadyAdded = array();
-		foreach($result as $action){
-			array_push($idsAlreadyAdded, $action->get('course_id'));
-		}
-		
 		// Get all of the courses in this user's session
+		$idsAlreadyAdded = $student->getAdded();
 		$usersCourses = array();
 		foreach($idsAlreadyAdded as $courseId){
 			try{
-				$course = new Course();
-				$course->findById($courseId);
-				array_push($usersCourses, array('id' => $course->get('id'),
-											  'name' => ucwords(strtolower($course->get('name'))),
-											  'department_id' => $course->get('department_id'),
-											  'number' => $course->get('number')));
+				$cArray = $Data->getReturnArray($courseId,'course');
+				array_push($usersCourses, array('id' => $cArray['id'],
+											  'name' => $cArray['name'],
+											  'department_id' => $cArray['department_id'],
+											  'number' => $cArray['number']));
 			}catch(Exception $e){}
 		}
-
 		$this->pageData['futureUsersCourses'] = $usersCourses;
 		//Pushes all the new courses to the ADDING LIST view.
 
@@ -117,6 +96,8 @@ class HomeController extends PageController {
 		////////////////////////////////////////////
 		//////////////ADDING END SLIDERS////////////
 		////////////////////////////////////////////
+
+		
 		$this->pageData['percentage2'] = 100*$Data->semesterDifficulty($idsAlreadyAdded);
 		
 
