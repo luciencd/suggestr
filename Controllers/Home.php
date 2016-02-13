@@ -2,17 +2,25 @@
 ini_set('display_errors', 1);
 // Page Controller for the Index Page
 
+//$Data->load();
+
+
 //error_reporting(0);
-class HomeController extends PageController {
+class HomeController extends PageController { 
+//PageModelController supposed to extend.
+	
 	public $pageTemplate = "Home";
 
 	public function process($get, $post) {
 		//$_COOKIE['sessionId'] = 1;
-
+		//$this->load();
 		$Data = $GLOBALS['MODEL']['Data'];
-		//$Data->load();
-		$Data->loadAllClasses();
-		$Data->loadAllStudents();
+		$Data->load();
+		
+		//$Data->getStudent($_COOKIE['sessionId'])->getMajor();
+		//$this->pageData['year_id'] = $Data->getStudent($_COOKIE['sessionId'])->getMajor();
+		//$Data->loadAllClasses();
+		//$Data->loadAllStudents();
 		//$Data = $GLOBALS['MODEL']['Data'];
 
 
@@ -97,8 +105,10 @@ class HomeController extends PageController {
 		//////////////ADDING END SLIDERS////////////
 		////////////////////////////////////////////
 
+		
 
-		$this->pageData['percentage2'] = 100*$Data->semesterDifficulty($idsAlreadyAdded);
+		//Somehow this does not work well, So I just put it into the 
+		$this->pageData['percentage2'] = 100.0*$Data->semesterDifficulty($student->getAdded());
 		
 
 		////////////////////////////////////////////
@@ -177,7 +187,7 @@ class HomeController extends PageController {
 			$this->pageData['description'] = "Press Suggest Button to get course Suggestions!";
 			//$this->pageData['allCourses'] = $allNewCourses;
 		}else {
-			if(count($studentCourses) == 0){
+			if(count($studentCoursesTaken) == 0){
 			$this->pageData['numResults'] = (String)count($allNewCourses);
 			$this->pageData['description'] = "Here are popular courses to get started!";
 			$this->pageData['allCourses'] = $allNewCourses;

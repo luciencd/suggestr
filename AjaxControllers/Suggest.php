@@ -9,12 +9,21 @@
 class SuggestController extends AjaxController {
 	public $template = "Suggest";//Identical to search one.
 	public function process($get,$post) {
-		//Remove this once we solved sessionId
 		
+		
+		//Global variables are clearly bad, but I don't know enough about the base AjaxController to extend it with 
+		//a reference to the model or something.
 		$Data = $GLOBALS['MODEL']['Data'];//Find a way to make this local to suggestr.php or something.
-		$Data->load();//Somehow i have to reload everything even if I already loaded it b4.
+		$Data->load();
 
 
+		//////////////
+
+		//Somehow I have to reload everything even if I already loaded it before in Home.php, and set
+		//$GLOBALS['MODEL']['Data']; to a $Data that I did $Data->load() on. 
+		//PLEASE FIGURE OUT HOW TO ONLY LOAD DATA ONCE.
+
+		///////////////
 		
 		///getting student from model.
 		$student = $Data->getStudent($_COOKIE['sessionId']);
@@ -35,6 +44,7 @@ class SuggestController extends AjaxController {
 
 		// Select all of the courses that this user is already added or ignored
 		// Currently "ignored" is no longer a thing, so we ignore ignores for now. 
+		// This takes all of those classes out of the suggestions.
 		$idsAlreadyAdded = array_merge($studentCoursesTaken,$studentCoursesAdded);
 
 		
@@ -64,15 +74,12 @@ class SuggestController extends AjaxController {
 												  'ratings' => $Data->rating($course['id'])
 												  )
 								);
-
-
-
-				}//var_dump($Data->courseTags($course->get('id')));
+				}
 			}catch(Exception $e){}
 		}
 
 		//Populate webpage with all the different courses that were predicted.
-		if(count($studentCourses) === 0){
+		if(count($studentCoursesTaken) === 0){
 			$this->pageData['numResults'] = (String)count($allCourses);
 			$this->pageData['description'] = "Here are popular courses to get started!";
 			$this->pageData['allCourses'] = $allNewCourses;

@@ -103,6 +103,7 @@ class Database {
 
     }
     function load(){
+        //$StudentList = array();
         $this->loadAllClasses();
         $this->loadAllStudents();
         $this->loadAllMajors();
@@ -113,6 +114,7 @@ class Database {
 
     
     function loadAllClasses(){
+        //$courseList = array();//So we
         $query = new Query('courses');
         $queryActions = $query->select('*',true,'','',false);//Need to return ordered by session_id
         
@@ -135,6 +137,8 @@ class Database {
     ##returns: 
 
     function loadAllStudents(){
+        $studentList = array();
+        //Need to reset array first, so we don't duplicate data entry.
 
         $query = new Query('action');
         $result = $query->select('*',true,'','',false);///Need to return ordered by session_id
@@ -176,6 +180,10 @@ class Database {
     //Preprocesses all the ratings from the slideractions Table.
     //Grabs all the data from the 
     function loadAllRatings(){
+        $RatingsList = array();
+        //Need to reset as would add same entries multiple times potentially.
+
+
         $query = new Query('slideraction');
         $result = $query->select('*','','','',false);
 

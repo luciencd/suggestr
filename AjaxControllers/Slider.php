@@ -6,22 +6,20 @@ class SliderController extends AjaxController {
 		
 		
 		//Updating difficulty slider. maybe put in separate function?
-		$query = new Query('action');
-		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']),
-											array('choice', '=', 0)));
-
-		$idsAlreadyAdded = array();
-		foreach($result as $action){
-			array_push($idsAlreadyAdded, $action->get('course_id'));
-		}
+		
 
 		//Should expand this to updating an array of sliders...
 		$Data = $GLOBALS['MODEL']['Data'];
+		$Data->load();
 
 		/*
 		In order to get correct difficulty, you need to reload everything...
 		*/
-		$Data->load();
+		//$Data
+		$student = $Data->getStudent($_COOKIE['sessionId']);
+
+		//Get the classes you just added, and determine the difficulty.
+		$idsAlreadyAdded = $student->getAdded();
 
 
 		$this->pageData['percent'] = 100.0*$Data->semesterDifficulty($idsAlreadyAdded);

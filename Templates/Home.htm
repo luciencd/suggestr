@@ -1,6 +1,8 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+	//resetStatistics();
+
 	function setMargins(){
 		
 		
@@ -242,7 +244,10 @@ $(document).ready(function(){
 	
 	//******************RESET SUGGESTIONS BUTTON******************/
 	$(document).on('click', 'div.btn-container-suggestr button.btn-primary', function(){
+		suggest();
 		
+	});
+	function suggest(){
 		$("div#courseResultsArea").html("");
 		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
 		$.post('/a.php?p=Suggest',function(d){
@@ -257,7 +262,7 @@ $(document).ready(function(){
 				alert(getAjaxFailureReason(d));
 			}
 		});
-	});
+	}
 	
 	
 	$(document).on('click', 'div.btn-container-reset button.btn-info', function(){
@@ -430,7 +435,7 @@ $(document).ready(function(){
 			elem.css({"background-color":endColor});
 		}
 	}
-	
+	suggest();
 	resetSliderColors();
 	setMargins();
 
@@ -579,8 +584,8 @@ $(document).ready(function(){
 		
 	</div>
 	<div class = "footer"> 
-		<span> Made by Lucien Christie-Dervaux. lucienchristiedervaux@gmail.com for questions and comments.</span> 
-		<a href = "https://github.com/luciencd/suggestr"><span>Github. </span></a>
+		<span> Made by <a href = "https://github.com/luciencd/suggestr"><span>Lucien Christie-Dervaux</span></a>. lucienchristiedervaux@gmail.com for questions and comments.</span> 
+		
 	</div>
 	
 </div> <!-- /Sidebar -->

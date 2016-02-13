@@ -24,6 +24,7 @@ if(!isset($_GET['AJAX']))
 $router = array();
 $router["/home"] = "Home";
 $router["/ml"] = "ML";
+$router["/visualization"] = "Visual";
 
 // API Router
 // The keys in the router array are page URLs
