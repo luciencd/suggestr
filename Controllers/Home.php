@@ -97,7 +97,7 @@ class HomeController extends PageController {
 		//////////////ADDING END SLIDERS////////////
 		////////////////////////////////////////////
 
-		
+
 		$this->pageData['percentage2'] = 100*$Data->semesterDifficulty($idsAlreadyAdded);
 		
 
@@ -186,7 +186,8 @@ class HomeController extends PageController {
 				$this->pageData['description'] = "Here are suggestions based on your course history!";
 				$this->pageData['allCourses'] = $allNewCourses;
 			}
-		}		
+		}
+		$GLOBALS['MODEL']['Data'] = $Data;
 	}
 }
 

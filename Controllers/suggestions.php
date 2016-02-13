@@ -300,13 +300,17 @@ class Database {
 
     function getReturnArray($id,$type){
         //Wrapper class for features in class.
-
+        $returnArray = array();
         if($type == "course"){
-            return $this->courseList[$id]->controllerArray();
+            $returnArray = $this->courseList[$id]->controllerArray();
         }else if($type == "student"){
-            return $this->studentList[$id]->controllerArray();
+            //$returnArray = $this->studentList[$id]->controllerArray();
         }
-        
+
+        /*if(!isset($returnArray)){
+            throw new Exception("type does not exist error");
+        }*/
+        return $returnArray;
     }
 
     //Returns number of credits in a course.
@@ -581,8 +585,6 @@ class Database {
     }
     
     function rating($course_id){
-
-
 
         $outputRating = array();
         $query = new Query('sliders');
