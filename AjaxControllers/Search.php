@@ -6,9 +6,11 @@ class SearchController extends AjaxController {
 		//Remove this once we solved sessionId
 		
 		$Data = $GLOBALS['MODEL']['Data'];
-		$Data->loadAllClasses();
-		$Data->loadAllStudents();
-		$Data->loadAllRatings();
+
+		$Data->load();
+		//Again we have to load in the data so that the ratings are correct. 
+
+
 		$student = $Data->getStudent($_COOKIE['sessionId']);
 		//not sure if this follows mvc protocol.
 		//Removing 
