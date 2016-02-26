@@ -435,7 +435,7 @@ $(document).ready(function(){
 			elem.css({"background-color":endColor});
 		}
 	}
-	suggest();
+	suggest();//Put all the classes on home page.
 	resetSliderColors();
 	setMargins();
 
@@ -444,48 +444,42 @@ $(document).ready(function(){
 </script>
 
 <div class="col-md-5" id="left-panel">
-	<div class="list-group" id="classes">
+	
 
-		<!-- need someone to fix this bullshit -->
-		<ul id="list-questions">
-			<!--<li class="list-group-item" id="questions">
-				<span>
-					Fill out these questions to the best of your knowledge.
-				</span>
-			</li>-->
-			<!-- Make this into a mustache array-->
+	<!-- need someone to fix this bullshit -->
+	<ul id="list-questions">
+		<li class = "list-group-item" style = "display:table;width:100%;">
 
-			<li class = "list-group-item" style = "display:table;width:100%;">
+			<div class = "single-question" id = "major" style="display:table-cell;">
+				<!-- shit to modify in a given table-->
+				<input type="hidden" id = "table" value = "session">
+				<input type="hidden" id = "id"  value = "{{session}}">
+				<input type="hidden" id = "column"  value = "major_name">
 
-				<div class = "single-question" id = "major" style="display:table-cell;">
-					<!-- shit to modify in a given table-->
-					<input type="hidden" id = "table" value = "session">
-					<input type="hidden" id = "id"  value = "{{session}}">
-					<input type="hidden" id = "column"  value = "major_name">
-
-					<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;border-bottom:0px;">
-						<span>Major</span>
-					</div>
-					<div class = "form-group"> 
-					  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="department_id" placeholder="Input Major" value="{{major_name}}">
-					</div>
+				<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;border-bottom:0px;">
+					<span>Major</span>
 				</div>
-
-				<div class = "single-question" id = "year" style="display:table-cell;">
-					<input type="hidden" id = "table" value = "session">
-					<input type="hidden" id = "id"  value = "{{session}}">
-					<input type="hidden" id = "column" value = "year_id">
-
-					<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;border-bottom:0px;">
-						<span>Year</span>
-					</div>
-					<div class = "form-group"> 
-					  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="year_id" placeholder="Input Year" value="{{year_id}}">
-					</div>
+				<div class = "form-group"> 
+				  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="department_id" placeholder="Input Major" value="{{major_name}}">
 				</div>
-
 			</div>
-		</ul>
+
+			<div class = "single-question" id = "year" style="display:table-cell;">
+				<input type="hidden" id = "table" value = "session">
+				<input type="hidden" id = "id"  value = "{{session}}">
+				<input type="hidden" id = "column" value = "year_id">
+
+				<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;border-bottom:0px;">
+					<span>Year</span>
+				</div>
+				<div class = "form-group"> 
+				  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="year_id" placeholder="Input Year" value="{{year_id}}">
+				</div>
+			</div>
+		</li>
+	</ul>
+	
+		
 
 
 

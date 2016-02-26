@@ -14,6 +14,8 @@ class SuggestController extends AjaxController {
 		//Global variables are clearly bad, but I don't know enough about the base AjaxController to extend it with 
 		//a reference to the model or something.
 		$Data = $GLOBALS['MODEL']['Data'];//Find a way to make this local to suggestr.php or something.
+		
+
 		$Data->load();
 
 
@@ -79,6 +81,12 @@ class SuggestController extends AjaxController {
 		}
 
 		//Populate webpage with all the different courses that were predicted.
+		if(!$Data->testConnection('courses')){
+			$this->pageData['numResults'] = 0;
+			$this->pageData['description'] = "No suggestions, Database Failed!";
+			$this->pageData['allCourses'] = $allNewCourses;
+			return true;
+		}
 		if(count($studentCoursesTaken) === 0){
 			$this->pageData['numResults'] = (String)count($allCourses);
 			$this->pageData['description'] = "Here are popular courses to get started!";

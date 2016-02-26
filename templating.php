@@ -23,15 +23,20 @@ function Render($templ, $objects, $useMain=true) {
 	$inner = $template->render($templ, $objects);
 	$objects["BaseContent"] = $inner;
 	$needNewSession = true;
-	if(isset($_COOKIE['sessionId'])){
-		$session = new Session();
-		try{
-			$session->findById($_COOKIE['sessionId']);
-			$needNewSession = false;
-		} catch(Exception $e){
-		
+	if (mysqli_connect_errno()){
+		$needNewSession = false;
+	}else{
+		if(isset($_COOKIE['sessionId'])){
+			$session = new Session();
+			try{
+				$session->findById($_COOKIE['sessionId']);
+				$needNewSession = false;
+			} catch(Exception $e){
+			
+			}
 		}
 	}
+	
 	if($needNewSession){ // Check if this user already has a session
 		// Generate the next user id from the table
 		//echo "set cookie";

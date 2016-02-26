@@ -30,6 +30,7 @@ class Query{
 	}
 	
 	public function select($fields='*', $where='', $order='', $limit='', $returnORM=true, $debug=false, $justQueryString=false){
+		if (mysqli_connect_errno()){return;}
 		/*
 		 * List of optional fields:
 		 * 	$fields
@@ -115,6 +116,7 @@ class Query{
 			echo $statement;
 		}
 		$result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
+		
 		if($justQueryString==true){
 			return $statement;
 		}elseif($returnORM==false){
@@ -309,6 +311,8 @@ class Query{
 	}
 	
 	public function getColsArry(){
+		if (mysqli_connect_errno()){return;}
+
 		/* Returns array of all field names in the table */
 		$result = mysqli_query($GLOBALS['CONFIG']['mysqli'], 'DESCRIBE `'.$this->table.'`');
 		if(!$result||mysqli_num_rows($result)<1)
@@ -322,6 +326,7 @@ class Query{
 	}
 	
 	public function nextId(){
+		if (mysqli_connect_errno()){return;}
 		/* Returns next auto_increment id of `table` */
 		$query = mysqli_query($GLOBALS['CONFIG']['mysqli'], "SHOW TABLE STATUS LIKE '".$this->table."'");
 		$row = mysqli_fetch_array($query);

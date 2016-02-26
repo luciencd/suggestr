@@ -112,9 +112,22 @@ class Database {
         //echo "loaded";
     }
 
-    
+    function testConnection($table){
+       
+        $query = new Query($table);
+        $queryActions = $query->select('*',false,'','',false);
+        
+        
+        if($queryActions == false){
+            return false;
+        }else{
+            return true;
+        }
+    }
     function loadAllClasses(){
-        //$courseList = array();//So we
+        if(!$this->testConnection('courses')){
+            return;
+        }
         $query = new Query('courses');
         $queryActions = $query->select('*',true,'','',false);//Need to return ordered by session_id
         
@@ -137,6 +150,9 @@ class Database {
     ##returns: 
 
     function loadAllStudents(){
+        if(!$this->testConnection('action')){
+            return;
+        }
         $studentList = array();
         //Need to reset array first, so we don't duplicate data entry.
 
@@ -182,7 +198,9 @@ class Database {
     function loadAllRatings(){
         $RatingsList = array();
         //Need to reset as would add same entries multiple times potentially.
-
+        if(!$this->testConnection('slideraction')){
+            return;
+        }
 
         $query = new Query('slideraction');
         $result = $query->select('*','','','',false);
@@ -245,6 +263,9 @@ class Database {
     }
 
     function loadAllMajors(){
+        if(!$this->testConnection('departments')){
+            return;
+        }
         $query = new Query('departments');
         $result = $query->select('*','','','',false);
         foreach($result as $row){
@@ -256,6 +277,9 @@ class Database {
     }
 
     function loadAllRelations(){
+        if(!$this->testConnection('majorrelations')){
+            return;
+        }
         $query = new Query('majorrelations');
         $result = $query->select('*','','','',false);
         foreach($result as $row){
@@ -535,7 +559,9 @@ class Database {
     function courseTags($course_id){
         
         /*find a way to limit total amount of outgoing tags or some other mechanic.*/
-
+        if(!$this->testConnection('tags')){
+            return;
+        }
 
         $query = new Query('tags');
         $result = $query->select('*',true,'','',false);
@@ -573,7 +599,9 @@ class Database {
     }
 
     function courseTagFrequency($course_id, $tag_id){
-
+        if(!$this->testConnection('tagaction')){
+            return;
+        }
         
         $query = new Query('tagaction');
         $result = $query->select('*',array(array('course_id','=',$course_id),array('tag_id','=',$tag_id)),'','',false);
