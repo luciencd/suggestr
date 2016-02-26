@@ -230,7 +230,9 @@ $(document).ready(function(){
 			if(getAjaxStatus(d)){
 				// Everything went well
 				if($input2.val() === ''){
-					$("div#courseResultsArea").html('');
+					suggest();
+					//If search bar is empty, reset to original suggest() function.
+					//Perhaps cache this information.
 				}else{
 					$("div#courseResultsArea").html(getAjaxData(d));
 					resetSliderColors();
