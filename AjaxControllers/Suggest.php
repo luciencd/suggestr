@@ -81,12 +81,12 @@ class SuggestController extends AjaxController {
 		}
 
 		//Populate webpage with all the different courses that were predicted.
-		/*if(!$Data->testConnection('courses')){
+		if(!$Data->testConnection('courses')){
 			$this->pageData['numResults'] = 0;
 			$this->pageData['description'] = "No suggestions, Database Failed!";
 			$this->pageData['allCourses'] = $allNewCourses;
 			return true;
-		}*/
+		}
 		if(count($studentCoursesTaken) === 0){
 			$this->pageData['numResults'] = (String)count($allCourses);
 			$this->pageData['description'] = "Here are popular courses to get started!";

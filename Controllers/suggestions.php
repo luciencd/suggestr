@@ -183,6 +183,7 @@ class Database {
         $query = new Query('sessions');
         $result = $query->select('*',true,'','',false);
         while($row = mysqli_fetch_array($result)){
+            //echo $id;
             $id = $row['id'];
             $major = $row['major_id'];
             $year = $row['year_id'];
@@ -418,7 +419,7 @@ class Database {
     function getSuggestedCourses($student, $coursesTaken){
         $start = microtime(true);
 
-
+        echo "<h3>SUGGESTED COURSES!!</h3>";
         $scores = array();
         foreach($this->StudentList as $otherStudent){
 
