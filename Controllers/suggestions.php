@@ -419,7 +419,7 @@ class Database {
     function getSuggestedCourses($student, $coursesTaken){
         $start = microtime(true);
 
-        echo "<h3>SUGGESTED COURSES!!</h3>";
+        //echo "<h3>SUGGESTED COURSES!!</h3>";
         $scores = array();
         foreach($this->StudentList as $otherStudent){
 

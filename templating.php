@@ -22,24 +22,30 @@ function Render($templ, $objects, $useMain=true) {
 	$objects["BaseURL"] = $GLOBALS['CONFIG']['app-path'];
 	$inner = $template->render($templ, $objects);
 	$objects["BaseContent"] = $inner;
+
+
 	$needNewSession = true;
-	if (mysqli_connect_errno()){
-		$needNewSession = false;
-	}else{
-		if(isset($_COOKIE['sessionId'])){
-			$session = new Session();
-			try{
-				$session->findById($_COOKIE['sessionId']);
-				$needNewSession = false;
-			} catch(Exception $e){
-			
-			}
+	
+	//If you already have a sessionId cookie, then we need to get that session from the database.
+	//And see if it exists in the database in the sessions table
+	if(isset($_COOKIE['sessionId'])){
+		$session = new Session();
+		try{
+			$session->findById($_COOKIE['sessionId']);
+			$needNewSession = false;
+		} catch(Exception $e){
+		
 		}
 	}
 	
+	//Need to ensure that if the database fails, and $session->findById($_COOKIE['sessionId']);
+	//Fails, that it won't cause the session to refresh.
+	// VERY IMPORTANT.
+	
 	if($needNewSession){ // Check if this user already has a session
 		// Generate the next user id from the table
-		//echo "set cookie";
+
+		//If new user, we get the nextId from the table.
 		$query = new Query('sessions');
 		$id = $query->nextId();
 		if(is_numeric($id)){
@@ -64,14 +70,13 @@ function Render($templ, $objects, $useMain=true) {
 		}else
 			throw new Exception("Error Processing New Session.", 1);
 	}else{
-		
-		
-		//echo 'cookie alreay set template'.$_COOKIE['sessionId'];
 	}
 
 	
 
 	$objects["sessionId"] = $_COOKIE['sessionId']; // Make the session ID avaliable to all controllers.
+	//If we created a new session, must set objects to it.
+
 	if($useMain){
 		// This is the place to make other ajax calls that don't use main and need to be loaded in..
 		// Tasks

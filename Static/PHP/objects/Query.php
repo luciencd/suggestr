@@ -30,7 +30,7 @@ class Query{
 	}
 	
 	public function select($fields='*', $where='', $order='', $limit='', $returnORM=true, $debug=false, $justQueryString=false){
-		if (mysqli_connect_errno()){return;}
+		//if (mysqli_connect_errno()){return;}
 		/*
 		 * List of optional fields:
 		 * 	$fields
@@ -311,7 +311,6 @@ class Query{
 	}
 	
 	public function getColsArry(){
-		if (mysqli_connect_errno()){return;}
 
 		/* Returns array of all field names in the table */
 		$result = mysqli_query($GLOBALS['CONFIG']['mysqli'], 'DESCRIBE `'.$this->table.'`');

@@ -81,7 +81,7 @@ $(document).ready(function(){
 			dataType: "text",
 			success: function(d){
 				
-				//alert("success2: "+);
+				//alert("success2: ");
 				$("div#left-panel div.addList")
 					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 				
@@ -257,12 +257,10 @@ $(document).ready(function(){
 			
 			
 			if(getAjaxStatus(d)){
-				// Everything went well
-				alert(d);
 				$("div#courseResultsArea").html(getAjaxData(d));
 				resetSliderColors();
 			}else{
-				alert(getAjaxFailureReason(d));
+				//alert(getAjaxFailureReason(d));
 			}
 		}).fail(function(jqXHR, textStatus, errorThrown) {
 		    $("div#courseResultsArea").html('<div class = "suggest-control" style="display: table;width:100%;"> <div class = "btn-container-suggestr" style="display: table-cell;"> <button type="button" class="btn btn-primary">Suggest</button> </div><div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;"><div class = "resultsInfo"><span>Database Failed!</span> (<span>0 Results</span>)</div></div></div>');

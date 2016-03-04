@@ -79,7 +79,7 @@ class SuggestController extends AjaxController {
 				}
 			}catch(Exception $e){}
 		}
-
+		
 		//Populate webpage with all the different courses that were predicted.
 		if(!$Data->testConnection('courses')){
 			$this->pageData['numResults'] = 0;
