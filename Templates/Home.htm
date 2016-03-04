@@ -41,7 +41,10 @@ $(document).ready(function(){
 		// Mark course as ignored in the model
 		
 		$.post('/a.php?p=TookCourse', {course_id:id}, function(d){
-			if(!getAjaxStatus(d)){
+			var obj = jQuery.parseJSON(d);
+			//alert(obj.success);
+			//if(!getAjaxStatus(d)){
+			if(obj.success === false){
 				//Don't need to print it because its a physical error.
 				//alert('Sorry, there was an error.');
 			}else{
@@ -61,6 +64,7 @@ $(document).ready(function(){
 					$course.remove();
 				});
 				setMargins();
+
 			}
 		});
 	});
@@ -74,44 +78,74 @@ $(document).ready(function(){
 		var number = $course.find('input#number').val();
 		var name = $course.find('input#name').val();
 		
-		
-		$.ajax({
-			type:"POST",
-			url:'/a.php?p=AddCourse',
-			data: {'course_id': id},
-			dataType: "text",
-			success: function(d){
+		$.post('/a.php?p=AddCourse', {course_id:id}, function(d){
+			var obj = jQuery.parseJSON(d);
+			//alert(obj.success);
+			//if(!getAjaxStatus(d)){
+			if(obj.success === false){
+				//Don't need to print it because its a physical error.
+				//alert('Sorry, there was an error.');
+			}else{
+				// Hide/remove elements
+				// Add course to left-hand list of courses
+	
+				//Adding class css/html to left-hand
 				
-				//alert("success2: ");
 				$("div#left-panel div.addList")
 					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
 				
 				
 				$("div#left-panel div.addList li.list-group-item:last").slideDown(400);
-
-				//Removing from right-side suggestions or search.
+				
+				//Removing class from right panel,(suggestion and search area)
 				$course.slideUp(400, function(){
 					$course.remove();
 				});
-				
 				setMargins();
-				//alert(d);
+				resetStatistics();
+			}
+		});
+		/*
+		$.ajax({
+			type:"POST",
+			url:'/a.php?p=AddCourse',
+			data: {'course_id': id},
+			dataType: "json",
+			success: function(d){
+				
+				
+				$("div#left-panel div.addList")
+					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+				
+				
+				$("div#left-panel div.addList li.list-group-item:last").slideDown(400);
+				
+				alert(d);
+				//alert(obj.success);
+				//Removing from right-side suggestions or search.
+				//$course.slideUp(400, function(){
+				//	$course.remove();
+				//});
 			}
 		}).done(function(d){
-			//alert('done');
+			alert('done');
+			//var obj = jQuery.parseJSON(d);
+			//alert(obj.success);
+			setMargins();
 			resetStatistics();
-		})
-		.fail(function(jqXHR, textStatus, errorThrown) {
-		    //alert( "error" );
-		    //console.log("error");
-		    //alert(textStatus);
-  			//alert(errorThrown);
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+		    alert( "error" );
+
+		    alert(textStatus);
+  			alert(errorThrown);
 		})
 		.always(function() {
-		    //alert( "complete" );
+		    alert( "complete" );
 		});
-		
+		*/
 	});
+
+	//Resetting total difficulty list of classes.
 	function resetStatistics(){
 		$.post('/a.php?p=Slider', function(d){
 			if(getAjaxStatus(d)){
@@ -168,14 +202,21 @@ $(document).ready(function(){
 					$(this).remove();
 					//doneTyping(); // Rerun the search in case new options are now avaliable...
 				});
-
+				
 
 				
 			}
-			//Issues here, it doesn't update the margin properly...
-			setMargins();
+			
+			//Somehow delaying the margins helps, but I'm not sure this is a great solution.
+			//Its a pretty good hack though.
+			setTimeout(setMargins,600);
+			//Could always make a function that takes in the destination to reduce or expand or whatevz.
+			//make somebody else deal with this.
+
 			resetStatistics();
+
 		});
+		
 		
 	});
 	// **************** GETTING QUESTION! *****************
