@@ -325,7 +325,7 @@ class Query{
 	}
 	
 	public function nextId(){
-		if (mysqli_connect_errno()){return;}
+		//if (mysqli_connect_errno()){return;}
 		/* Returns next auto_increment id of `table` */
 		$query = mysqli_query($GLOBALS['CONFIG']['mysqli'], "SHOW TABLE STATUS LIKE '".$this->table."'");
 		$row = mysqli_fetch_array($query);

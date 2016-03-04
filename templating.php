@@ -48,24 +48,24 @@ function Render($templ, $objects, $useMain=true) {
 		//If new user, we get the nextId from the table.
 		$query = new Query('sessions');
 		$id = $query->nextId();
+		//I suppose if database could not be accessed when we check for it
+		//in $session->findById($_COOKIE['sessionId']);
+		// it also won't work here, meaning the session_id won't actually change
+		// just because the database fails.
+
 		if(is_numeric($id)){
-			
 			
 			$session = new Session();
 			$session->set('amount', 0); // Just so that the ORM class thinks something's dirty and allows entry of an empty row
 			$session->save(); // Add an empty row to the Sessions table with the next session ID
 			
-
-			//echo $id;
-			//header_remove();
 			header('Location: /'); // Needs to reload since a cookie must be set at the start of the request.
 			setcookie('sessionId', $id, time()+315360000, '/'); // Shouldn't expire for 10 years
 
 			ob_end_flush();
-			//$_COOKIE['sessionId'] = $id;//REAL BIG PROBLEMS.
+
 			
 			//now that the session_id is set, start model.
-			
 			
 		}else
 			throw new Exception("Error Processing New Session.", 1);
