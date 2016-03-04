@@ -26,6 +26,19 @@
 				<div class="col-md-9">
 					<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
 				</div>
+				<!--
+				{{#stars}}
+				<img src="/images/misc_58.png" class="star" style="opacity:{{percentage}};">
+					
+						
+					
+					<input type="hidden" id="slider_type" value="{{slider_type}}">
+					<input type="hidden" id="slider_id" value="{{slider_id}}">
+					<input type="hidden" class="percentage" value="{{percentage}}">
+					<input type="hidden" class="state" value ="0">
+				</img>
+				{{/stars}}-->
+
 				<div class="col-md-3">
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-success">Took</button>
@@ -53,11 +66,15 @@
 				<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;">
 					<span>{{slider_name}}</span>
 				</div>
+				<input type="hidden" id="slider_type" value="{{slider_type}}">
 				<input type="hidden" id="slider_id" value="{{slider_id}}">
 				<input type="hidden" class="percentage" value="{{percentage}}">
 			</div>
 			{{/ratings}}
+			
+			
 		</div>
+
 	</div>
 	<!-- needs spacing here-->
 {{/allCourses}}

@@ -12,12 +12,13 @@ class AddRatingController extends AjaxController {
 		}
 
 		//Check if the vote is positive or negative(future version)
-
+		
 		//Checking if particular session has already pressed this tag button.
 		$query = new Query('slideraction');
 		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']), 
 											array('slider_id', '=', $post['slider_id']),
-											array('course_id', '=', $post['course_id'])), '', 2,true);
+											array('course_id', '=', $post['course_id']),
+											array('slider_type', '=', $post['slider_type'])), '', 2,true);
 
 		if(count($result)!=0){
 			// Abort because this tag has already been voted on by this session on this course.
@@ -32,9 +33,10 @@ class AddRatingController extends AjaxController {
 		$action = new SliderAction();
 		
 		$action->set('slider_id', $post['slider_id']);
+		$action->set('slider_type', $post['slider_type']);
 		$action->set('course_id', $post['course_id']);
 		$action->set('session_id', $_COOKIE['sessionId']);
-		$action->set('vote',$post['slider_num']);
+		$action->set('vote',$post['vote']);
 		$action->save();
 
 		

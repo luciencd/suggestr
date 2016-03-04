@@ -392,13 +392,47 @@ $(document).ready(function(){
 		var width = $(this).width();
 		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
 		var $slider_id = $(this).children('input#slider_id').val();
-		var $slider_num = (e.pageX - offset.left)/(width);
+		var vote = (e.pageX - offset.left)/(width);
+		var $slider_type = $(this).children('input#slider_type').val();
 
 		$elem = $(this);
-		$elem.children('input.percentage').val($slider_num*100);
+		$elem.children('input.percentage').val(vote*100);
+
+
 		$elem.children('.slider-rating').css({"width":(e.pageX - offset.left)+"px"});
 		sliderColorizeUp($elem);
-		$.post('/a.php?p=AddRating', {course_id: $course_id, slider_id: $slider_id, slider_num: $slider_num} ,function(d) { 
+		alert(slider_type);
+		$.post('/a.php?p=AddRating', {course_id: $course_id, slider_id: $slider_id, vote: vote,slider_type: $slider_type} ,function(d) { 
+			//Sets input-wise the percentage to the one you set.
+			
+		});
+	});
+
+
+	$(document).on('click', 'img.star', function(e){
+
+		var $course_id = $(this).parents("div.panel-heading").children('input#course_id').val();
+		alert($course_id);
+		var $slider_id = $(this).siblings('input#slider_id').val();
+		var $slider_type = $(this).siblings('input#slider_type').val();
+		var $state = $(this).siblings('input#state').val();
+		var $vote = 0;
+
+		//Some fucked up shit happening here.
+		$elem = $(this);
+		if($elem.siblings('input.percentage').val() == "0"){
+			$elem.siblings('input.percentage').val(1);
+			vote = 1;
+		}else{
+			vote = 0;
+			$elem.siblings('input.percentage').val(0);
+		}
+		
+		$elem.css({"opacity":vote});
+		alert(slider_type);
+
+		$.post('/a.php?p=AddRating', {course_id: $course_id, slider_id: $slider_id, vote: $vote,slider_type: $slider_type} ,function(d) { 
+			alert(d);
 			//Sets input-wise the percentage to the one you set.
 			
 		});
@@ -483,6 +517,7 @@ $(document).ready(function(){
 	}
 	suggest();//Put all the classes on home page.
 	resetSliderColors();
+	
 	setMargins();
 
 	

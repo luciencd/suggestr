@@ -17,7 +17,7 @@ class CourseObject {
     function controllerArray(){
         return array(
             'id' => $this->id,
-            'name' => ucwords(strtolower($this->name)),
+            'name' => $this->name,
             'description' => $this->description,
             'department_id' => $this->department_id,
             'number' => $this->number
@@ -208,7 +208,7 @@ class Database {
 
         
         foreach($result as $row){
-            
+            //echo $row;
             /*
             Probably not best practice here. fix it eventually.
             */
@@ -220,22 +220,49 @@ class Database {
             //echo "(".$source_major." ".$target_major. "),";
             // arts taking calc 1
             // ['arts'][.1,[.2,.2,.2,.2],4]['Mathematics'][]
-            if(isset($this->RatingsList[$row['course_id']][$row['slider_id']][$target_major])){
-                
-                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = $this->majorSimilarity($source_major,$target_major);
-                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] += $row['vote'];
-                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] += 1;
-                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
 
+            //When it comes to preferences and stuff like that, we want a weighting that accuratly represents
+            //similar majors as perhaps 60-40% of the rating.
+            if($row['slider_type'] == "preference"){
+                if(isset($this->RatingsList[$row['course_id']][$row['slider_id']][$target_major])){
                 
-            }else{
-                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = $this->majorSimilarity($source_major,$target_major);
-                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] = $row['vote'];
-                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] = 1;
-                $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = $this->majorSimilarity($source_major,$target_major);
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] += $row['vote'];
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] += 1;
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
+
+                    
+                }else{
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = $this->majorSimilarity($source_major,$target_major);
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] = $row['vote'];
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] = 1;
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
+                }
+            //When it comes to individual majors' requirements, it should be 90% the major.
+            }else if($row['slider_type'] == "advised"){
+                if(isset($this->RatingsList[$row['course_id']][$row['slider_id']][$target_major])){
+                    
+                    //$this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = $this->majorSimilarity($source_major,$target_major);
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] += $row['vote'];
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] += 1;
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
+
+                    
+                }else{
+                    if($source_major == $target_major){
+                        $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = .95;
+                    }else{
+                        $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = .005;
+                    }
+                    
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] = $row['vote'];
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] = 1;
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
+                }
             }
-            //}
-            //echo '<br>';
+            
+            
+
         }
 
         //echo $this->RatingsList[35483][3][1];
@@ -620,7 +647,39 @@ class Database {
             return 0.5;
         }
     }
+
+    //returns an array of true false ratings.
+    function stars($course_id){
+        $outputRating = array();
+        $query = new Query('sliders');
+        $result = $query->select('*',true,'','',false);
+
+        $ratingResults = array();
+
+        foreach($result as $row){
+            $slider_id = $row['id'];
+            $slider_name = $row['name'];
+            $slider_type = $row['type'];
+            if(!isset($ratingResults[$slider_id]) and ($slider_type == "advised")){
+                $ratingResults[$slider_id]['slider_name'] = $slider_name;
+                $ratingResults[$slider_id]['slider_id'] = $slider_id;
+                $ratingResults[$slider_id]['count'] = $this->ratingPercentage($course_id,$slider_id);
+                $ratingResults[$slider_id]['slider_type'] = $slider_type;
+            }
+        }
+
+        $ratingResultsArray = array();
+        foreach($ratingResults as $key => $value){
+            array_push($ratingResultsArray,array('percentage' => $value['count'],
+                                                'slider_id' => $value['slider_id'],
+                                                'slider_name' => $value['slider_name'],
+                                                'slider_type' => $value['slider_type']));
+
+        }
+        return $ratingResultsArray;
+    }
     
+    //Returns an array of the 3 bar ratings.
     function rating($course_id){
 
         $outputRating = array();
@@ -632,10 +691,13 @@ class Database {
         foreach($result as $row){
             $slider_id = $row['id'];
             $slider_name = $row['name'];
-            if(!isset($ratingResults[$slider_id])){
+            $slider_type = $row['type'];
+            
+            if(!isset($ratingResults[$slider_id]) and ($slider_type == "preference")){
                 $ratingResults[$slider_id]['slider_name'] = $slider_name;
                 $ratingResults[$slider_id]['slider_id'] = $slider_id;
                 $ratingResults[$slider_id]['count'] = $this->ratingPercentage($course_id,$slider_id);
+                $ratingResults[$slider_id]['slider_type'] = $slider_type;
             }
         }
 
@@ -643,7 +705,8 @@ class Database {
         foreach($ratingResults as $key => $value){
             array_push($ratingResultsArray,array('percentage' => 100*$value['count'],
                                                 'slider_id' => $value['slider_id'],
-                                                'slider_name' => $value['slider_name']));
+                                                'slider_name' => $value['slider_name'],
+                                                'slider_type' => $value['slider_type']));
 
         }
         return $ratingResultsArray;

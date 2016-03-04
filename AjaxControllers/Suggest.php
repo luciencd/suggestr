@@ -68,13 +68,13 @@ class SuggestController extends AjaxController {
 			try{
 				if(!in_array($course['id'], $idsAlreadyAdded)){ // Check that this course has not been added by the user yet
 					array_push($allNewCourses, array('id' => $course['id'],
-												  'name' => ucwords(strtolower($course['name'])),
+												  'name' => $course['name'],
 												  'department_id' => $course['department_id'],
 												  'number' => $course['number'],
 												  'description' => $course['description'],//((strlen($course['description']==0)?'No description':$course['description'])),
 												  'allTags' => array(array()),//$Data->courseTags($course->get('id')),//Should contain 5 tags.
-												  'ratings' => $Data->rating($course['id'])
-												  )
+												  'ratings' => $Data->rating($course['id']),
+												  'stars' => $Data->stars($course['id']))
 								);
 				}
 			}catch(Exception $e){}
