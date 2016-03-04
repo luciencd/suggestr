@@ -42,7 +42,8 @@ $(document).ready(function(){
 		
 		$.post('/a.php?p=TookCourse', {course_id:id}, function(d){
 			if(!getAjaxStatus(d)){
-				alert('Sorry, there was an error.');
+				//Don't need to print it because its a physical error.
+				//alert('Sorry, there was an error.');
 			}else{
 				// Hide/remove elements
 				// Add course to left-hand list of courses
@@ -94,17 +95,17 @@ $(document).ready(function(){
 				});
 				
 				setMargins();
-				alert(d);
+				//alert(d);
 			}
 		}).done(function(d){
 			//alert('done');
 			resetStatistics();
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
-		    alert( "error" );
+		    //alert( "error" );
 		    //console.log("error");
-		    alert(textStatus);
-  			alert(errorThrown);
+		    //alert(textStatus);
+  			//alert(errorThrown);
 		})
 		.always(function() {
 		    //alert( "complete" );
