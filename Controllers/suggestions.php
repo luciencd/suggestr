@@ -649,6 +649,38 @@ class Database {
     }
 
     //returns an array of true false ratings.
+    function requirement($course_id){
+        $outputRating = array();
+        $query = new Query('sliders');
+        $result = $query->select('*',true,'','',false);
+
+        $ratingResults = array();
+
+        foreach($result as $row){
+            $slider_id = $row['id'];
+            $slider_name = $row['name'];
+            $slider_type = $row['type'];
+            if(!isset($ratingResults[$slider_id]) and ($slider_type == "advised")){
+                $ratingResults[$slider_id]['slider_name'] = $slider_name;
+                $ratingResults[$slider_id]['slider_id'] = $slider_id;
+                $ratingResults[$slider_id]['count'] = $this->ratingPercentage($course_id,$slider_id);
+                $ratingResults[$slider_id]['slider_type'] = $slider_type;
+            }
+        }
+
+        $ratingResultsArray = array();
+        $maxPercent = -1;
+        foreach($ratingResults as $key => $value){
+            if($maxPercent < $value['count']){
+                $maxPercent = $value['count'];
+                $ratingResult = array('percentage' => $value['count'],
+                                                'slider_id' => $value['slider_id'],
+                                                'slider_name' => $value['slider_name'],
+                                                'slider_type' => $value['slider_type']);
+            }
+        }
+        return $ratingResult;
+    }
     function stars($course_id){
         $outputRating = array();
         $query = new Query('sliders');

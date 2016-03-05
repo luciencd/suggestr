@@ -409,7 +409,7 @@ $(document).ready(function(){
 	});
 
 
-	$(document).on('click', 'img.star', function(e){
+	$(document).on('click', 'div.star_slider', function(e){
 
 		var $course_id = $(this).parents("div.panel-heading").children('input#course_id').val();
 		alert($course_id);
@@ -420,12 +420,12 @@ $(document).ready(function(){
 
 		//Some fucked up shit happening here.
 		$elem = $(this);
-		if($elem.siblings('input.percentage').val() == "0"){
-			$elem.siblings('input.percentage').val(1);
-			vote = 1;
-		}else{
+		if($elem.siblings('input.percentage').val() == 1){
+			$elem.siblings('input.percentage').val(0.5);
 			vote = 0;
-			$elem.siblings('input.percentage').val(0);
+		}else{
+			vote = 1;
+			$elem.siblings('input.percentage').val(1);
 		}
 		
 		$elem.css({"opacity":vote});
@@ -517,7 +517,7 @@ $(document).ready(function(){
 	}
 	suggest();//Put all the classes on home page.
 	resetSliderColors();
-	
+
 	setMargins();
 
 	
@@ -695,7 +695,8 @@ $(document).ready(function(){
 							<input type="hidden" id="course_id" value="{{id}}" />
 							<input type="hidden" id="number" value="{{number}}" />
 							<input type="hidden" id="name" value="{{name}}"/>
-							<div class="row">
+							
+
 								<div class="col-md-9">
 									<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
 								</div>
@@ -707,8 +708,9 @@ $(document).ready(function(){
 										<!--<button type="button" class="btn btn-danger">Ignore</button>-->
 									</div>
 								</div>
-							</div>
+							
 						</div>
+
 
 						<div class="panel-body">
 							<div class="row">{{description}}</div>

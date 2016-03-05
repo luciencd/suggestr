@@ -21,6 +21,35 @@
 .row {
 	margin: 0px;
 }
+
+div.panel-heading div.row {
+
+}
+div.panel-heading [class*="col-"] {
+	border-right: 1px solid #ddd;
+	height:40px;
+}
+
+div.star-slider {
+	text-align: center;
+	top:50%;
+}
+
+div.star-slider div.change-up {
+	text-align: center;
+	font-size:9px;
+	color:gray;
+}
+
+div.star-slider div.attribute {
+	font-size:14px;
+}
+
+div.star-slider div.change-down {
+	font-size:9px;
+	text-align: center;
+	color:gray;
+}
 /*SCROLLING PANEL*/
 
 #left-panel, #right-panel {

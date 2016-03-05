@@ -23,22 +23,26 @@
 			<input type="hidden" id="number" value="{{number}}" />
 			<input type="hidden" id="name" value="{{name}}"/>
 			<div class="row">
-				<div class="col-md-9">
+				<div class="col-md-6">
 					<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
 				</div>
-				<!--
-				{{#stars}}
-				<img src="/images/misc_58.png" class="star" style="opacity:{{percentage}};">
-					
-						
-					
-					<input type="hidden" id="slider_type" value="{{slider_type}}">
-					<input type="hidden" id="slider_id" value="{{slider_id}}">
-					<input type="hidden" class="percentage" value="{{percentage}}">
-					<input type="hidden" class="state" value ="0">
-				</img>
-				{{/stars}}-->
+				<div class = "col-md-3">
 
+			
+					{{#stars}}					
+					<div class = "star-slider">
+						<input type="hidden" id="slider_type" value="{{slider_type}}">
+						<input type="hidden" id="slider_id" value="{{slider_id}}">
+						<input type="hidden" class="percentage" value="{{percentage}}">
+
+						<div class = "change-up">▲</div>
+						<div class = "attribute">{{slider_name}}</div>
+						<div class = "change-down">▼</div>
+					</div>
+					{{/stars}}
+				</div>
+				<!--
+				-->
 				<div class="col-md-3">
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-success">Took</button>
@@ -47,7 +51,11 @@
 						<!--<button type="button" class="btn btn-danger">Ignore</button>-->
 					</div>
 				</div>
+
+				
 			</div>
+			
+
 		</div>
 
 		<div class="panel-body">

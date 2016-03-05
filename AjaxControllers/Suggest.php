@@ -74,7 +74,7 @@ class SuggestController extends AjaxController {
 												  'description' => $course['description'],//((strlen($course['description']==0)?'No description':$course['description'])),
 												  'allTags' => array(array()),//$Data->courseTags($course->get('id')),//Should contain 5 tags.
 												  'ratings' => $Data->rating($course['id']),
-												  'stars' => $Data->stars($course['id']))
+												  'stars' => $Data->requirement($course['id']))
 								);
 				}
 			}catch(Exception $e){}
