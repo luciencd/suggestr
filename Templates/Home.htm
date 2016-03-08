@@ -77,12 +77,12 @@ $(document).ready(function(){
 		var id = $course.find('input#course_id').val();
 		var number = $course.find('input#number').val();
 		var name = $course.find('input#name').val();
-		alert('start');
+		//alert('start');
 		$.post('/a.php?p=AddCourse', {course_id:id}, function(d){
 			var obj = jQuery.parseJSON(d);
 			//alert(obj.success);
 			if(!getAjaxStatus(d)){
-				alert('fuckup');
+				//alert('fuckup');
 			}else{
 				if(obj.success === false){
 				//Don't need to print it because its a physical error.
