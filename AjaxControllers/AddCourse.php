@@ -11,7 +11,7 @@ class AddCourseController extends AjaxController {
 			$this->failureReason = 'Sorry, there was an error. 2';
 			return false;
 		}
-
+		
 		$session = new Session();
 		$session->findById($_COOKIE['sessionId']);
 		$major_id = $session->get('department_id');
