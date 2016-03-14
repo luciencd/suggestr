@@ -32,11 +32,12 @@ function Render($templ, $objects, $useMain=true) {
 		$session = new Session();
 		try{
 			$session->findById($_COOKIE['sessionId']);
+			$needNewSession = false;
 		}catch(Exception $e){
-
+			$needNewSession = true;
 		}
 		
-		$needNewSession = false;
+		
 		
 	}
 	
