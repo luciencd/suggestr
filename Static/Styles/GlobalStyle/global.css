@@ -22,6 +22,9 @@
 	margin: 0px;
 }
 
+div.panel-heading div.row div.col-md-6{
+	padding-left:0px;
+}
 div.panel-heading div.row {
 
 }
@@ -29,7 +32,10 @@ div.panel-heading [class*="col-"] {
 	border-right: 1px solid #ddd;
 	height:40px;
 }
-
+div.panel-bottom {
+	padding: 15px;
+	height:52px;
+}
 div.star-slider {
 	text-align: center;
 	top:50%;
@@ -176,7 +182,7 @@ div.info-bar-2{
 .panel-bottom {
 	background-color:#F5FFFA;/*#CDC0B0;*/
 	border-radius:0px 0px 5px 5px;
-	height:21px;
+	height:35px;
 
 }
 .panel-title {
@@ -340,21 +346,38 @@ fieldset[disabled] .btn-sample.active {
 }
 
 /*SLIDER*/
-.slider {
+.slider-base {
 	width:33.33%;
 	float:left;
-	height:21px;
+	height:40px;
 	/*border: 1px solid black;*/
 	border-radius:5px;
 	/*border-right:1px solid black;
 	border-bottom-right-radius:5px;*/
+	/*padding-left:20px;
+	padding-right:10px;*/
+}
 
+.slider {
+	
 
 }
 .slider-rating {
 	background-color:black;
 	color:black;
-	height:21px;
+	height:10px;
+	margin-right:10px;
+
+
+	/*text-align:center;*/
+}
+.slider-label {
+	
+	color:black;
+	font-size:13px;
+	height:15px;
+	margin-bottom:10px;
+	
 	/*text-align:center;*/
 }
 
