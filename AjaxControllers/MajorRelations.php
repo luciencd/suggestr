@@ -10,9 +10,12 @@ class MajorRelationsController extends AjaxController {
 		//echo json_encode(array('foo' => 'bar'));
 
 		$Data = new Database();
-		$Data->updateMajorRelations();
+		$DUMP = $Data->updateMajorRelations();
 
-
+		$this->pageData['SQL'] = $DUMP[0];
+		$this->pageData['count'] = $DUMP[1];
+		//$this->pageData['SQL'] = $DUMP[0];
+		return true;
 
 		
 	}

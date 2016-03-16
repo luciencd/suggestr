@@ -822,15 +822,15 @@ class Database {
         //set major relations table back to 0.
         $query = new Query('majorrelations');
         $query->update(array(array('count',0)),array(array('id','!=',0)));
-
-       
+        $count = 0;
+        $studentsExamined = 0;
         
         foreach($this->StudentList as $student){
             $source_id = $student->getMajor();
 
             
             $classes = $student->getTaken();
-
+            $studentsExamined +=1;
             foreach($classes as $course){
 
 
@@ -849,7 +849,7 @@ class Database {
                     $MajorRelation->save();
                     //$query = new Query('majorrelations');
                     //$result = $query->select('*',array(array('source_id','=',$source_id),array('target_id','=',$target_id)),'',1,false);
-
+                    $count+=1;
                     //$result
 
                 }
@@ -862,7 +862,7 @@ class Database {
 
         // now get similarity ratings. simple. If 1/15 classes people take in cs is economics,
         // the rating is 1/15.
-        echo "start";
+        //echo "start";
         $statement =  "UPDATE ";
         $statement .= "MajorRelations m1 ";
         $statement .= "INNER JOIN ";
@@ -872,10 +872,10 @@ class Database {
         $statement .= "group by source_id ";
         $statement .= ") m2 on m1.source_id = m2.source_id ";
         $statement .= "SET m1.score = m1.count/m2.t_sum";
-        echo $statement;
+        //echo $statement;
         $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
 
-        return false;
+        return array($statement,$count,$studentsExamined);
 
     }
 }
