@@ -276,6 +276,7 @@ $(document).ready(function(){
 		$("div#courseResultsArea").html("");
 		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
 		$.post('/a.php?p=Search', {q: $input2.val()}, function(d){
+			
 			if(getAjaxStatus(d)){
 				// Everything went well
 				if($input2.val() === ''){

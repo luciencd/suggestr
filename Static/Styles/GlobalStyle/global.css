@@ -28,9 +28,14 @@ div.panel-heading div.row div.col-md-6{
 div.panel-heading div.row {
 
 }
-div.panel-heading [class*="col-"] {
+/*div.panel-heading [class*="col-"] {
 	border-right: 1px solid #ddd;
 	height:40px;
+}*/
+div.panel-heading div.col-md-3::after{
+	border-right: 0px solid transparent;
+	height:40px;
+	background-color:blue;
 }
 div.panel-bottom {
 	padding: 15px;
@@ -42,6 +47,8 @@ div.panel-bottom {
 div.star-slider {
 	height:100%;
 	top:50%;
+	width:130px;
+	margin-left:20%;
 }
 
 div.star-slider div.change-up {
@@ -71,7 +78,7 @@ div.star-slider div.confirm {
 	width:19%;
 	margin-left:auto; margin-right:0;
 
-	line-height:44px;
+	line-height:43px;
 
 	
 	
@@ -207,7 +214,7 @@ div.info-bar-2{
 
 }
 .panel-title {
-	margin-top: 8px;
+	margin-top: 12px;
 }
 
 body{
@@ -218,8 +225,11 @@ body{
 	color: red;
 	cursor: pointer;
 }
-
+div.btn-group{
+	margin-top:4px;
+}
 .btn-group .button:last-child {
+
   border-radius: 0 6px 6px 0;
   margin-left: -1px;
 }

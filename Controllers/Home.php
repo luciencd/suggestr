@@ -55,6 +55,7 @@ class HomeController extends PageController {
 			$this->pageData["Title"] = "Error reset cache";
 		}
 		
+
 	
 		//FINAL INFO// GET COURSES
 	
@@ -72,6 +73,7 @@ class HomeController extends PageController {
 		$idsAlreadyAdded = $student->getTaken();
 		$usersCourses = array();
 		foreach($idsAlreadyAdded as $courseId){
+			$Data->requirement($courseId);
 			try{
 				$cArray = $Data->getReturnArray($courseId,'course');
 				array_push($usersCourses, array('id' => $cArray['id'],

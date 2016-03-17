@@ -94,7 +94,8 @@ class SuggestController extends AjaxController {
 												  'allTags' => array(array()),//$Data->courseTags($course->get('id')),//Should contain 5 tags.
 												  'ratings' => $Data->rating($course['id']),
 												  'stars' => $Data->requirement($course['id']),
-												  'stack' => $advisoryArray)
+												  'stack' => $advisoryArray
+												  )
 								);
 				}
 			}catch(Exception $e){}
