@@ -249,10 +249,14 @@ class Database {
 
                     
                 }else{
+                    //Basically if we have an "advised" slider, then the weight for the same major's
+                    //Information is .95 
+                    //and the different majors are fractions of a percent, but when the .95 doesn't exist, they
+                    //resume proportional allocation.
                     if($source_major == $target_major){
                         $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = .95;
                     }else{
-                        $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = .005;
+                        $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = .001+.005*$this->majorSimilarity($source_major,$target_major);
                     }
                     
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] = $row['vote'];
@@ -649,6 +653,8 @@ class Database {
     }
 
     //returns an array of true false ratings.
+    //Returns a single array, which contains whether the plurality of the voters
+    //thought a given class was free, option, or required.
     function requirement($course_id){
         $outputRating = array();
         $query = new Query('sliders');
@@ -662,7 +668,7 @@ class Database {
             $slider_type = $row['type'];
             if(!isset($ratingResults[$slider_id]) and ($slider_type == "advised")){
                 $ratingResults[$slider_id]['slider_name'] = $slider_name;
-                $ratingResults[$slider_id]['slider_id'] = $slider_id;
+                $ratingResults[$slider_id]['slider_id'] = $slider_id;  
                 $ratingResults[$slider_id]['count'] = $this->ratingPercentage($course_id,$slider_id);
                 $ratingResults[$slider_id]['slider_type'] = $slider_type;
             }
@@ -679,39 +685,12 @@ class Database {
                                                 'slider_type' => $value['slider_type']);
             }
         }
+        ##get plurality of vote towards Free, option or required.
         return $ratingResult;
-    }
-    function stars($course_id){
-        $outputRating = array();
-        $query = new Query('sliders');
-        $result = $query->select('*',true,'','',false);
-
-        $ratingResults = array();
-
-        foreach($result as $row){
-            $slider_id = $row['id'];
-            $slider_name = $row['name'];
-            $slider_type = $row['type'];
-            if(!isset($ratingResults[$slider_id]) and ($slider_type == "advised")){
-                $ratingResults[$slider_id]['slider_name'] = $slider_name;
-                $ratingResults[$slider_id]['slider_id'] = $slider_id;
-                $ratingResults[$slider_id]['count'] = $this->ratingPercentage($course_id,$slider_id);
-                $ratingResults[$slider_id]['slider_type'] = $slider_type;
-            }
-        }
-
-        $ratingResultsArray = array();
-        foreach($ratingResults as $key => $value){
-            array_push($ratingResultsArray,array('percentage' => $value['count'],
-                                                'slider_id' => $value['slider_id'],
-                                                'slider_name' => $value['slider_name'],
-                                                'slider_type' => $value['slider_type']));
-
-        }
-        return $ratingResultsArray;
     }
     
     //Returns an array of the 3 bar ratings.
+    
     function rating($course_id){
 
         $outputRating = array();
