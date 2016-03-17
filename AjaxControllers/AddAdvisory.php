@@ -13,13 +13,12 @@ class AddAdvisoryController extends AjaxController {
 
 		//Check if the vote is positive or negative(future version)
 		$query = new Query('sliders');
-		$result = $query->select('*', array((),
+		$result = $query->select('*', array(
 											array('course_id', '=', $post['course_id']),
 											array('slider_type', '=', $post['slider_type'])), '', 1,true);
 		//Checking if particular session has already pressed this tag button.
 		$query = new Query('slideraction');
-		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']), 
-											array('slider_id', '=', $post['slider_id']),
+		$result = $query->select('*', array(array('session_id', '=', $_COOKIE['sessionId']),
 											array('course_id', '=', $post['course_id']),
 											array('slider_type', '=', $post['slider_type'])), '', 1,true);
 
@@ -39,7 +38,7 @@ class AddAdvisoryController extends AjaxController {
 		$action->set('slider_type', $post['slider_type']);
 		$action->set('course_id', $post['course_id']);
 		$action->set('session_id', $_COOKIE['sessionId']);
-		$action->set('vote',$post['vote']);
+		$action->set('vote',1);
 		$action->save();
 
 		

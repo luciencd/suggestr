@@ -690,7 +690,7 @@ class Database {
     }
     
     //Returns an array of the 3 bar ratings.
-    
+
     function rating($course_id){
 
         $outputRating = array();
@@ -747,9 +747,9 @@ class Database {
 
         $sumDifficulty /= 4;// max credits is 21. Need to adjust for classes with more/less credits.
         //$sumDifficulty += $sumCredits;
-        if($sumDifficulty >= 1 ){
+        if($sumDifficulty >= 1){
             return .99;
-        }else if($sumDifficulty <= 0 ){
+        }else if($sumDifficulty <= 0){
             return .01;
         }
         return $sumDifficulty;

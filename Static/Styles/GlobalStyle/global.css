@@ -36,8 +36,11 @@ div.panel-bottom {
 	padding: 15px;
 	height:52px;
 }
+
+/**STAR SLIDER FREE OPTION ELECTIVE!!!!
+*/
 div.star-slider {
-	text-align: center;
+	height:100%;
 	top:50%;
 }
 
@@ -45,17 +48,35 @@ div.star-slider div.change-up {
 	text-align: center;
 	font-size:9px;
 	color:gray;
+	width:70%;
+	float:left;
 }
 
 div.star-slider div.attribute {
+	text-align: center;
 	font-size:14px;
+	width:70%;
+	float:left;
 }
 
 div.star-slider div.change-down {
 	font-size:9px;
 	text-align: center;
 	color:gray;
+	width:70%;
+	float:left;
+
 }
+div.star-slider div.confirm {
+	width:19%;
+	margin-left:auto; margin-right:0;
+
+	line-height:44px;
+
+	
+	
+}
+
 /*SCROLLING PANEL*/
 
 #left-panel, #right-panel {
