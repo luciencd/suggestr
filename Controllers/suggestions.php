@@ -298,29 +298,29 @@ class Database {
                             if($s >3 and $s <7){
                                 if(isset($slider[$m][2])){
                                     $sum += $slider[$m][2];
-                                    echo "1 ";
+                                    //echo "1 ";
                                 }else{
-                                    echo "0 ";
+                                    //echo "0 ";
                                 }
                             }
                             
 
                         }
-                        echo " -> ";
+                        //echo " -> ";
                         foreach($key as $s => $slider){
                             //echo "SLIDER: ".$slider;
                             if($s >3 and $s <7){
                                 if(isset($slider[$m][2])){
-                                    echo $slider[$m][2]/$sum." ";
+                                    //echo $slider[$m][2]/$sum." ";
                                 }
                             }
                             
 
                         }
-                        echo "<br>";
+                        //echo "<br>";
                        
                         $b[4] = $votes/$sum;
-                        echo "AA k ".$k." b[2] ".$b[2]. " b[4] ".$b[4]." votes: ".$votes. "/".$sum."<br>";
+                        //echo "AA k ".$k." b[2] ".$b[2]. " b[4] ".$b[4]." votes: ".$votes. "/".$sum."<br>";
                     }
                     
 
@@ -732,9 +732,9 @@ class Database {
                 $ratingResults[$slider_id]['slider_id'] = $slider_id;  
                 $ratingResults[$slider_id]['count'] = $this->ratingPercentage($course_id,$slider_id);
                 $ratingResults[$slider_id]['slider_type'] = $slider_type;
-                echo " ".$slider_id."->".$ratingResults[$slider_id]['count'];
+                //echo " ".$slider_id."->".$ratingResults[$slider_id]['count'];
             }
-            echo "<br>";
+            //echo "<br>";
         }
 
         $ratingResultsArray = array();
