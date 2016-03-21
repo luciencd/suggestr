@@ -60,6 +60,7 @@ function Render($templ, $objects, $useMain=true) {
 			
 			$session = new Session();
 			$session->set('amount', 0); // Just so that the ORM class thinks something's dirty and allows entry of an empty row
+			$session->set('ip',$_SERVER['REMOTE_ADDR']);
 			$session->save(); // Add an empty row to the Sessions table with the next session ID
 			
 			header('Location: /'); // Needs to reload since a cookie must be set at the start of the request.
