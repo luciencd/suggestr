@@ -230,13 +230,18 @@ class Database {
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] += $row['vote'];
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] += 1;
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
-
+                    
                     
                 }else{
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = $this->majorSimilarity($source_major,$target_major);
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] = $row['vote'];
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] = 1;
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
+                }   
+                if(isset($this->RatingsList[$row['course_id']][$row['slider_type']][$target_major])){
+                    $this->RatingsList[$row['course_id']][$row['slider_type']][$target_major] += 1;
+                }else{
+                    $this->RatingsList[$row['course_id']][$row['slider_type']][$target_major] = 1;
                 }
             //When it comes to individual majors' requirements, it should be 90% the major.
             }else if($row['slider_type'] == "advised"){
@@ -246,8 +251,6 @@ class Database {
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] += $row['vote'];
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] += 1;
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
-
-                    
                     
                 }else{
                     //Basically if we have an "advised" slider, then the weight for the same major's
@@ -264,26 +267,102 @@ class Database {
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] = 1;
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
                     
-                    
-                    
+                }
+                if(isset($this->RatingsList[$row['course_id']][$row['slider_type']][$target_major])){
+                    $this->RatingsList[$row['course_id']][$row['slider_type']][$target_major] += 1;
+                    //echo 'adding binary rate: '.$row['slider_type']."<br>";
+                }else{
+                    $this->RatingsList[$row['course_id']][$row['slider_type']][$target_major] = 1;
                 }
             }
+        }
+        
+        foreach($this->RatingsList as $course => &$key){
             
-            
+            //Get the total amount of ratins for this particular course
+            foreach($key as $k => &$target){
+                //echo $k."<br>";
 
+                if($k == 1 || $k == 2 || $k == 3){
+                    
+                    //If $k, the slider id, is a preference.
+                    $weightedVoteSum = 0.0;
+                    $weightSum = 0.0;
+                    foreach($target as $major => &$values){
+                        //$values contains the major similarity, (coefficient)
+                        //The amount of votes cast by these students in this major
+                        //The total sum of those votes. 
+                        // 1 + 1 + 1  =  $values[1] = $numVotes = 3
+                        // 0 + 1 + .5 =  $values[2] = $sumVotes = 1.5 
+                        //
+                        // average rating for this major should be $avgVotes = 3/1.5 = 0.5
+                        // the weight of this rating will be $values[4] = $weight = .40
+                        $weight = $values[0];
+                        $sumVotes = $values[1];
+                        $numVotes = $values[2];
+                        
+
+
+                        $weightedVoteSum += $weight*($sumVotes/$numVotes);
+                        $weightSum += $weight;
+                    }
+
+                   
+                    //must normalize the result = .4*(.5) + .2*(0.0)
+                    // = (.4(.5)+.2(0))/.6 = .33
+                    // End rating .33 / 1 , 33%
+
+                    //Obviously if there is no weightSum
+                    if($weightSum == 0){
+                        $target[0] = 0;
+                    }else{
+                        $target[0] = $weightedVoteSum/$weightSum;
+                    }
+                    //echo $target[0];
+
+                    
+
+                }else if($k == 4 || $k == 5 || $k == 6){
+                    //If $k, the slider id, is an advisory.
+                    //$totalCourseTypeRatings = $key['advisory'];
+                    $weightedVoteSum = 0.0;
+                    $weightSum = 0.0;
+
+                    foreach($target as $major => &$values){
+
+                        $totalCourseTypeRatings = $key['advised'][$major];
+                        //echo $this->getClassNameById($course)." ".$course."Major(".$major.") -> totalcount(".$totalCourseTypeRatings.')';
+                        //$values contains the major similarity, (coefficient)
+                        //The amount of votes cast by these students in this major
+                        //The total sum of those votes. 
+                        // 1 + 1 + 1  =  $values[1] = $numVotes = 3
+                        // 1 + 1 + 1 =  $values[2] = $sumVotes = 3 
+                        // 3 + 1 + 1  = $key['advisory']['major'] = 5
+                        // 3/5 = $actualVote
+                        // average rating for this major should be $avgVotes = 3/1.5 = 0.5
+                        // the weight of this rating will be $values[4] = $weight = .40
+                        $weight = $values[0];
+                        $sumVotes = $values[1];
+                        $numVotes = $values[2];
+                        $actualVote = $sumVotes/$totalCourseTypeRatings;
+                        //echo 'advised: '.$k.' '.$actualVote.'<br>';
+
+
+                        $weightedVoteSum += $weight*($actualVote);// .44(3/5)
+                        $weightSum += $weight;// .44
+                    }
+
+                    if($weightSum == 0){
+                        $target[0] = 0;
+                    }else{
+                        $target[0] = $weightedVoteSum/$weightSum;
+                    }
+                    //echo $target[0].'<br>';
+                    //$target[0] = 1;
+                }
+            }
         }
         /*
-        This shit can create a 
-        */
-
-        
-
-        //echo $this->RatingsList[35483][3][1];
-        foreach($this->RatingsList as $course => &$key){
-            foreach($key as $k => &$a){
-                
-                
-
                 $avg = 0.0;
                 $sum = 0.0;
                 foreach($a as $m => &$b){
@@ -338,20 +417,10 @@ class Database {
                     }
                     
                     //echo $course."::".$this->getClassNameById($course)."(".$b[3]." -> ".$m." weight:".$b[0]." slider:".$b[1]/$b[2]."{".$b[1].",".$b[2]."})";
-                }
+                }*/
                 //$avg = $avg*$
                 //echo "(".$major." -> ".$sum." ".$avg.")";
-                //echo "FINAL: sum:".$sum.",avg:".$avg.",slider: ".$avg/$sum."<br>";
-
-                if($sum == 0){
-                    $a[0] = 0;
-                }else{
-                    $a[0] = $avg/$sum;
-                }
-                
-                
-            }
-        }
+                //echo "FINAL: sum:".$sum.",avg:".$avg.",slider: ".$avg/$sum."<br>"
     }
 
     function loadAllMajors(){
@@ -706,6 +775,7 @@ class Database {
 
         //Preprocessing the array takes half the time.
         if(isset($this->RatingsList[$course_id][$slider_id][0])){
+            
             return $this->RatingsList[$course_id][$slider_id][0];
         }else{
             return 0.5;

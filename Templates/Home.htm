@@ -306,7 +306,7 @@ $(document).ready(function(){
 		
 		$.post('/a.php?p=Suggest',function(d){
 			//alert(d);
-			
+			alert(d);
 			if(getAjaxStatus(d)){
 				$("div#courseResultsArea").html(getAjaxData(d));
 				resetSliderColors();
