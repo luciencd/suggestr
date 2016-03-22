@@ -1,10 +1,51 @@
 <script src="./resources/jqueryui/external/jquery/jquery.js"></script>
 <script src="./resources/jqueryui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="./Resources/fuzzyset/lib/fuzzyset.js"></script>
+<script type="text/javascript" src="./Resources/selectize/dist/js/standalone/selectize.js"></script>
+<link rel="stylesheet" type="text/css" href="./Resources/selectize/dist/css/selectize.css" />
 <script type="text/javascript">
+
+
+
 
 $(document).ready(function(){
 	//resetStatistics();
+	function decodeHTML(html){
+		var txt = document.createElement('textarea');
+		txt.innerHTML = html;
+		return txt.value;
+	}
+	function setDropdowns(){
+		var a = FuzzySet();
+		var arrayOfOptions = [];
+		$.post('/a.php?p=GetMajors', 'json',function(d){
+			//alert(d);
 
+			var obj = JSON.parse(d);
+			//alert(obj.data);
+			//console.log(obj.data);
+			var array = JSON.parse(decodeHTML(obj.data));
+			//alert(array);
+			for(var i = 0; i < array.length; i++) {
+    			var obj2 = array[i];//.name;
+    			//var miniarray = ['id' => i,'title' => obj2];
+    			arrayOfOptions.push(obj2);
+			}
+			
+			$('div.single-question#major div.form-group').selectize({maxItems: 1, valueField: 'id', labelField: 'name', searchField: 'name',options: arrayOfOptions});
+		});
+	}
+	
+	setDropdowns();
+	function clickOutQuestion(){
+		var table = $event.parents('div.single-question').find('input#table').val();
+		var id = $event.parents('div.single-question').find('input#id').val();
+		var column = $event.parents('div.single-question').find('input#column').val();
+		var value = $event.val();
+		//alert(table+" "+id+ " "+column+" "+value);
+		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
+		});
+	}
 	function setMargins(){
 		//Find way of making this more visually appealing by sliding down.
 		
@@ -225,14 +266,37 @@ $(document).ready(function(){
 		
 		
 	});
+	
+	/*
+	Gets data from dropdown question, then sends it to database, redo later with better organization.
+	
+	*/
+	function sendMajor(value){
+		var table = "sessions";
+		var id = "1";
+		var column = "major";
+		
+		//alert(table+" "+id+ " "+column+" "+value);
+		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
+		});
+	}
+	selectize.on('change',sendMajor);
+
 	// **************** GETTING QUESTION! *****************
 	var typingTimer1;                //timer identifier
 	var doneTypingInterval1 = 200;  //time in ms, 5 second for example
-	var $input1 = $('div.single-question div.form-group input.form-control');
+	var $input1 = $('div.single-question div.form-option');
 	var $event;
 	//on keyup, start the countdown
 	$input1.on('keyup', function () {
 		//alert('keyup');
+		$event = $(this);
+		clearTimeout(typingTimer1);
+		typingTimer1 = setTimeout(doneTypingQuestion(), doneTypingInterval1);
+	});
+
+	$input1.on('hover', function () {
+		alert('click');
 		$event = $(this);
 		clearTimeout(typingTimer1);
 		typingTimer1 = setTimeout(doneTypingQuestion(), doneTypingInterval1);
@@ -244,8 +308,13 @@ $(document).ready(function(){
 	  clearTimeout(typingTimer1);
 	});
 
+	$input1.on('enter',function(){
+	  $event = $(this);
+	  clearTimeout(typingTimer1);
+	});
+
 	function doneTypingQuestion(){
-		
+		alert('finished');
 		var table = $event.parents('div.single-question').find('input#table').val();
 		var id = $event.parents('div.single-question').find('input#id').val();
 		var column = $event.parents('div.single-question').find('input#column').val();
@@ -644,7 +713,7 @@ $(document).ready(function(){
 	<ul id="list-questions">
 		<li class = "list-group-item" style = "display:table;width:100%;">
 
-			<div class = "single-question" id = "major" style="display:table-cell;">
+			<div class = "single-question" id = "major" style="display:table-cell;width:50%;">
 				<!-- shit to modify in a given table-->
 				<input type="hidden" id = "table" value = "session">
 				<input type="hidden" id = "id"  value = "{{session}}">
@@ -658,7 +727,7 @@ $(document).ready(function(){
 				</div>
 			</div>
 
-			<div class = "single-question" id = "year" style="display:table-cell;">
+			<div class = "single-question" id = "year" style="display:table-cell;width:50%;">
 				<input type="hidden" id = "table" value = "session">
 				<input type="hidden" id = "id"  value = "{{session}}">
 				<input type="hidden" id = "column" value = "year_id">
@@ -669,7 +738,7 @@ $(document).ready(function(){
 				<div class = "form-group"> 
 				  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="year_id" placeholder="Input Year" value="{{year_id}}">
 				</div>
-				
+
 			</div>
 		</li>
 	</ul>

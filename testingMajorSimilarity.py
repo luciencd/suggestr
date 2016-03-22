@@ -113,9 +113,9 @@ summation = 0
 for item in depts:
     rate1 = majorRelations(firstmajor,item[0])
     rate2 = betterRelations(firstmajor,item[0])
-    print rate2
+    #print rate2
     rate2 = math.pow(rate2,.01)
-    print rate2
+    #print rate2
     bigArray.append([firstmajor,item[0],rate1,rate2])
 
     
