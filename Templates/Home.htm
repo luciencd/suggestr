@@ -15,6 +15,22 @@ $(document).ready(function(){
 		txt.innerHTML = html;
 		return txt.value;
 	}
+	/*
+	Gets data from dropdown question, then sends it to database, redo later with better organization.
+
+	*/
+	function sendMajor(){
+		$event = $(this);
+		var table = $('div.single-question#major').find('input#table').val();
+		var id = $('div.single-question#major').find('input#id').val();
+		var column = $('div.single-question#major').find('input#column').val();
+		var value = arguments[0]; 
+		alert(table+" "+id+ " "+column+" "+value);
+		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
+		
+		});
+	}
+	
 	function setDropdowns(){
 		var a = FuzzySet();
 		var arrayOfOptions = [];
@@ -32,9 +48,10 @@ $(document).ready(function(){
     			arrayOfOptions.push(obj2);
 			}
 			
-			$('div.single-question#major div.form-group').selectize({maxItems: 1, valueField: 'id', labelField: 'name', searchField: 'name',options: arrayOfOptions});
+			$('div.single-question#major div.form-group').selectize({maxItems: 1, valueField: 'name', labelField: 'name', searchField: 'name',options: arrayOfOptions,onChange:sendMajor});
 		});
 	}
+	
 	
 	setDropdowns();
 	function clickOutQuestion(){
@@ -267,51 +284,32 @@ $(document).ready(function(){
 		
 	});
 	
-	/*
-	Gets data from dropdown question, then sends it to database, redo later with better organization.
 	
-	*/
-	function sendMajor(value){
-		var table = "sessions";
-		var id = "1";
-		var column = "major";
-		
-		//alert(table+" "+id+ " "+column+" "+value);
-		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
-		});
-	}
-	selectize.on('change',sendMajor);
 
 	// **************** GETTING QUESTION! *****************
 	var typingTimer1;                //timer identifier
 	var doneTypingInterval1 = 200;  //time in ms, 5 second for example
-	var $input1 = $('div.single-question div.form-option');
+	var $input1 = $('div.single-question div.form-group input.form-control');
 	var $event;
 	//on keyup, start the countdown
 	$input1.on('keyup', function () {
-		//alert('keyup');
+		alert('keyup');
 		$event = $(this);
 		clearTimeout(typingTimer1);
 		typingTimer1 = setTimeout(doneTypingQuestion(), doneTypingInterval1);
 	});
 
-	$input1.on('hover', function () {
-		alert('click');
-		$event = $(this);
-		clearTimeout(typingTimer1);
-		typingTimer1 = setTimeout(doneTypingQuestion(), doneTypingInterval1);
-	});
+	
 
 	//on keydown, clear the countdown 
 	$input1.on('keydown', function () {
+	  alert('keydown');
 	  $event = $(this);
 	  clearTimeout(typingTimer1);
+	  typingTimer1 = setTimeout(doneTypingQuestion(), doneTypingInterval1);
 	});
 
-	$input1.on('enter',function(){
-	  $event = $(this);
-	  clearTimeout(typingTimer1);
-	});
+
 
 	function doneTypingQuestion(){
 		alert('finished');
@@ -319,7 +317,7 @@ $(document).ready(function(){
 		var id = $event.parents('div.single-question').find('input#id').val();
 		var column = $event.parents('div.single-question').find('input#column').val();
 		var value = $event.val();
-		//alert(table+" "+id+ " "+column+" "+value);
+		alert(table+" "+id+ " "+column+" "+value);
 		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
 		});
 	}
