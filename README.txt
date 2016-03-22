@@ -50,3 +50,16 @@ Lou Yufan & Jeff Hui for help and advice. YACS for the course data.
 HELP & FEEDBACK:
 
 Go to GitHub issues page to list your bugs and concerns.
+
+Tools we use in app:
+
+Glench/fuzzyset.js
+Copyright (c) 2016, Glench
+
+
+
+
+
+Main Copyright notice:
+Copyright (c) 2016, Lucien Christie-Dervaux
+All rights reserved.
