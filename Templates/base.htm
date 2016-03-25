@@ -8,6 +8,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<link rel="icon" href="./images/favicon.ico">
+	<meta name="google-signin-client_id" content="647708811177-3pf6gf6uf24fro43b445l1ghdn7nh9ff.apps.googleusercontent.com">
 
 	<title>Suggestr</title>
 	
@@ -26,8 +27,34 @@
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+
 	<link rel="stylesheet" href="/Static/Styles/GlobalStyle/global.css"> 
 	<link rel="stylesheet" href="/Static/Styles/font-awesome-4.5.0/font-awesome.css"> 
+	<script type="text/javascript">
+		function onSignIn(googleUser) {
+			var profile = googleUser.getBasicProfile();
+			var id_token = googleUser.getAuthResponse().id_token;
+
+
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.onreadystatechange = function() { 
+				if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+					console.log(xmlHttp.responseText);
+					// Need to check aud = 647708811177-3pf6gf6uf24fro43b445l1ghdn7nh9ff
+					// Use sub field to send to backend
+				}
+					
+			}
+			xmlHttp.open("GET", 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + id_token , true); // true for asynchronous 
+			xmlHttp.send(null);
+
+			console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+			console.log('Name: ' + profile.getName());
+			console.log('Image URL: ' + profile.getImageUrl());
+			console.log('Email: ' + profile.getEmail());
+		}
+	</script>
 </head>
 
 <body>
@@ -39,6 +66,7 @@
 		<h4 style = "color:gray;">Helpful course suggestions based on your course history.</h4>
 		<!--<div class="class-list-title1">Course History</div>
 		<div class="class-list-title2">Course Suggestions</div>-->
+		<div class="g-signin2" data-onsuccess="onSignIn"></div>
 	</div>
 
 	<div class="row" id="page-body">
