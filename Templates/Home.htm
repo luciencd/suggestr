@@ -1,8 +1,69 @@
-
+<script src="./resources/jqueryui/external/jquery/jquery.js"></script>
+<script src="./resources/jqueryui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="./Resources/fuzzyset/lib/fuzzyset.js"></script>
+<script type="text/javascript" src="./Resources/selectize/dist/js/standalone/selectize.js"></script>
+<link rel="stylesheet" type="text/css" href="./Resources/selectize/dist/css/selectize.css" />
 <script type="text/javascript">
-$(document).ready(function(){
-	//resetStatistics();
 
+
+
+
+$(document).ready(function(){
+	
+	//resetStatistics();
+	function decodeHTML(html){
+		var txt = document.createElement('textarea');
+		txt.innerHTML = html;
+		return txt.value;
+	}
+	/*
+	Gets data from dropdown question, then sends it to database, redo later with better organization.
+
+	*/
+	function sendMajor(){
+		$event = $(this);
+		var table = $('div.single-question#major').find('input#table').val();
+		var id = $('div.single-question#major').find('input#id').val();
+		var column = $('div.single-question#major').find('input#column').val();
+		var value = arguments[0]; 
+		//alert(table+" "+id+ " "+column+" "+value);
+		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
+		
+		});
+	}
+	
+	function setDropdowns(){
+		var a = FuzzySet();
+		var arrayOfOptions = [];
+		$.post('/a.php?p=GetMajors', 'json',function(d){
+			//alert(d);
+
+			var obj = JSON.parse(d);
+			//alert(obj.data);
+			//console.log(obj.data);
+			var array = JSON.parse(decodeHTML(obj.data));
+			//alert(array);
+			for(var i = 0; i < array.length; i++) {
+    			var obj2 = array[i];//.name;
+    			//var miniarray = ['id' => i,'title' => obj2];
+    			arrayOfOptions.push(obj2);
+			}
+			
+			$('div.single-question#major div.form-group').selectize({maxItems: 1, valueField: 'name', labelField: 'name', searchField: 'name',options: arrayOfOptions,onChange:sendMajor});
+		});
+	}
+	
+	
+	setDropdowns();
+	function clickOutQuestion(){
+		var table = $event.parents('div.single-question').find('input#table').val();
+		var id = $event.parents('div.single-question').find('input#id').val();
+		var column = $event.parents('div.single-question').find('input#column').val();
+		var value = $event.val();
+		//alert(table+" "+id+ " "+column+" "+value);
+		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
+		});
+	}
 	function setMargins(){
 		//Find way of making this more visually appealing by sliding down.
 		
@@ -223,6 +284,9 @@ $(document).ready(function(){
 		
 		
 	});
+	
+	
+
 	// **************** GETTING QUESTION! *****************
 	var typingTimer1;                //timer identifier
 	var doneTypingInterval1 = 200;  //time in ms, 5 second for example
@@ -230,20 +294,26 @@ $(document).ready(function(){
 	var $event;
 	//on keyup, start the countdown
 	$input1.on('keyup', function () {
-		//alert('keyup');
+		alert('keyup');
 		$event = $(this);
 		clearTimeout(typingTimer1);
 		typingTimer1 = setTimeout(doneTypingQuestion(), doneTypingInterval1);
 	});
 
+	
+
 	//on keydown, clear the countdown 
 	$input1.on('keydown', function () {
+	  alert('keydown');
 	  $event = $(this);
 	  clearTimeout(typingTimer1);
+	  typingTimer1 = setTimeout(doneTypingQuestion(), doneTypingInterval1);
 	});
 
+
+
 	function doneTypingQuestion(){
-		
+		alert('finished');
 		var table = $event.parents('div.single-question').find('input#table').val();
 		var id = $event.parents('div.single-question').find('input#id').val();
 		var column = $event.parents('div.single-question').find('input#column').val();
@@ -274,6 +344,7 @@ $(document).ready(function(){
 		$("div#courseResultsArea").html("");
 		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
 		$.post('/a.php?p=Search', {q: $input2.val()}, function(d){
+
 			if(getAjaxStatus(d)){
 				// Everything went well
 				if($input2.val() === ''){
@@ -302,7 +373,7 @@ $(document).ready(function(){
 		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
 		
 		$.post('/a.php?p=Suggest',function(d){
-			
+			//alert(d);
 			
 			if(getAjaxStatus(d)){
 				$("div#courseResultsArea").html(getAjaxData(d));
@@ -368,7 +439,7 @@ $(document).ready(function(){
 		var offset = $(this).offset();
 		var width = $(this).width();
 		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
-		var $slider_id = $(this).children('input#slider_id').val();
+		var $slider_id = $(this).children('input.slider_id').val();
 		var $slider_num = (e.pageX - offset.left)/(width);
 		var $slider_rating = $(this).children('.slider-rating');
 
@@ -381,7 +452,7 @@ $(document).ready(function(){
 		var offset = $(this).offset();
 		var width = $(this).width();
 		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
-		var $slider_id = $(this).children('input#slider_id').val();
+		var $slider_id = $(this).children('input.slider_id').val();
 		var $slider_num = (e.pageX - offset.left)/(width);
 		var $percentage = $(this).children('input.percentage').val();
 		var $slider_rating = $(this).children('.slider-rating');
@@ -396,9 +467,9 @@ $(document).ready(function(){
 		var offset = $(this).offset();
 		var width = $(this).width();
 		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
-		var $slider_id = $(this).children('input#slider_id').val();
+		var $slider_id = $(this).children('input.slider_id').val();
 		var vote = (e.pageX - offset.left)/(width);
-		var $slider_type = $(this).children('input#slider_type').val();
+		var $slider_type = $(this).children('input.slider_type').val();
 
 		$elem = $(this);
 		$elem.children('input.percentage').val(vote*100);
@@ -414,12 +485,98 @@ $(document).ready(function(){
 	});
 
 
+	/*
+	CHOOSING FREE, OPTION, OR REQUIRED!!!
+	*/
+
+	$(document).on('click','div.change-up', function(d){
+		var $course_id = $(this).parents("div.panel-heading").children('input#course_id').val();
+		var $slider_id = $(this).siblings('input.slider_id');
+		var $slider_type = $(this).siblings('input.slider_type');
+		var $slider_name = $(this).siblings('div.attribute');
+
+		var $course = $(this).parents('div.single-course');
+
+		//Obviously not too scalable...
+		var $next_id;
+		if(parseInt($slider_id.val()) == 6){
+			$next_id = 4;
+		} 
+		else{
+			$next_id = parseInt($slider_id.val())+1;
+		}
+
+		//Getting the next value in the queue.
+		//alert($next_id);
+		var $next = $course.find('div.advisory :input[value="'+$next_id+'"]');
+		var $next_type = $next.siblings('input.slider_type').val();
+		var $next_name = $next.siblings('input.slider_name').val();
+
+		//Changing all values to next ones.
+		$slider_id.val($next_id);
+		$slider_type.val($next_type);
+		$slider_name.html($next_name);
+	});
+
+	$(document).on('click','div.change-down', function(d){
+		var $course_id = $(this).parents("div.panel-heading").children('input#course_id').val();
+		var $slider_id = $(this).siblings('input.slider_id');
+		var $slider_type = $(this).siblings('input.slider_type');
+		var $slider_name = $(this).siblings('div.attribute');
+
+		var $course = $(this).parents('div.single-course');
+
+		//Obviously not too scalable...
+		if(parseInt($slider_id.val()) == 4){
+			$next_id = 6;
+		} 
+		else{
+			$next_id = parseInt($slider_id.val())-1;
+		}
+
+		//Getting the next value in the queue.
+		//
+		var $next = $course.find('div.advisory :input[value="'+$next_id+'"]').parent();
+
+		var $next_type = $next.children('input.slider_type');
+		
+		var $next_name = $next.children('input.slider_name');
+
+		//Changing all values to next ones.
+		$slider_id.val($next_id);
+		$slider_type.val($next_type.val());
+		$slider_name.html($next_name.val());
+	});
+
+	$(document).on('click','div.confirm', function(d){
+		var $course_id = $(this).parents("div.panel-heading").children('input#course_id').val();
+		var $slider_id = $(this).siblings('input.slider_id').val();
+		var $slider_type = $(this).siblings('input.slider_type').val();
+		var $slider_name = $(this).siblings('div.attribute');
+
+		
+
+		$.post('/a.php?p=AddAdvisory', {course_id: $course_id, slider_id: $slider_id, slider_type: $slider_type} ,function(d) { 
+			
+
+			//Sets input-wise the percentage to the one you set.
+			
+		});
+		$(this).html("☑");
+		$(this).parents('div.star-slider').css({backgroundColor:"green"});
+		$(this).parents('div.star-slider').animate({backgroundColor: "transparent" });
+
+	});
+	
+
+
+
 	$(document).on('click', 'div.star_slider', function(e){
 
 		var $course_id = $(this).parents("div.panel-heading").children('input#course_id').val();
 		alert($course_id);
-		var $slider_id = $(this).siblings('input#slider_id').val();
-		var $slider_type = $(this).siblings('input#slider_type').val();
+		var $slider_id = $(this).siblings('input.slider_id').val();
+		var $slider_type = $(this).siblings('input.slider_type').val();
 		var $state = $(this).siblings('input#state').val();
 		var $vote = 0;
 
@@ -547,7 +704,10 @@ $(document).ready(function(){
 	
 });
 </script>
-
+<div class="page-header">
+	<h1>Suggestr</h1>
+	<h4 style = "color:gray;">Helpful course suggestions based on your course history.</h4>
+</div>
 <div class="col-md-5" id="left-panel">
 	
 
@@ -555,7 +715,7 @@ $(document).ready(function(){
 	<ul id="list-questions">
 		<li class = "list-group-item" style = "display:table;width:100%;">
 
-			<div class = "single-question" id = "major" style="display:table-cell;">
+			<div class = "single-question" id = "major" style="display:table-cell;width:50%;">
 				<!-- shit to modify in a given table-->
 				<input type="hidden" id = "table" value = "session">
 				<input type="hidden" id = "id"  value = "{{session}}">
@@ -569,7 +729,7 @@ $(document).ready(function(){
 				</div>
 			</div>
 
-			<div class = "single-question" id = "year" style="display:table-cell;">
+			<div class = "single-question" id = "year" style="display:table-cell;width:50%;">
 				<input type="hidden" id = "table" value = "session">
 				<input type="hidden" id = "id"  value = "{{session}}">
 				<input type="hidden" id = "column" value = "year_id">
@@ -580,6 +740,7 @@ $(document).ready(function(){
 				<div class = "form-group"> 
 				  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="year_id" placeholder="Input Year" value="{{year_id}}">
 				</div>
+
 			</div>
 		</li>
 	</ul>

@@ -22,34 +22,68 @@
 	margin: 0px;
 }
 
+div.panel-heading div.row div.col-md-6{
+	padding-left:0px;
+}
 div.panel-heading div.row {
 
 }
-div.panel-heading [class*="col-"] {
+/*div.panel-heading [class*="col-"] {
 	border-right: 1px solid #ddd;
 	height:40px;
+}*/
+div.panel-heading div.col-md-3::after{
+	border-right: 0px solid transparent;
+	height:40px;
+	background-color:blue;
+}
+div.panel-bottom {
+	padding: 15px;
+	height:52px;
 }
 
+/**STAR SLIDER FREE OPTION ELECTIVE!!!!
+*/
 div.star-slider {
-	text-align: center;
+	height:100%;
 	top:50%;
+	width:130px;
+	margin-left:20%;
 }
 
 div.star-slider div.change-up {
 	text-align: center;
 	font-size:9px;
 	color:gray;
+	width:70%;
+	float:left;
 }
 
 div.star-slider div.attribute {
+	text-align: center;
 	font-size:14px;
+	width:70%;
+	float:left;
 }
 
 div.star-slider div.change-down {
 	font-size:9px;
 	text-align: center;
 	color:gray;
+	width:70%;
+	float:left;
+
 }
+div.star-slider div.confirm {
+	width:19%;
+	margin-left:auto; margin-right:0;
+
+	line-height:43px;
+
+	
+	
+}
+
 /*SCROLLING PANEL*/
 
 #left-panel, #right-panel {
@@ -176,11 +210,11 @@ div.info-bar-2{
 .panel-bottom {
 	background-color:#F5FFFA;/*#CDC0B0;*/
 	border-radius:0px 0px 5px 5px;
-	height:21px;
+	height:35px;
 
 }
 .panel-title {
-	margin-top: 8px;
+	margin-top: 12px;
 }
 
 body{
@@ -191,8 +225,11 @@ body{
 	color: red;
 	cursor: pointer;
 }
-
+div.btn-group{
+	margin-top:4px;
+}
 .btn-group .button:last-child {
+
   border-radius: 0 6px 6px 0;
   margin-left: -1px;
 }
@@ -340,21 +377,38 @@ fieldset[disabled] .btn-sample.active {
 }
 
 /*SLIDER*/
-.slider {
+.slider-base {
 	width:33.33%;
 	float:left;
-	height:21px;
+	height:40px;
 	/*border: 1px solid black;*/
 	border-radius:5px;
 	/*border-right:1px solid black;
 	border-bottom-right-radius:5px;*/
+	/*padding-left:20px;
+	padding-right:10px;*/
+}
 
+.slider {
+	
 
 }
 .slider-rating {
 	background-color:black;
 	color:black;
-	height:21px;
+	height:10px;
+	margin-right:10px;
+
+
+	/*text-align:center;*/
+}
+.slider-label {
+	
+	color:black;
+	font-size:13px;
+	height:15px;
+	margin-bottom:10px;
+	
 	/*text-align:center;*/
 }
 

@@ -19,12 +19,29 @@ class SearchController extends AjaxController {
 
 
 		// Select all of the courses that this user is already added
+		$advisoryArray = array();
+
+		$query = new Query('sliders');
+		// Select all the courses that are in this user's session and have this course id
+		$result = $query->select('*', array(array('type', '=', "advised")), '');
 		
+		///echo count($result);
+		foreach($result as $advisory){
+			//echo $advisory->get('slider_id');
+			//echo "<-<";
+			array_push($advisoryArray,array('slider_id' => $advisory->get('id'),
+			                                'slider_name' => $advisory->get('name'),
+			                                'slider_type' => $advisory->get('type')
+					  						)
+			);
+		}
 		// Select all the courses where the query string is a sub-string of the name or id
 		$query = new Query('courses');
 		$result = $query->select('*', array(array('name', 'LIKE', '%'.$post['q'].'%'), 'OR', array('number', 'LIKE', '%'.$post['q'].'%')), array('number', 'ASC'), 30);
 		$courses = array();
 
+
+		
 		
 		foreach($result as $course){
 
@@ -36,7 +53,9 @@ class SearchController extends AjaxController {
 											  'number' => $c['number'],
 											  'description' => $c['description'],
 											  'allTags' => array(array()),//$Data->courseTags($course->get('id')) //Should contain 5 tags.
-											  'ratings' => $Data->rating($c['id'])
+											  'ratings' => $Data->rating($c['id']),
+											  'stars' => $Data->requirement($c['id']),
+											  'stack' => $advisoryArray
 											)
 							);
 			}//will need to add tags. Make a new function taking in an array and returning the classes as an array in this form.

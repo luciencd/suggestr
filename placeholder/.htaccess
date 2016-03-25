@@ -1,0 +1,29 @@
+#Require password for testing (temporary)
+#AuthUserFile /home/users/web/b175/moo.leopold/.htpasswd
+#AuthName "Test Website Login"
+#AuthType Basic
+#require user admin
+
+#Rewrite settings
+Options All -Indexes
+Options +FollowSymlinks
+RewriteEngine on
+
+#Remove index.php from url
+#RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)index\.php($|\ |\?)
+#RewriteRule ^ /%1 [R=301,L]
+
+#Add trailing slash
+#RewriteBase /
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_URI} !(.*)/$
+#RewriteRule ^(.*)$ /$1/ [L,R=301]
+
+#Make entire url variable
+#RewriteCond %{REQUEST_URI} !^/a\.php$ [NC]
+#RewriteRule ^(.*/)$ /index.php
+
+#Rewrite for root requests
+RewriteRule ^$ /index.php
+
+RewriteRule ^/(.*)$ index.php [L]

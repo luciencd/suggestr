@@ -22,9 +22,12 @@ if(!isset($_GET['AJAX']))
 // The keys in the router array are page URLs
 // The values in the router array are controller names
 $router = array();
+$router["/landing"] = "Landing";
 $router["/home"] = "Home";
 $router["/ml"] = "ML";
-$router["/visualization"] = "Visual";
+
+//$router["/visualization"] = "Visual";
+
 
 // API Router
 // The keys in the router array are page URLs
@@ -42,6 +45,9 @@ $Ajaxrouter["Reset/"] = "Reset";
 $Ajaxrouter["AddRating/"] = "AddRating";
 $Ajaxrouter["AddSessionAspect/"] = "AddSessionAspect";
 $Ajaxrouter["MajorRelations/"] = "MajorRelations";
+$Ajaxrouter["AddAdvisory/"] = "AddAdvisory";
+$Ajaxrouter["GetMajors/"] = "GetMajors";
+$Ajaxrouter["CreateSession/"] = "CreateSession";
 // Is this an API method?
 $isAjax = (isset($_GET['SUGGESTR_PAGE']) && (strpos($_GET['SUGGESTR_PAGE'],'ajax/') === 0));
 
@@ -62,9 +68,29 @@ if(!isset($_GET['SUGGESTR_PAGE']) || $_GET['SUGGESTR_PAGE'] != "login/") {
 
 //***********HOW TO get to work this without default***/
 //$_GET['SUGGESTR_PAGE'] = '/ml';
+//$_GET['SUGGESTR_PAGE'] = '/landing';
 
-if($_GET['SUGGESTR_PAGE']=='')
-	$_GET['SUGGESTR_PAGE'] = 'home/';
+if($_GET['SUGGESTR_PAGE']=='/home'){
+	
+	
+	$needNewSession = true;
+	//Make sure if database fails, catch that, don't create new session.
+	if(isset($_COOKIE['sessionId'])){
+		$query = new Query('sessions');
+		$cookieSessions = $query->select('*',array(array('id','=',$_COOKIE['sessionId'])),'','',false);
+		if(Count($cookieSessions) == 1){
+			$needNewSession = false;
+		}else{
+			$needNewSession = true;
+		}
+	}
+	if(!$needNewSession){
+		$_GET['SUGGESTR_PAGE'] = '/home';
+	}else{
+		$_GET['SUGGESTR_PAGE'] = '/landing';
+	}
+}
+//echo $_GET['SUGGESTR_PAGE'];
 
 // Ensure the user is an administrator when accessing pages in /admin
 /*
@@ -83,13 +109,15 @@ $controller;
 ob_start();
 if(!$isAjax){
 	if(!array_key_exists($_GET['SUGGESTR_PAGE'],$router)) {
-		
+		//echo "404";
 		header($_GET["SUGGESTR_PAGE"]." 404 Not Found");
 		$_SYSTEM["SUGGESTR_PAGE"] = "404 - Page Not Found";
 		$controller = GetController("error");
 	}else{
+		//echo "getcontroller";
 		$controller = GetController($router[$_GET['SUGGESTR_PAGE']]);
 	}
+	//echo "process";
 	$controller->process($_GET,$_POST,$_FILES,$_SYSTEM);
 	die($controller->render(!$_GET['AJAX']));
 }else{
@@ -101,7 +129,7 @@ if(!$isAjax){
 
 	//Basically $_GET['SUGGESTR_PAGE'] tells the controller to display the home.htm
 	//and to render it with home.php
-	
+	//echo "replace";
 	$method = str_replace("ajax/","",$_GET['SUGGESTR_PAGE']);
 	if(!array_key_exists($method,$Ajaxrouter)) {
 		header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
