@@ -28,23 +28,24 @@ function Render($templ, $objects, $useMain=true) {
 	
 	//If you already have a sessionId cookie, then we need to get that session from the database.
 	//And see if it exists in the database in the sessions table
+	
 	if(isset($_COOKIE['sessionId'])){
-		$session = new Session();
-		try{
-			$session->findById($_COOKIE['sessionId']);
+		$query = new Query('sessions');
+		$cookieSessions = $query->select('*',array(array('id','=',$_COOKIE['sessionId'])),'','',false);
+		if(Count($cookieSessions) == 1){
 			$needNewSession = false;
-		}catch(Exception $e){
+		}else{
 			$needNewSession = true;
 		}
-		
-		
-		
+		$objects["sessionId"] = $_COOKIE['sessionId'];
+	}else{
+		$objects["sessionId"] = 0;//Fail
 	}
 	
 	//Need to ensure that if the database fails, and $session->findById($_COOKIE['sessionId']);
 	//Fails, that it won't cause the session to refresh.
 	// VERY IMPORTANT.
-	
+	/*
 	if($needNewSession){ // Check if this user already has a session
 		// Generate the next user id from the table
 
@@ -74,11 +75,11 @@ function Render($templ, $objects, $useMain=true) {
 		}else
 			throw new Exception("Error Processing New Session.", 1);
 	}else{
-	}
+	}*/
 
 	
 
-	$objects["sessionId"] = $_COOKIE['sessionId']; // Make the session ID avaliable to all controllers.
+	 // Make the session ID avaliable to all controllers.
 	//If we created a new session, must set objects to it.
 
 	if($useMain){

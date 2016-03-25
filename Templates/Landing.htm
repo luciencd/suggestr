@@ -1,0 +1,92 @@
+
+
+
+<head>
+<title>suggestr.co</title>
+		<!-- Google Fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,700,900italic' rel='stylesheet' type='text/css'>
+		<style type="text/css">
+			*{
+				margin: 0px;
+				padding: 0px;
+			}
+
+			html body{
+				background-color: #00bcec;
+				text-align: center;
+				font-family: "Source Sans Pro";
+				padding-top: 14%;
+				color: white;
+			}
+			html body h1{
+				font-weight: 400;
+				font-size: 72px;
+				padding-bottom: 20px;
+			}
+			html body h1 span{
+				font-weight: 700;
+			}
+			html body div.top{
+				font-weight: 400;
+				font-size: 24px;
+				width: 60%;
+				margin-left: auto;
+				margin-right: auto;
+				text-align: center;
+			}
+			html body div.bottom{
+				margin-top: 120px;
+
+			}
+			a:visited { text-decoration: none; color:black; }
+			a:hover { text-decoration: none; color:black; }
+			a:focus { text-decoration: none; color:black; }
+			a:hover, a:active { text-decoration: none; color:black }
+			html body div.bottom span{
+				background-color: #000;
+				font-style: normal;
+			    border-radius: 10px;
+			    color: white;
+			    padding: 5px 15px;
+			    font-family: menlo, monospace;
+			}
+		</style>
+</head>
+
+
+<body>
+
+
+	
+	
+	<script type="text/javascript">
+		function createSession(){
+			$.post('/a.php?p=CreateSession', function(d){
+				alert('created session');
+			});
+	  	}
+
+	  	$(document).on('click','div.bottom#getstarted', function(e){
+	  		alert('clicked');
+	  		createSession();
+	  		location.reload();
+	  	});
+
+
+	</script>
+
+
+	<h1>
+	<span>Suggestr</span>.co
+	</h1>
+	<div class="top">
+		Suggestr is an app that helps university students find courses at their schools based on crowdsourced information from their classmates.
+	</div>
+	<div class="bottom">
+		<a href="https://github.com/luciencd/suggestr"><span>Git</span></a>
+	</div>
+	<br>
+	<div class ="bottom" id="getstarted">
+		<span>Get Started.</span>
+	</div>
+</body>

@@ -583,10 +583,12 @@ class Database {
         $scores = array();
         foreach($this->StudentList as $otherStudent){
 
-            $otherStudentTaken = $otherStudent->getTaken();
+            $otherStudentClasses = $otherStudent->getTaken();
+            array_merge($otherStudentClasses,$otherStudent->getAdded());
+
             //if((abs(Count($coursesTaken) - Count($otherStudentTaken)) < 6)){
-                $score = $this->jaccardIndex($coursesTaken,$otherStudentTaken);
-                $scores[$otherStudent->getId()] = array($otherStudent,$score,$otherStudentTaken);
+            $score = $this->jaccardIndex($coursesTaken,$otherStudentClasses);
+            $scores[$otherStudent->getId()] = array($otherStudent,$score,$otherStudentClasses);
                 //echo " (".$otherStudent->getId().",".$score.") ";
             //}
             

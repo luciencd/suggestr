@@ -9,6 +9,7 @@
 
 
 $(document).ready(function(){
+	
 	//resetStatistics();
 	function decodeHTML(html){
 		var txt = document.createElement('textarea');
@@ -25,7 +26,7 @@ $(document).ready(function(){
 		var id = $('div.single-question#major').find('input#id').val();
 		var column = $('div.single-question#major').find('input#column').val();
 		var value = arguments[0]; 
-		alert(table+" "+id+ " "+column+" "+value);
+		//alert(table+" "+id+ " "+column+" "+value);
 		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
 		
 		});
@@ -317,7 +318,7 @@ $(document).ready(function(){
 		var id = $event.parents('div.single-question').find('input#id').val();
 		var column = $event.parents('div.single-question').find('input#column').val();
 		var value = $event.val();
-		alert(table+" "+id+ " "+column+" "+value);
+		//alert(table+" "+id+ " "+column+" "+value);
 		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
 		});
 	}
@@ -703,7 +704,10 @@ $(document).ready(function(){
 	
 });
 </script>
-
+<div class="page-header">
+	<h1>Suggestr</h1>
+	<h4 style = "color:gray;">Helpful course suggestions based on your course history.</h4>
+</div>
 <div class="col-md-5" id="left-panel">
 	
 
