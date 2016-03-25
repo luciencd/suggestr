@@ -23,9 +23,36 @@
 			<input type="hidden" id="number" value="{{number}}" />
 			<input type="hidden" id="name" value="{{name}}"/>
 			<div class="row">
-				<div class="col-md-9">
+				<div class="col-md-4">
 					<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
 				</div>
+				<div class = "col-md-5">
+
+			
+					{{#stars}}					
+					<div class = "star-slider">
+						<input type="hidden" class="slider_type" value="{{slider_type}}">
+						<input type="hidden" class="slider_id" value="{{slider_id}}">
+						<input type="hidden" class="percentage" value="{{percentage}}">
+
+						<div class = "change-up">▲</div>
+						<div class = "attribute">{{slider_name}}</div>
+						<div class = "change-down">▼</div>
+						<div class = "confirm">☐</div>
+					</div>
+					{{/stars}}
+					
+					<!--queue of other options to choose from -->
+					{{#stack}}
+					<div class = "advisory" style = "visibility:hidden;">
+						<input type="hidden" class="slider_type" value="{{slider_type}}">
+						<input type="hidden" class="slider_id" value="{{slider_id}}">
+						<input type="hidden" class="slider_name" value="{{slider_name}}">
+					</div>
+					{{/stack}}
+				</div>
+				<!--
+				-->
 				<div class="col-md-3">
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-success">Took</button>
@@ -34,30 +61,43 @@
 						<!--<button type="button" class="btn btn-danger">Ignore</button>-->
 					</div>
 				</div>
+
+				
 			</div>
+
 		</div>
 
+
 		<div class="panel-body">
-			<div class="row">{{description}}</div>
+			<div class="row"><span>{{description}}</span></div>
 		</div>
 
 
 		<div class = "panel-bottom">
 			{{#ratings}}
-			<div class = "slider">
-				<!-- Working on making this look better-->
-				<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
-					<span>{{slider_name}}</span>
-				</div>-->
-				<!--<div class = ""-->
-				<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;">
-					<span>{{slider_name}}</span>
+			<div class = "slider-base">
+				<div class = "slider">
+					<!-- Working on making this look better-->
+					<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
+						<span>{{slider_name}}</span>
+					</div>-->
+					<!--<div class = ""-->
+					
+					<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;">
+					<!--<span>{{slider_name}}</span>-->
+					</div>
+
+					<input type="hidden" class="slider_type" value="{{slider_type}}">
+					<input type="hidden" class="slider_id" value="{{slider_id}}">
+					<input type="hidden" class="percentage" value="{{percentage}}">
+					<div class = "slider-label">{{slider_name}}</div>
 				</div>
-				<input type="hidden" id="slider_id" value="{{slider_id}}">
-				<input type="hidden" class="percentage" value="{{percentage}}">
 			</div>
 			{{/ratings}}
+			
+			
 		</div>
+
 	</div>
 	<!-- needs spacing here-->
 {{/allCourses}}

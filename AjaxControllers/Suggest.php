@@ -59,6 +59,25 @@ class SuggestController extends AjaxController {
 		}
 		//$allcourses only contains the course id's
 		
+
+		$advisoryArray = array();
+
+		$query = new Query('sliders');
+		// Select all the courses that are in this user's session and have this course id
+		$result = $query->select('*', array(array('type', '=', "advised")), '');
+		
+		///echo count($result);
+		foreach($result as $advisory){
+			//echo $advisory->get('slider_id');
+			//echo "<-<";
+			array_push($advisoryArray,array('slider_id' => $advisory->get('id'),
+			                                'slider_name' => $advisory->get('name'),
+			                                'slider_type' => $advisory->get('type')
+					  						)
+			);
+		}
+		
+		//
 		
 		//Create new array containing all the course details based on what is in Allcourses, 
 		//in a format that will be taken in by the view.
@@ -74,7 +93,9 @@ class SuggestController extends AjaxController {
 												  'description' => $course['description'],//((strlen($course['description']==0)?'No description':$course['description'])),
 												  'allTags' => array(array()),//$Data->courseTags($course->get('id')),//Should contain 5 tags.
 												  'ratings' => $Data->rating($course['id']),
-												  'stars' => $Data->requirement($course['id']))
+												  'stars' => $Data->requirement($course['id']),
+												  'stack' => $advisoryArray
+												  )
 								);
 				}
 			}catch(Exception $e){}

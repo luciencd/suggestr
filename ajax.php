@@ -10,7 +10,9 @@ $ajaxTemplate = new Mustache_Engine(array(
 // Note your class must be named in the following format:
 // $name = "index" means a class name of IndexController
 function GetAjaxController($name) {
+	//echo "<h1>File exits?</h1>";
 	if (file_exists('AjaxControllers/' . $name . ".php")) {
+
 		require_once('AjaxControllers/' . $name . ".php");
 		$className = ucwords($name)."Controller";
 		return new $className;
@@ -23,7 +25,7 @@ function RenderAjax($templ, $objects) {
 	global $ajaxTemplate;
 	$objects["BaseURL"] = $GLOBALS['CONFIG']['app-path'];
 	$inner = $ajaxTemplate->render($templ, $objects);
-	//echo "RENDERING AJAX";
+	//echo "<h1>RENDERING AJAX?</h1>";
 	return $inner;
 }
 

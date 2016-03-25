@@ -8,7 +8,9 @@
  */
 
 if(isset($_GET['p'])){
+	
 	$_GET['SUGGESTR_PAGE'] = 'ajax/'.str_replace('/', '', $_GET['p']).'/';
+
 	require('suggestr.php');
 }
 
