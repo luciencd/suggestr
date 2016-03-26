@@ -3,6 +3,7 @@
 <script type="text/javascript" src="./Resources/fuzzyset/lib/fuzzyset.js"></script>
 <script type="text/javascript" src="./Resources/selectize/dist/js/standalone/selectize.js"></script>
 <link rel="stylesheet" type="text/css" href="./Resources/selectize/dist/css/selectize.css" />
+<link rel="stylesheet" href="/Static/Styles/font-awesome-4.5.0/font-awesome.css"> 
 <script type="text/javascript">
 
 
@@ -115,7 +116,7 @@ $(document).ready(function(){
 				//Adding class css/html to left-hand
 				
 				$("div#left-panel div.tookList")
-					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+number+" | "+name+'<span class ="badge">x</span>'+'</li>');
 				
 				
 				$("div#left-panel div.tookList li.list-group-item:last").slideDown(400);
@@ -155,7 +156,7 @@ $(document).ready(function(){
 					//Adding class css/html to left-hand
 					
 					$("div#left-panel div.addList")
-						.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+number+" | "+name+'<span class ="badge">x</span>'+'</li>');
 					
 					
 					$("div#left-panel div.addList li.list-group-item:last").slideDown(400);
@@ -342,7 +343,7 @@ $(document).ready(function(){
 	//user is "finished typing," do something
 	function doneTyping (){
 		$("div#courseResultsArea").html("");
-		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
+		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		$.post('/a.php?p=Search', {q: $input2.val()}, function(d){
 
 			if(getAjaxStatus(d)){
@@ -370,7 +371,7 @@ $(document).ready(function(){
 
 	function suggest(){
 		$("div#courseResultsArea").html("");
-		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
+		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
 		$.post('/a.php?p=Suggest',function(d){
 			//alert(d);
@@ -547,8 +548,17 @@ $(document).ready(function(){
 		$slider_type.val($next_type.val());
 		$slider_name.html($next_name.val());
 	});
+	$(document).on('mouseover','div.attribute', function(d){
 
-	$(document).on('click','div.confirm', function(d){
+		$(this).addClass('cn');
+		
+	});
+	$(document).on('mouseout','div.attribute', function(d){
+		//$(this).toggleClass('cn');
+		$(this).removeClass('cn');
+		
+	});
+	$(document).on('click','div.attribute', function(d){
 		var $course_id = $(this).parents("div.panel-heading").children('input#course_id').val();
 		var $slider_id = $(this).siblings('input.slider_id').val();
 		var $slider_type = $(this).siblings('input.slider_type').val();
@@ -562,9 +572,9 @@ $(document).ready(function(){
 			//Sets input-wise the percentage to the one you set.
 			
 		});
-		$(this).html("☑");
-		$(this).parents('div.star-slider').css({backgroundColor:"green"});
-		$(this).parents('div.star-slider').animate({backgroundColor: "transparent" });
+		//$(this).html("☑");
+		$(this).css({backgroundColor:"#e5ffe5"});
+		$(this).animate({backgroundColor: "transparent" });
 
 	});
 	
@@ -765,14 +775,16 @@ $(document).ready(function(){
 			<!-- not sure of how styling this be.<br>-->
 			<div class = "tookList">
 				{{#usersCourses}}
-				<li class="list-group-item" style="background-color:#e5ffe5">
-					<input type="hidden" id="course_id" value="{{id}}" />
-					<span class="badge XButton">X</span>
-					<!-- How to make this look better. Also, class should be unique no?
-					<span class="badge">ADD TAG</span>-->
-					{{name}}
-					<span class="badge">{{number}}</span>
+				<li class="list-group-item" style="background-color:#e5ffe5;">
+					<input type="hidden" id="course_id" value="'+id+'" />
+					{{number}}&nbsp;|&nbsp;{{name}}
+					<span class ="badge">
+						<span>
+						x
+						</span>
+					</span>
 				</li>
+
 				{{/usersCourses}}
 			</div>
 			<!-- Make more aesthetically pleasing-->
@@ -783,7 +795,7 @@ $(document).ready(function(){
 
 
 		<!--<div class="arrow-down" style="border-top: 20px solid#4cae4c;"></div>-->
-		<br>
+		
 		
 		<ul id="list-add">
 			<li class="list-group-item" id="description">
@@ -795,17 +807,15 @@ $(document).ready(function(){
 			<!--<div class="arrow-down" style="border-top: 20px solid #2e6da4;"></div>-->
 			<div class = "addList">
 			{{#futureUsersCourses}}
-			<li class="list-group-item" style="background-color:#e5f2ff">
-				<input type="hidden" id="course_id" value="{{id}}" />
-				<span class="badge XButton">X</span>
-				<!-- How to make this look better. Also, class should be unique no?
-				<span class="badge">ADD TAG</span>-->
-				
-				
-
-				{{name}}
-				<span class="badge">{{number}}</span>
-			</li>
+			<li class="list-group-item" style="background-color:#e5f2ff;">
+					<input type="hidden" id="course_id" value="'+id+'" />
+					{{number}}&nbsp;|&nbsp;{{name}}
+					<span class ="badge">
+						<span>
+						x
+						</span>
+					</span>
+				</li>
 			{{/futureUsersCourses}}
 			</div>
 
@@ -814,7 +824,7 @@ $(document).ready(function(){
 		</ul>
 		
 		
-		<br>
+		
 		<ul class = "stats">
 			<li class = "list-group-item">
 				<span>Statistics on courses added.</span>
@@ -872,7 +882,7 @@ $(document).ready(function(){
 
 				</div>
 				
-				<br>
+				
 				{{#allCourses}}
 					<div class="single-course">
 						<div class="panel-heading">
@@ -883,7 +893,7 @@ $(document).ready(function(){
 							
 
 								<div class="col-md-9">
-									<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
+									<h3 class="panel-title"><!--<span>{{number}}</span>--> <span>{{name}}</span></h3>
 								</div>
 								<div class="col-md-3">
 									<div class="btn-group" role="group">
