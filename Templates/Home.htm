@@ -251,11 +251,12 @@ $(document).ready(function(){
 
 	// **************** REMOVE COURSE FROM SESSION ****************
 	
-	$(document).on('click', 'div#left-panel span.XButton', function(){
+	$(document).on('click', 'div#left-panel span.badge', function(){
 		$elem = $(this);
 		//add margin-top if no more courses.
 
 		// Mark course as ignored in the model
+		//alert($elem.siblings("input#course_id").val().trim());
 		$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
 
 			if(!getAjaxStatus(d)){
@@ -776,7 +777,7 @@ $(document).ready(function(){
 			<div class = "tookList">
 				{{#usersCourses}}
 				<li class="list-group-item" style="background-color:#e5ffe5;">
-					<input type="hidden" id="course_id" value="'+id+'" />
+					<input type="hidden" id="course_id" value="{{id}}" />
 					{{number}}&nbsp;|&nbsp;{{name}}
 					<span class ="badge">
 						<span>
@@ -808,7 +809,7 @@ $(document).ready(function(){
 			<div class = "addList">
 			{{#futureUsersCourses}}
 			<li class="list-group-item" style="background-color:#e5f2ff;">
-					<input type="hidden" id="course_id" value="'+id+'" />
+					<input type="hidden" id="course_id" value="{{id}}" />
 					{{number}}&nbsp;|&nbsp;{{name}}
 					<span class ="badge">
 						<span>
