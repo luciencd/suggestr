@@ -61,15 +61,18 @@
 	
 	<script type="text/javascript">
 		function createSession(){
+			
 			$.post('/a.php?p=CreateSession', function(d){
-				alert('created session');
+				//alert('created session');
+				//alert(d);
+				location.reload();
 			});
 	  	}
 
 	  	$(document).on('click','div.bottom#getstarted', function(e){
-	  		alert('clicked');
+	  		//alert('clicked');
 	  		createSession();
-	  		location.reload();
+	  		//location.reload();
 	  	});
 
 
