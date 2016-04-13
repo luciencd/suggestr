@@ -61,13 +61,15 @@ def betterRelations(major1,major2):
 
     
 def majorRelations(major1,major2):
+    major1 = str(major1)
+    major2 = str(major2)
     
-    cur.execute("SELECT id FROM Departments WHERE name = '"+major1+"'")
+    cur.execute("SELECT id FROM Departments WHERE (name = '"+major1+"' or id = '"+major1+"') ")
     tup = cur.fetchall();
     id1 = str(tup[0][0])
 
     
-    cur.execute("SELECT id FROM Departments WHERE name = '"+major2+"'")
+    cur.execute("SELECT id FROM Departments WHERE (name = '"+major2+"' or id = '"+major2+"')")
     tup = cur.fetchall();
     id2 = str(tup[0][0])
 
@@ -101,7 +103,7 @@ betterRelations("Computer Science","Electrical, Computer, and Systems Engineerin
 betterRelations("Computer Science","Computer Science")
 '''
 
-
+'''
 
 cur.execute("SELECT name FROM departments")
 depts = cur.fetchall();
@@ -147,3 +149,4 @@ for item in bigArray:
 #def majorRelationBetter(major1,major2):
     
 
+'''
