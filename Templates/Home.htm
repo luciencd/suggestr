@@ -30,7 +30,7 @@ $(document).ready(function(){
 		var value = arguments[0]; 
 		//alert(table+" "+id+ " "+column+" "+value);
 		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
-		
+			//alert(d);
 		});
 	}
 	
@@ -51,7 +51,11 @@ $(document).ready(function(){
     			arrayOfOptions.push(obj2);
 			}
 			
-			$('div.single-question#major div.form-group').selectize({maxItems: 1, valueField: 'name', labelField: 'name', searchField: 'name',options: arrayOfOptions,onChange:sendMajor});
+			var $select = $('div.single-question#major div.form-group').selectize({maxItems: 1, valueField: 'name', labelField: 'name', searchField: 'name',options: arrayOfOptions,onChange:sendMajor});
+			
+			var selectize = $select[0].selectize;
+			//alert($select.parent('div.single-question').children('input#answer').val());
+			selectize.setValue($select.parent('div.single-question').children('input#answer').val());
 		});
 	}
 	
@@ -398,7 +402,7 @@ $(document).ready(function(){
 		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
 		//alert('Course'+$course_id);
-		$elem.css({backgroundColor:"Purple"});
+		$elem.css({backgroundColor:"Gold"});
 		$elem.animate({backgroundColor: "#e5ffe5" });
 		$.post('/a.php?p=SimilarSuggestions', {course_id:$course_id}, function(d){
 			//alert(d);
@@ -408,17 +412,17 @@ $(document).ready(function(){
 			
 		});
 	}
-	$(document).on('click', 'div.single-course div.panel-heading', function(){
-		$course_id = $(this).find('input#course_id').val();
+	$(document).on('click', 'div.single-course div.panel-title', function(){
+		$course_id = $(this).parent("div.col-md-4").parent('div.row').parent('panel-heading').find('input#course_id').val();
 		similaritySuggest($(this),$course_id);
 
 	});
-	$(document).on('click', 'div.tookList li.list-group-item', function(){
+	$(document).on('click', 'div.tookList li.list-group-item div.item-text', function(){
 		//alert("$(this).find('input#course_name').val()");
 		$course_id = $(this).find('input#course_id').val();
 		similaritySuggest($(this),$course_id);
 	});
-	$(document).on('click', 'div.addList li.list-group-item', function(){
+	$(document).on('click', 'div.addList li.list-group-item div.item-text', function(){
 		$course_id = $(this).find('input#course_id').val();
 		//alert("$(this).find('input#course_name').val()");
 		similaritySuggest($(this),$course_id);
@@ -768,7 +772,8 @@ $(document).ready(function(){
 				<!-- shit to modify in a given table-->
 				<input type="hidden" id = "table" value = "session">
 				<input type="hidden" id = "id"  value = "{{session}}">
-				<input type="hidden" id = "column"  value = "major_name">
+				<input type="hidden" id = "column"  value = "major_id">
+				<input type="hidden" id = "answer" value = "{{major_name}}">
 
 				<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;border-bottom:0px;">
 					<span>Major</span>
@@ -782,7 +787,7 @@ $(document).ready(function(){
 				<input type="hidden" id = "table" value = "session">
 				<input type="hidden" id = "id"  value = "{{session}}">
 				<input type="hidden" id = "column" value = "year_id">
-
+				<input type="hidden" id = "answer" value = "{{year_id}}">
 				<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;border-bottom:0px;">
 					<span>Year</span>
 				</div>
@@ -815,8 +820,10 @@ $(document).ready(function(){
 			<div class = "tookList">
 				{{#usersCourses}}
 				<li class="list-group-item" style="background-color:#e5ffe5;">
-					<input type="hidden" id="course_id" value="{{id}}" />
-					{{number}}&nbsp;|&nbsp;{{name}}
+					<div class = "item-text">
+						<input type="hidden" id="course_id" value="{{id}}" />
+						{{number}}&nbsp;|&nbsp;{{name}}
+					</div>
 					<span class ="badge">
 						<span>
 						x
@@ -847,8 +854,11 @@ $(document).ready(function(){
 			<div class = "addList">
 			{{#futureUsersCourses}}
 			<li class="list-group-item" style="background-color:#e5f2ff;">
-					<input type="hidden" id="course_id" value="{{id}}" />
-					{{number}}&nbsp;|&nbsp;{{name}}
+					<div class = "item-text">
+						<input type="hidden" id="course_id" value="{{id}}" />
+						{{number}}&nbsp;|&nbsp;{{name}}
+					</div>
+
 					<span class ="badge">
 						<span>
 						x

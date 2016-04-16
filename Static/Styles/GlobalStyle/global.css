@@ -43,9 +43,8 @@ div.suggest-control button.btn-primary{
 div.suggest-control div.list-group-item {
 	padding-top:0px;
 	padding-bottom:0px;
-
-
 }
+
 div.panel-heading div.col-md-3::after{
 	border-right: 0px solid transparent;
 	height:40px;
@@ -323,6 +322,7 @@ div.tookList span.badge {
 	height:22px;
 	border-radius:15px;
 	text-align: center;
+	float: right;
 }
 
 span.badge span{
@@ -340,6 +340,10 @@ span.badge span{
 	text-shadow:none;
 	-webkit-box-shadow:none;
 	box-shadow:none;
+}
+div.item-text{
+	display:inline-block;
+	width:80%;
 }
 
 li#bottom-container{

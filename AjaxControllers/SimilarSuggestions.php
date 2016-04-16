@@ -23,7 +23,7 @@ class SimilarSuggestionsController extends AjaxController {
 		
 
 		$Data->load();
-		$DUMP = $Data->similarCourses($course_id,10);
+		$DUMP = $Data->similarCourses($course_id,20);
 		//echo $DUMP;
 		$array = array();
 		/*foreach($DUMP[1] as $word){
