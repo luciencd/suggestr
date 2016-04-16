@@ -895,7 +895,7 @@ class Database {
         $ratingResultsArray = array();
         $maxPercent = -1;
         foreach($ratingResults as $key => $value){
-            if($value['count'] > $maxPercent){
+            if($value['count'] >= $maxPercent){
                 $maxPercent = $value['count'];
                 $ratingResult = array('percentage' => $value['count'],
                                                 'slider_id' => $value['slider_id'],
