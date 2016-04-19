@@ -57,6 +57,9 @@
 				height:70px;
 				width:250px;
 			}
+			div.outline:hover {
+				background-color:#1aa3ff;
+			}
 			div.surrounding {
 				border: 1px white solid;
 				border-radius: 6px;
@@ -77,8 +80,10 @@
 				line-height:60px;
 			}
 			a {
-				color:white;
+				font-color:white;
 			}
+
+
 		</style>
 </head>
 
@@ -98,11 +103,13 @@
 			});
 	  	}
 
-	  	$(document).on('click','div.bottom#getstarted', function(e){
+	  	$(document).on('click','div.surrounding', function(e){
 	  		//alert('clicked');
 	  		createSession();
+	  		$(this).find('div.imgLocache').html('<img class = "loading" src="/images/reload.gif" alt="loading" style="width:32px;height:32px;" >');
 	  		//location.reload();
 	  	});
+
 
 
 	</script>
@@ -122,6 +129,8 @@
 					<div class = "outline">
 						<div class = "getStarted">
 							<span>Get Started</span>
+						</div>
+						<div class = "imgLocache">
 						</div>
 					</div>
 				</div>
