@@ -8,9 +8,9 @@ $(document).ready(function(){
 		// Hide/remove elements
 		//alert('major relations1');
 		$.post('/a.php?p=MajorRelations', {test:'1'}, function(d){
-			alert(d);
+			//alert(d);
 			var obj = jQuery.parseJSON(d);
-			alert(getAjaxData(d));
+			//alert(getAjaxData(d));
 			$("div.SQLdump").html(getAjaxData(d));
 		});
 		
@@ -37,14 +37,26 @@ $(document).ready(function(){
 			}
 
 		});*/
-
 	});
+	/*
+	$(document).on('click', 'button#td-idf', function(){
+		//alert('test');
+		$course_id = $(this).siblings('input.class_name').val();
+		//alert('Course'+$course_id);
+		$.post('/a.php?p=SimilarSuggestions', {course_id:$course_id}, function(d){
+			alert(d);
+			//var obj = jQuery.parseJSON(d);
+			alert(getAjaxData(d));
+			$("div.SQLdump").html(getAjaxData(d));
+		});
+	});*/
+
 });
 
 </script>
 <link rel="stylesheet" href="/Static/Styles/GlobalStyle/ml.css"> 
 
-<div class="col-md-5" id="left-panel">
+<div class="col-md-8" id="left-panel">
 	<div class = "control-panel">
 		<form action="model-factors">
 			<input type="checkbox" name="major" value="major">Major<br>
@@ -52,9 +64,13 @@ $(document).ready(function(){
 		</form>
 		<button class="btn btn-default" id = "analyze" type="submit">Analyze</button>
 		<button class="btn btn-default" id = "majorrelations" type="submit">Major Relations</button>
+		<br>
+		<span>Enter Class for TD-IDF score:</span>
+		<input class = "class_name" type="text">
+		<button class="btn btn-default" id = "td-idf" type="submit">go</button>
 	</div>
 	<div class ="SQLdump">
-		<span>{{SQL}}</span>
+		{{SQL}}
 	</div>
 </div>
 

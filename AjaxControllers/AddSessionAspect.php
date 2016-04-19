@@ -13,7 +13,7 @@ class AddSessionAspectController extends AjaxController {
 		
 		//In case we need to get the id of the major from a name.
 		//special case.
-		if($post['column'] == "major_name"){
+		if($post['column'] == "major_id"){
 
 			//work out special cases.
 			$query = new Query('departments');
@@ -35,6 +35,7 @@ class AddSessionAspectController extends AjaxController {
 			 // Just so that the ORM class thinks something's dirty and allows entry of an empty row
 			
 			$session->save();
+			echo $department_id;
 		}else{
 			//Other than that, edit table $post['table'] 's $post['id'] 'th column 
 			//by replacing $post['column'] with $post['value'];

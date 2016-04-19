@@ -184,6 +184,21 @@ class HomeController extends PageController {
 		*/
 		//Populate webpage with all the different courses that were predicted.
 		
+		//Populate major name
+		$major = new Department();
+		//echo $student->getMajor();
+		try{
+			$major->findById($student->getMajor());
+			$this->pageData['major'] = $major->get('name');
+			
+		}catch(Exception $e){
+			$this->pageData['major'] = 'Uncommitted';
+		}
+		//$major->findById($student->getMajor());
+
+		
+
+
 		if(true){//If we want to load page faster.// Perhaps include a "fake" class to teach how to use program.
 			$this->pageData['numResults'] = "See";
 			$this->pageData['description'] = "Press Suggest Button to get course Suggestions!";
