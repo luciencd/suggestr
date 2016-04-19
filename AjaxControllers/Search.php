@@ -1,7 +1,9 @@
 <?php
 require_once('Controllers/suggestions.php');
 class SearchController extends AjaxController {
-	public $template = "Search";
+	//public $template = "Search";
+	public $template = "Suggest";
+	//Perhaps make this default template.
 	public function process($get,$post) {
 		//Remove this once we solved sessionId
 		
@@ -48,7 +50,7 @@ class SearchController extends AjaxController {
 			$c = $Data->getReturnArray($course->get('id'),'course');
 			if(!in_array($c['id'], $idsAlreadyAdded)){ // Check that this course has not been added by the user yet
 				array_push($courses, array('id' => $c['id'],
-											  'name' => ucwords(strtolower($c['name'])),
+											  'name' => ucwords($c['name']),
 											  'department_id' => $c['department_id'],
 											  'number' => $c['number'],
 											  'description' => $c['description'],

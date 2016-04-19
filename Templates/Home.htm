@@ -1,8 +1,10 @@
+
+<link rel="stylesheet" type="text/css" href="./Resources/selectize/dist/css/selectize.css" />
+<link rel="stylesheet" href="/Static/Styles/font-awesome-4.5.0/font-awesome.css"> 
 <script src="./resources/jqueryui/external/jquery/jquery.js"></script>
 <script src="./resources/jqueryui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="./Resources/fuzzyset/lib/fuzzyset.js"></script>
 <script type="text/javascript" src="./Resources/selectize/dist/js/standalone/selectize.js"></script>
-<link rel="stylesheet" type="text/css" href="./Resources/selectize/dist/css/selectize.css" />
 <script type="text/javascript">
 
 
@@ -10,6 +12,18 @@
 
 $(document).ready(function(){
 	
+	/*Display a list of courses here*/
+
+
+
+
+
+	/*Take in list, display courses in right panel.*/
+
+
+
+
+
 	//resetStatistics();
 	function decodeHTML(html){
 		var txt = document.createElement('textarea');
@@ -28,7 +42,7 @@ $(document).ready(function(){
 		var value = arguments[0]; 
 		//alert(table+" "+id+ " "+column+" "+value);
 		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
-		
+			//alert(d);
 		});
 	}
 	
@@ -49,7 +63,11 @@ $(document).ready(function(){
     			arrayOfOptions.push(obj2);
 			}
 			
-			$('div.single-question#major div.form-group').selectize({maxItems: 1, valueField: 'name', labelField: 'name', searchField: 'name',options: arrayOfOptions,onChange:sendMajor});
+			var $select = $('div.single-question#major div.form-group').selectize({maxItems: 1, valueField: 'name', labelField: 'name', searchField: 'name',options: arrayOfOptions,onChange:sendMajor});
+			
+			var selectize = $select[0].selectize;
+			//alert($select.parent('div.single-question').children('input#answer').val());
+			selectize.setValue($select.parent('div.single-question').children('input#answer').val());
 		});
 	}
 	
@@ -102,6 +120,8 @@ $(document).ready(function(){
 		// Mark course as ignored in the model
 		
 		$.post('/a.php?p=TookCourse', {course_id:id}, function(d){
+			//alert("works");
+			//alert(d);
 			var obj = jQuery.parseJSON(d);
 			//alert(obj.success);
 			//if(!getAjaxStatus(d)){
@@ -113,9 +133,9 @@ $(document).ready(function(){
 				// Add course to left-hand list of courses
 	
 				//Adding class css/html to left-hand
-				
+
 				$("div#left-panel div.tookList")
-					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;"><div class = "item-text">'+'<input type="hidden" id="course_id" value="'+id+'" />'+number+" | "+name+'</div><span class ="badge"><span>x</span></span>'+'</li>');
 				
 				
 				$("div#left-panel div.tookList li.list-group-item:last").slideDown(400);
@@ -129,7 +149,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-		
+	
 	// **************** ADD COURSE TO SESSION ****************
 	$(document).on('click', 'div.panel-heading button.btn-primary', function(){
 		$elem = $(this);
@@ -154,8 +174,7 @@ $(document).ready(function(){
 		
 					//Adding class css/html to left-hand
 					
-					$("div#left-panel div.addList")
-						.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+'<span class="badge XButton">X</span>'+'<span class="badge">'+number+'</span>'+name+'</li>');
+					$("div#left-panel div.addList").append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;"><div class = "item-text">'+'<input type="hidden" id="course_id" value="'+id+'" />'+number+" | "+name+'</div><span class ="badge"><span>x</span></span>'+'</li>');
 					
 					
 					$("div#left-panel div.addList li.list-group-item:last").slideDown(400);
@@ -250,11 +269,12 @@ $(document).ready(function(){
 
 	// **************** REMOVE COURSE FROM SESSION ****************
 	
-	$(document).on('click', 'div#left-panel span.XButton', function(){
+	$(document).on('click', 'div#left-panel span.badge', function(){
 		$elem = $(this);
 		//add margin-top if no more courses.
 
 		// Mark course as ignored in the model
+		//alert($elem.siblings("input#course_id").val().trim());
 		$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
 
 			if(!getAjaxStatus(d)){
@@ -342,7 +362,7 @@ $(document).ready(function(){
 	//user is "finished typing," do something
 	function doneTyping (){
 		$("div#courseResultsArea").html("");
-		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
+		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		$.post('/a.php?p=Search', {q: $input2.val()}, function(d){
 
 			if(getAjaxStatus(d)){
@@ -370,7 +390,7 @@ $(document).ready(function(){
 
 	function suggest(){
 		$("div#courseResultsArea").html("");
-		$("div#courseResultsArea").html('<img src="/images/ajax-loader.gif" alt="loading" style="width:16px;height:16px;">');
+		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
 		$.post('/a.php?p=Suggest',function(d){
 			//alert(d);
@@ -385,16 +405,50 @@ $(document).ready(function(){
 		    $("div#courseResultsArea").html('<div class = "suggest-control" style="display: table;width:100%;"> <div class = "btn-container-suggestr" style="display: table-cell;"> <button type="button" class="btn btn-primary">Suggest</button> </div><div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;"><div class = "resultsInfo"><span>Database Failed!</span> (<span>0 Results</span>)</div></div></div>');
 		});
 	}
+
 	
-	
+
+	function similaritySuggest($elem,$course_id){
+		//alert('test');
+		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
+		
+		//alert('Course'+$course_id);
+		$elem.css({backgroundColor:"Gold"});
+		$elem.animate({backgroundColor: "#e5ffe5" });
+		$.post('/a.php?p=SimilarSuggestions', {course_id:$course_id}, function(d){
+			//alert(d);
+			//alert(getAjaxData(d));
+			$("div#courseResultsArea").html(getAjaxData(d));
+			resetSliderColors();
+			
+		});
+	}
+	$(document).on('click', 'div.single-course div.panel-title', function(){
+		$course_id = $(this).parent("div.col-md-4").parent('div.row').parent('panel-heading').find('input#course_id').val();
+		similaritySuggest($(this),$course_id);
+
+	});
+	$(document).on('click', 'div.tookList li.list-group-item div.item-text', function(){
+		//alert("$(this).find('input#course_name').val()");
+		$course_id = $(this).find('input#course_id').val();
+		similaritySuggest($(this),$course_id);
+	});
+	$(document).on('click', 'div.addList li.list-group-item div.item-text', function(){
+		$course_id = $(this).find('input#course_id').val();
+		//alert("$(this).find('input#course_name').val()");
+		similaritySuggest($(this),$course_id);
+	});
+
+
+
 	$(document).on('click', 'div.btn-container-reset button.btn-info', function(){
 		
 		$.post('/a.php?p=Reset',function(d){
 			
-			alert("Sent");
+			//alert("Sent");
 			if(getAjaxStatus(d)){
 				// Everything went well
-				alert("worked");
+				//alert("worked");
 			}else{
 				alert(getAjaxFailureReason(d));
 			}
@@ -547,8 +601,17 @@ $(document).ready(function(){
 		$slider_type.val($next_type.val());
 		$slider_name.html($next_name.val());
 	});
+	$(document).on('mouseover','div.attribute', function(d){
 
-	$(document).on('click','div.confirm', function(d){
+		$(this).addClass('cn');
+		
+	});
+	$(document).on('mouseout','div.attribute', function(d){
+		//$(this).toggleClass('cn');
+		$(this).removeClass('cn');
+		
+	});
+	$(document).on('click','div.attribute', function(d){
 		var $course_id = $(this).parents("div.panel-heading").children('input#course_id').val();
 		var $slider_id = $(this).siblings('input.slider_id').val();
 		var $slider_type = $(this).siblings('input.slider_type').val();
@@ -562,9 +625,9 @@ $(document).ready(function(){
 			//Sets input-wise the percentage to the one you set.
 			
 		});
-		$(this).html("☑");
-		$(this).parents('div.star-slider').css({backgroundColor:"green"});
-		$(this).parents('div.star-slider').animate({backgroundColor: "transparent" });
+		//$(this).html("☑");
+		$(this).css({backgroundColor:"#e5ffe5"});
+		$(this).animate({backgroundColor: "transparent" });
 
 	});
 	
@@ -574,7 +637,7 @@ $(document).ready(function(){
 	$(document).on('click', 'div.star_slider', function(e){
 
 		var $course_id = $(this).parents("div.panel-heading").children('input#course_id').val();
-		alert($course_id);
+		//alert($course_id);
 		var $slider_id = $(this).siblings('input.slider_id').val();
 		var $slider_type = $(this).siblings('input.slider_type').val();
 		var $state = $(this).siblings('input#state').val();
@@ -591,10 +654,10 @@ $(document).ready(function(){
 		}
 		
 		$elem.css({"opacity":vote});
-		alert(slider_type);
+		//alert(slider_type);
 
 		$.post('/a.php?p=AddRating', {course_id: $course_id, slider_id: $slider_id, vote: $vote,slider_type: $slider_type} ,function(d) { 
-			alert(d);
+			//alert(d);
 			//Sets input-wise the percentage to the one you set.
 			
 		});
@@ -704,6 +767,7 @@ $(document).ready(function(){
 	
 });
 </script>
+
 <div class="page-header">
 	<h1>Suggestr</h1>
 	<h4 style = "color:gray;">Helpful course suggestions based on your course history.</h4>
@@ -719,7 +783,8 @@ $(document).ready(function(){
 				<!-- shit to modify in a given table-->
 				<input type="hidden" id = "table" value = "session">
 				<input type="hidden" id = "id"  value = "{{session}}">
-				<input type="hidden" id = "column"  value = "major_name">
+				<input type="hidden" id = "column"  value = "major_id">
+				<input type="hidden" id = "answer" value = "{{major_name}}">
 
 				<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;border-bottom:0px;">
 					<span>Major</span>
@@ -733,7 +798,7 @@ $(document).ready(function(){
 				<input type="hidden" id = "table" value = "session">
 				<input type="hidden" id = "id"  value = "{{session}}">
 				<input type="hidden" id = "column" value = "year_id">
-
+				<input type="hidden" id = "answer" value = "{{year_id}}">
 				<div class = "form-title" style ="border-radius: 5px 5px 0px 0px;text-align:center;border:1px solid #ddd;border-bottom:0px;">
 					<span>Year</span>
 				</div>
@@ -765,14 +830,18 @@ $(document).ready(function(){
 			<!-- not sure of how styling this be.<br>-->
 			<div class = "tookList">
 				{{#usersCourses}}
-				<li class="list-group-item" style="background-color:#e5ffe5">
-					<input type="hidden" id="course_id" value="{{id}}" />
-					<span class="badge XButton">X</span>
-					<!-- How to make this look better. Also, class should be unique no?
-					<span class="badge">ADD TAG</span>-->
-					{{name}}
-					<span class="badge">{{number}}</span>
+				<li class="list-group-item" style="background-color:#e5ffe5;">
+					<div class = "item-text">
+						<input type="hidden" id="course_id" value="{{id}}" />
+						{{number}}&nbsp;|&nbsp;{{name}}
+					</div>
+					<span class ="badge">
+						<span>
+						x
+						</span>
+					</span>
 				</li>
+
 				{{/usersCourses}}
 			</div>
 			<!-- Make more aesthetically pleasing-->
@@ -783,7 +852,7 @@ $(document).ready(function(){
 
 
 		<!--<div class="arrow-down" style="border-top: 20px solid#4cae4c;"></div>-->
-		<br>
+		
 		
 		<ul id="list-add">
 			<li class="list-group-item" id="description">
@@ -795,16 +864,17 @@ $(document).ready(function(){
 			<!--<div class="arrow-down" style="border-top: 20px solid #2e6da4;"></div>-->
 			<div class = "addList">
 			{{#futureUsersCourses}}
-			<li class="list-group-item" style="background-color:#e5f2ff">
-				<input type="hidden" id="course_id" value="{{id}}" />
-				<span class="badge XButton">X</span>
-				<!-- How to make this look better. Also, class should be unique no?
-				<span class="badge">ADD TAG</span>-->
-				
-				
+			<li class="list-group-item" style="background-color:#e5f2ff;">
+				<div class = "item-text">
+					<input type="hidden" id="course_id" value="{{id}}" />
+					{{number}}&nbsp;|&nbsp;{{name}}
+				</div>
 
-				{{name}}
-				<span class="badge">{{number}}</span>
+				<span class ="badge">
+					<span>
+					x
+					</span>
+				</span>
 			</li>
 			{{/futureUsersCourses}}
 			</div>
@@ -814,7 +884,7 @@ $(document).ready(function(){
 		</ul>
 		
 		
-		<br>
+		
 		<ul class = "stats">
 			<li class = "list-group-item">
 				<span>Statistics on courses added.</span>
@@ -872,7 +942,7 @@ $(document).ready(function(){
 
 				</div>
 				
-				<br>
+				
 				{{#allCourses}}
 					<div class="single-course">
 						<div class="panel-heading">
@@ -883,7 +953,7 @@ $(document).ready(function(){
 							
 
 								<div class="col-md-9">
-									<h3 class="panel-title"><span>{{number}}</span> <span>{{name}}</span></h3>
+									<h3 class="panel-title"><!--<span>{{number}}</span>--> <span>{{name}}</span></h3>
 								</div>
 								<div class="col-md-3">
 									<div class="btn-group" role="group">

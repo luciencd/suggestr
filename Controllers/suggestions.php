@@ -1,17 +1,93 @@
 <?php
+class Blob {
+    public $titleArray = array();
+    public $array = array();
+    public $wordCount = array();
+    public $set = array();
+    function __construct($arraywords,$arraytitle){
+        //Unfortunately, if there is no description, the
+        //Title gets a shit ton more weight.
+        //Perhaps make it not calculate if no description?
+
+        $this->array = array_diff(explode(" ",$arraywords),array(''," "));
+        //Add title, here; kinda hacky.
+        
+        $this->titleArray = array_diff(explode(" ",$arraytitle),array(''," "));
+
+        if(Count($this->array)>5){//So classes with less than 5 words in desc aren't considered.
+            $compiledArray = array_merge($this->array,$this->titleArray);
+
+            foreach($compiledArray as $word){
+
+                //So case does not matter
+                $word = strtolower($word);
+                
+
+                //So puctuation doesn't matter either.
+                $word = str_replace(",","",$word);
+                $word = str_replace(".","",$word);
+                $word = str_replace(":","",$word);
+                $word = str_replace(";","",$word);
+
+                
+
+
+
+                //Figure out how to get stemming to work..
+                //$word = stemword($word, 'english', 'UTF_8');
+
+
+                if(isset($this->wordCount[$word])){
+                    $this->wordCount[$word] += 1;
+                }else{
+                    $this->wordCount[$word] = 1;
+                    array_push($this->set,$word);
+                }
+
+            }
+        }
+        
+    }
+
+    function getArray(){
+        return $this->array;
+    }
+    function getSet(){
+        return $this->set;
+    }
+
+    function size(){
+        return Count($this->array);
+    }
+    function getCountWord($word){
+        if(isset($this->wordCount[$word])){
+            return $this->wordCount[$word];
+        }else{
+            return 0;
+        }
+    }
+
+}
 class CourseObject {
     public $id = "";
     public $name = "";
     public $number = "";
     public $description = "";
     public $department_id = "";
-
+    public $blob;
     function __construct($id_,$name_,$number_,$description_,$department_id_){
         $this->id = $id_;
         $this->name = $name_;
         $this->number = $number_;
         $this->description = $description_;
         $this->department_id = $department_id_;
+        $this->setBlob($this->description,$this->name);
+    }
+    function setBlob($array,$name){
+        $this->blob = new Blob($array,$name);
+    }
+    function getBlob(){
+        return $this->blob;
     }
 
     function controllerArray(){
@@ -95,6 +171,9 @@ class Database {
     public $MajorList = array();
     public $RelationsList = array(array());
 
+    public $containingCache = array();
+    public $idfCache = array();
+    public $blobList = array();
     function __construct(){
         
         
@@ -128,6 +207,7 @@ class Database {
         if(!$this->testConnection('courses')){
             return;
         }
+
         $query = new Query('courses');
         $queryActions = $query->select('*',true,'','',false);//Need to return ordered by session_id
         
@@ -140,7 +220,10 @@ class Database {
 
 
             //$this->courseList[$id] = array('name' => $courseName,'number'=> $courseNumber,'description' => $courseDescription,'department_id'=>$department_id);
-            $this->courseList[$id] = new CourseObject($id,$courseName,$courseNumber,$courseDescription,$department_id);
+            $courseObj = new CourseObject($id,$courseName,$courseNumber,$courseDescription,$department_id);
+            //$courseObj->setBlob($course['description']);
+            $this->courseList[$id] = $courseObj;
+            
             //$arrayList = $newCourse->controllerArray();
             //echo $arrayList['name'];
         }
@@ -812,7 +895,7 @@ class Database {
         $ratingResultsArray = array();
         $maxPercent = -1;
         foreach($ratingResults as $key => $value){
-            if($value['count'] > $maxPercent){
+            if($value['count'] >= $maxPercent){
                 $maxPercent = $value['count'];
                 $ratingResult = array('percentage' => $value['count'],
                                                 'slider_id' => $value['slider_id'],
@@ -991,6 +1074,123 @@ class Database {
         $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
 
         return array($statement,$count,$studentsExamined);
+
+    }
+
+    function tf($word, $blob){
+        return $blob->getCountWord($word)/$blob->size();
+    }
+    function n_containing($word, $courseList){
+        if(isset($this->containingCache[$word])){
+            return $this->containingCache[$word];
+        }else{
+            $count = 0;
+            foreach($courseList as $course){
+                $count += $course->getBlob()->getCountWord($word);
+            }
+            $this->containingCache[$word] = $count;
+            return $count;
+        }
+        
+    }
+    function idf($word,$courseList){
+        if(isset($this->idfCache[$word])){
+            return $this->idfCache[$word];
+        }else{
+            $total = log(Count($courseList) / (1 + $this->n_containing($word, $courseList)));
+            $this->idfCache[$word] = $total;
+            return $total;
+        }
+    }
+    function tfidf($word, $blob, $courseList){
+        return $this->tf($word, $blob) * $this->idf($word, $courseList);
+    }
+
+    function cmpScores($a, $b)
+    {
+        if ($a[1] == $b[1]) {
+            return 0;
+        }
+        return ($a[1]< $b[1]) ? 1 : -1;
+    }
+
+    function arraySimilarity($array1,$array2){
+        $total = 0;
+        foreach($array1 as $word => $score){
+            if(isset($array2[$word])) {
+                $total += $array2[$word]*$score;
+            }
+        }
+        return $total;
+    }
+
+    function similarCourses($course_id,$numSuggestions){
+        $course_obj = $this->courseList[$course_id];
+        $blob = $course_obj->getBlob();
+        $blobSet = $blob->getSet();
+
+        $output = '';
+
+        $Scores = array();
+        $Scores2 = array();
+        foreach($blobSet as $word){
+            $output .= 'word: '.$word.' '.$this->tfidf($word,$blob,$this->courseList);///." ".$this->tfidf($word,$blob,$this->courseList)."<br>";
+            
+            $s = $this->tfidf($word,$blob,$this->courseList);
+            array_push($Scores,array($word,$s));
+            $Scores2[$word] = $s;
+
+        }
+        //Can run score against onself! works.
+        $finalScore = $this->arraySimilarity($Scores2,$Scores2);
+        
+
+        /*
+        Now do yourself versus all other classes, ranking top 10 and removing duplicates
+        */
+        $mostSimilarClasses = array();
+        foreach($this->courseList as $id => $course){
+            $course_obj = $this->courseList[$id];
+            $blob = $course_obj->getBlob();
+            $blobSet = $blob->getSet();
+            $ScoresOther = array();
+            foreach($blobSet as $word){
+                $output .= 'word: '.$word.' '.$this->tfidf($word,$blob,$this->courseList);///." ".$this->tfidf($word,$blob,$this->courseList)."<br>";
+                
+                $s = $this->tfidf($word,$blob,$this->courseList);
+                $ScoresOther[$word] = $s;
+
+            }
+            $finalScore = $this->arraySimilarity($Scores2,$ScoresOther);
+
+            if($course_obj->id != $course_id and $course_obj->description != ""){
+                //echo "(".$course_obj->description.")";
+                $mostSimilarClasses[$course_obj->id] = $finalScore;//array($course_obj,$finalScore);
+            }
+            
+            //echo $course_obj->name." ".$finalScore;
+        }
+        $mostSimilarClasses[$course_id] = 1000.0;
+        
+        //echo "Total Score: ".$this->arraySimilarity($Scores2,$Scores2);
+        //usort($tagResults,array($this,'cmp2'));
+        usort($Scores,array($this,'cmpScores'));
+        arsort($mostSimilarClasses);
+        //usort($mostSimilarClasses,array($this,'cmpScores'));
+        $arrOut = array();
+        $i = 0;
+        foreach($mostSimilarClasses as $key => $value){
+            if($i >= min(Count($mostSimilarClasses),$numSuggestions)){
+                break;
+            }else{
+                $arrOut[$key] = $value;
+            }
+            $i+=1;
+        }
+        
+        //$mostSimilarClasses = array_slice($mostSimilarClasses,0,$num);
+        
+        return array($finalScore,$arrOut);
 
     }
 }
