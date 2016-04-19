@@ -11,15 +11,23 @@
 
 
 $(document).ready(function(){
-	
+	startupSetup();
 	/*Display a list of courses here*/
+	function startupSetup(){
+		suggest();//Put all the classes on home page.
 
+		resetSliderColors();
+
+		shrinkDescriptions();
+
+		setMargins();
+	}
 	function displayList($list){
 		$("div#courseResultsArea").html("");
 		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
-		$.post('/a.php?p=List',{courses},function(d){
-			//alert(d);
+		$.post('/a.php?p=List',{courses:list},function(d){
+			
 			
 			if(getAjaxStatus(d)){
 				$("div#courseResultsArea").html(getAjaxData(d));
@@ -772,13 +780,7 @@ $(document).ready(function(){
 			elem.css({"background-color":endColor});
 		}
 	}
-	suggest();//Put all the classes on home page.
-
-	resetSliderColors();
-
-	shrinkDescriptions();
-
-	setMargins();
+	
 
 	
 });
