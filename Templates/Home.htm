@@ -12,6 +12,18 @@
 
 $(document).ready(function(){
 	
+	/*Display a list of courses here*/
+
+
+
+
+
+	/*Take in list, display courses in right panel.*/
+
+
+
+
+
 	//resetStatistics();
 	function decodeHTML(html){
 		var txt = document.createElement('textarea');
@@ -121,9 +133,9 @@ $(document).ready(function(){
 				// Add course to left-hand list of courses
 	
 				//Adding class css/html to left-hand
-				
+
 				$("div#left-panel div.tookList")
-					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+number+" | "+name+'<span class ="badge">x</span>'+'</li>');
+					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;"><div class = "item-text">'+'<input type="hidden" id="course_id" value="'+id+'" />'+number+" | "+name+'</div><span class ="badge"><span>x</span></span>'+'</li>');
 				
 				
 				$("div#left-panel div.tookList li.list-group-item:last").slideDown(400);
@@ -137,7 +149,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-		
+	
 	// **************** ADD COURSE TO SESSION ****************
 	$(document).on('click', 'div.panel-heading button.btn-primary', function(){
 		$elem = $(this);
@@ -162,8 +174,7 @@ $(document).ready(function(){
 		
 					//Adding class css/html to left-hand
 					
-					$("div#left-panel div.addList")
-					.append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;">'+'<input type="hidden" id="course_id" value="'+id+'" />'+number+" | "+name+'<span class ="badge">x</span>'+'</li>');
+					$("div#left-panel div.addList").append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;"><div class = "item-text">'+'<input type="hidden" id="course_id" value="'+id+'" />'+number+" | "+name+'</div><span class ="badge"><span>x</span></span>'+'</li>');
 					
 					
 					$("div#left-panel div.addList li.list-group-item:last").slideDown(400);
@@ -854,17 +865,17 @@ $(document).ready(function(){
 			<div class = "addList">
 			{{#futureUsersCourses}}
 			<li class="list-group-item" style="background-color:#e5f2ff;">
-					<div class = "item-text">
-						<input type="hidden" id="course_id" value="{{id}}" />
-						{{number}}&nbsp;|&nbsp;{{name}}
-					</div>
+				<div class = "item-text">
+					<input type="hidden" id="course_id" value="{{id}}" />
+					{{number}}&nbsp;|&nbsp;{{name}}
+				</div>
 
-					<span class ="badge">
-						<span>
-						x
-						</span>
+				<span class ="badge">
+					<span>
+					x
 					</span>
-				</li>
+				</span>
+			</li>
 			{{/futureUsersCourses}}
 			</div>
 
