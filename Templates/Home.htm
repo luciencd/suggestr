@@ -14,7 +14,23 @@ $(document).ready(function(){
 	
 	/*Display a list of courses here*/
 
-
+	function displayList($list){
+		$("div#courseResultsArea").html("");
+		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
+		
+		$.post('/a.php?p=List',{courses},function(d){
+			//alert(d);
+			
+			if(getAjaxStatus(d)){
+				$("div#courseResultsArea").html(getAjaxData(d));
+				resetSliderColors();
+			}else{
+				//alert(getAjaxFailureReason(d));
+			}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+		    $("div#courseResultsArea").html('<div class = "suggest-control" style="display: table;width:100%;"> <div class = "btn-container-suggestr" style="display: table-cell;"> <button type="button" class="btn btn-primary">Suggest</button> </div><div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;"><div class = "resultsInfo"><span>Database Failed!</span> (<span>0 Results</span>)</div></div></div>');
+		});
+	}
 
 
 
