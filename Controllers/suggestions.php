@@ -269,6 +269,9 @@ class Database {
             //echo $id;
             $id = $row['id'];
             $major = $row['major_id'];
+            if($major == 0){
+                $major = 1;
+            }
             $year = $row['year_id'];
             $student = $this->getStudent($id);
             $student->setMajor($major);
@@ -297,6 +300,9 @@ class Database {
             */
             $source_major = $this->getStudent($_COOKIE['sessionId'])->getMajor();
             $target_major = $this->getStudent($row['session_id'])->getMajor();
+            //if($target_major == "" or $source_major == ""){
+            //    continue;
+            //}
             //if($target_major > 132 and $target_major <178 and $source_major > 132 and $source_major <178){
             //$target_major = $this->getClassMajorById($row['course_id']);
 
@@ -313,6 +319,7 @@ class Database {
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] += $row['vote'];
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] += 1;
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][4] = $row['session_id'];
                     
                     
                 }else{
@@ -320,6 +327,7 @@ class Database {
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] = $row['vote'];
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] = 1;
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][4] = $row['session_id'];
                 }   
                 if(isset($this->RatingsList[$row['course_id']][$row['slider_type']][$target_major])){
                     $this->RatingsList[$row['course_id']][$row['slider_type']][$target_major] += 1;
@@ -334,12 +342,14 @@ class Database {
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] += $row['vote'];
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] += 1;
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][4] = $row['session_id'];
                     
                 }else{
                     //Basically if we have an "advised" slider, then the weight for the same major's
                     //Information is .95 
                     //and the different majors are fractions of a percent, but when the .95 doesn't exist, they
                     //resume proportional allocation.
+                    //$this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = .1122;
                     if($source_major == $target_major){
                         $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][0] = .95;
                     }else{
@@ -349,6 +359,7 @@ class Database {
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][1] = $row['vote'];
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][2] = 1;
                     $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][3] = $source_major;
+                    $this->RatingsList[$row['course_id']][$row['slider_id']][$target_major][4] = $row['session_id'];
                     
                 }
                 if(isset($this->RatingsList[$row['course_id']][$row['slider_type']][$target_major])){
@@ -410,7 +421,7 @@ class Database {
                     //$totalCourseTypeRatings = $key['advisory'];
                     $weightedVoteSum = 0.0;
                     $weightSum = 0.0;
-
+                    $totalVotes = 0;
                     foreach($target as $major => &$values){
 
                         $totalCourseTypeRatings = $key['advised'][$major];
@@ -427,9 +438,9 @@ class Database {
                         $weight = $values[0];
                         $sumVotes = $values[1];
                         $numVotes = $values[2];
-                        $actualVote = $sumVotes/$totalCourseTypeRatings;
+                        //$actualVote = $sumVotes/$totalCourseTypeRatings;
                         //echo 'advised: '.$k.' '.$actualVote.'<br>';
-
+                        $totalVotes +=$sumVotes;
 
                         //$weightedVoteSum += $weight*($actualVote);// .44(3/5)
                         $weightedVoteSum += $weight*($sumVotes);
@@ -439,7 +450,7 @@ class Database {
                     if($weightSum == 0){
                         $target[0] = 0;
                     }else{
-                        $target[0] = $weightedVoteSum;//$weightedVoteSum/$weightSum;
+                        $target[0] = $weightedVoteSum;///$totalVotes;//$weightedVoteSum/$weightSum;
                     }
                     //echo $target[0].'<br>';
                     //$target[0] = 1;
@@ -648,7 +659,7 @@ class Database {
             
 
         }else{
-            return .01;//if the thing never got set in the database.
+            return .0001;//if the thing never got set in the database.
         }
     }
 
@@ -864,7 +875,7 @@ class Database {
             
             return $this->RatingsList[$course_id][$slider_id][0];
         }else{
-            return 0.5;
+            return 0.0;
         }
     }
 
@@ -886,6 +897,7 @@ class Database {
             if(!isset($ratingResults[$slider_id]) and ($slider_type == "advised")){
                 $ratingResults[$slider_id]['slider_name'] = $slider_name;
                 $ratingResults[$slider_id]['slider_id'] = $slider_id;  
+                //if at 0.5 because of default reasons, then this will mean everything is option.
                 $ratingResults[$slider_id]['count'] = $this->ratingPercentage($course_id,$slider_id);
                 $ratingResults[$slider_id]['slider_type'] = $slider_type;
                 //echo " ".$slider_id."->".$ratingResults[$slider_id]['count'];
@@ -897,6 +909,7 @@ class Database {
         $maxPercent = -1;
         foreach($ratingResults as $key => $value){
             if($value['count'] >= $maxPercent){
+                //echo "\n".$key." ".$value['count'];
                 $maxPercent = $value['count'];
                 $ratingResult = array('percentage' => $value['count'],
                                                 'slider_id' => $value['slider_id'],
@@ -904,7 +917,7 @@ class Database {
                                                 'slider_type' => $value['slider_type']);
             }
         }
-        
+    
         ##get plurality of vote towards Free, option or required.
         return $ratingResult;
     }

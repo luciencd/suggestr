@@ -24,6 +24,7 @@ class AdvisoryQueryController extends AjaxController {
         		$weightedVoteSum = 0.0;
 	            $weightSum = 0.0;
 	            $totalVotes = 0;
+	            $votes = array();
 	            foreach($target as $major => &$values){
 	            	//echo "major:(".$major.") ";
 	                $totalCourseTypeRatings = $key['advised'][$major];
@@ -42,27 +43,32 @@ class AdvisoryQueryController extends AjaxController {
 	                $weight = $values[0];
 	                $sumVotes = $values[1];
 	                $numVotes = $values[2];
+
+	                $id = $values[4];
 	                //echo $sumVotes."/".$totalCourseTypeRatings;
 	                //$actualVote = ((float)$sumVotes)/((float)$totalCourseTypeRatings);
-	                //echo "vote: ".$k." weight: ".$weight." vote major:(".$major.") my major (".$myMajor.")<br>";
+	                //echo "id:".$id."vote: ".$k." weight: ".$weight."majors:(".$major.",".$myMajor.")\n";
 	                //echo 'advised: '.$k.' '.$actualVote.'<br>';
 	                $totalVotes += $sumVotes;
 
 	                $weightedVoteSum += $weight*($sumVotes);// .44(3/5)
 	                $weightSum += $weight;// .44
+	                array_push($votes,array('id'=>$id,'major'=>$major,'weight'=>$weight));
 	            }
 
 	            if($weightSum == 0){
 	                $target[0] = 0;
 	            }else{
-	                $target[0] = ((float)$weightedVoteSum)/((float)$totalVotes);
+	                $target[0] = ((float)$weightedVoteSum);
 	            }
 
-	            array_push($sqlDump,array('advisoryname' => $k, 'advisoryvotes' => $totalVotes,'advisoryscore' => $weightedVoteSum));
+	            array_push($sqlDump,array('advisoryname' => $k, 'advisoryvotes' => $totalVotes,'advisoryscore' => $weightedVoteSum,'votes'=>$votes));
 	            //echo $target[0].'<br>';
 	            //$target[0] = 1;
 	        }
         }
+
+        $Data->requirement($course_id);
         $this->pageData['name'] = $Data->getClassNameById($course_id);
         $this->pageData['SQL'] = $sqlDump;
         return true;
