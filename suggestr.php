@@ -49,6 +49,7 @@ $Ajaxrouter["AddAdvisory/"] = "AddAdvisory";
 $Ajaxrouter["GetMajors/"] = "GetMajors";
 $Ajaxrouter["CreateSession/"] = "CreateSession";
 $Ajaxrouter["SimilarSuggestions/"] = "SimilarSuggestions";
+$Ajaxrouter["AdvisoryQuery/"] = "AdvisoryQuery";
 // Is this an API method?
 $isAjax = (isset($_GET['SUGGESTR_PAGE']) && (strpos($_GET['SUGGESTR_PAGE'],'ajax/') === 0));
 

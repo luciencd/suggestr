@@ -4,7 +4,7 @@ class AddSessionAspectController extends AjaxController {
 	public function process($get,$post) {
 		
 		//REALLY NEEDS WORK
-
+		//11014 major computer science
 		//Need to redo this function.
 		if(!isset($_COOKIE['sessionId'])||!is_numeric($_COOKIE['sessionId'])){
 			$this->failureReason = 'Sorry, there was an error.';
