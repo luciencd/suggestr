@@ -522,7 +522,7 @@ $(document).ready(function(){
 		
 		var offset = $(this).offset();
 		var width = $(this).width();
-		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+		var $course_id = $(this).parent('div.slider-base').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
 		var $slider_id = $(this).children('input.slider_id').val();
 		var $slider_num = (e.pageX - offset.left)/(width);
 		var $slider_rating = $(this).children('.slider-rating');
@@ -535,7 +535,7 @@ $(document).ready(function(){
 	$(document).on('mouseleave', 'div.panel-bottom div.slider',function(e){
 		var offset = $(this).offset();
 		var width = $(this).width();
-		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+		var $course_id = $(this).parent('div.slider-base').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
 		var $slider_id = $(this).children('input.slider_id').val();
 		var $slider_num = (e.pageX - offset.left)/(width);
 		var $percentage = $(this).children('input.percentage').val();
@@ -550,7 +550,8 @@ $(document).ready(function(){
 	$(document).on('click', 'div.panel-bottom div.slider', function(e){
 		var offset = $(this).offset();
 		var width = $(this).width();
-		var $course_id = $(this).parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+		var $course_id = $(this).parent('div.slider-base').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+		//alert($course_id);
 		var $slider_id = $(this).children('input.slider_id').val();
 		var vote = (e.pageX - offset.left)/(width);
 		var $slider_type = $(this).children('input.slider_type').val();
@@ -563,6 +564,7 @@ $(document).ready(function(){
 		sliderColorizeUp($elem);
 		//alert(slider_type);
 		$.post('/a.php?p=AddRating', {course_id: $course_id, slider_id: $slider_id, vote: vote,slider_type: $slider_type} ,function(d) { 
+			//alert(d);
 			//Sets input-wise the percentage to the one you set.
 			
 		});

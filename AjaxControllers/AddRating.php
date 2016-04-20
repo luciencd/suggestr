@@ -2,7 +2,7 @@
 //Working on tags.
 class AddRatingController extends AjaxController {
 	public function process($get,$post) {
-		
+		//echo "sliderid:".$post['slider_id']." courseid:".$post['course_id']."slidertype:".$post['slider_type'];
 		//Checking the inputs //Currently sessions don't work.
 		if(!isset($post['slider_id'])||!is_numeric($post['slider_id'])||
 			!isset($post['course_id'])||!is_numeric($post['course_id'])||
