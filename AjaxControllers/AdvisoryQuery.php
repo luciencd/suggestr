@@ -51,7 +51,8 @@ class AdvisoryQueryController extends AjaxController {
 	                //echo 'advised: '.$k.' '.$actualVote.'<br>';
 	                $totalVotes += $sumVotes;
 
-	                $weightedVoteSum += $weight*($sumVotes);// .44(3/5)
+	                $weightedVoteSum += $weight*($sumVotes/$totalCourseTypeRatings);// .44(3/5)
+	                //This way, we limit how much influence one major can brind to the average .44*(4/5)+.01(2/2)/.45
 	                $weightSum += $weight;// .44
 	                array_push($votes,array('id'=>$id,'major'=>$major,'weight'=>$weight));
 	            }
@@ -59,10 +60,10 @@ class AdvisoryQueryController extends AjaxController {
 	            if($weightSum == 0){
 	                $target[0] = 0;
 	            }else{
-	                $target[0] = ((float)$weightedVoteSum);
+	                $target[0] = ((float)$weightedVoteSum);///$weightSum; normalizing factor makes it so if there is one unanimous vote for free in an unpopular major, it overshadows a small dissagreement in Option among similar major.
 	            }
 
-	            array_push($sqlDump,array('advisoryname' => $k, 'advisoryvotes' => $totalVotes,'advisoryscore' => $weightedVoteSum,'votes'=>$votes));
+	            array_push($sqlDump,array('advisoryname' => $k, 'advisoryvotes' => $totalVotes,'advisoryscore' => $target[0],'votes'=>$votes));
 	            //echo $target[0].'<br>';
 	            //$target[0] = 1;
 	        }

@@ -443,7 +443,7 @@ class Database {
                         $totalVotes +=$sumVotes;
 
                         //$weightedVoteSum += $weight*($actualVote);// .44(3/5)
-                        $weightedVoteSum += $weight*($sumVotes);
+                        $weightedVoteSum += $weight*($sumVotes/$totalCourseTypeRatings);
                         $weightSum += $weight;// .44
                     }
 
