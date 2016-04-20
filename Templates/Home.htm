@@ -15,7 +15,13 @@ $(document).ready(function(){
 	/*Display a list of courses here*/
 	function startupSetup(){
 		suggest();//Put all the classes on home page.
+		//Using rank function to return list here::::
+		//then send it to displayList here:
+		/*
 
+		displayList([35422,35423]);
+		
+		*/
 		resetSliderColors();
 
 		shrinkDescriptions();
@@ -26,9 +32,7 @@ $(document).ready(function(){
 		$("div#courseResultsArea").html("");
 		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
-		$.post('/a.php?p=List',{courses:list},function(d){
-			
-			
+		$.post('/a.php?p=ListCourses',{courses:$list},function(d){
 			if(getAjaxStatus(d)){
 				$("div#courseResultsArea").html(getAjaxData(d));
 				resetSliderColors();
@@ -36,7 +40,9 @@ $(document).ready(function(){
 				//alert(getAjaxFailureReason(d));
 			}
 		}).fail(function(jqXHR, textStatus, errorThrown) {
+
 		    $("div#courseResultsArea").html('<div class = "suggest-control" style="display: table;width:100%;"> <div class = "btn-container-suggestr" style="display: table-cell;"> <button type="button" class="btn btn-primary">Suggest</button> </div><div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;"><div class = "resultsInfo"><span>Database Failed!</span> (<span>0 Results</span>)</div></div></div>');
+		    
 		});
 	}
 
