@@ -1,5 +1,5 @@
 # SUGGESTR
-###Try it at [suggestr.mybluemix.net](suggestr.mybluemix.net)
+###Try it at [suggestr.co](suggestr.co)
 
 Suggestr is a convenient, web-based course suggester centered around feature richness and usability.
 
