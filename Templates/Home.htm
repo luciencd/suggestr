@@ -70,7 +70,7 @@ $(document).ready(function(){
 		var id = $('div.single-question#major').find('input#id').val();
 		var column = $('div.single-question#major').find('input#column').val();
 		var value = arguments[0]; 
-		//alert(table+" "+id+ " "+column+" "+value);
+		alert(table+" "+id+ " "+column+" "+value);
 		$.post('/a.php?p=AddSessionAspect', {table: table,id: id,column: column,value: value}, function(d){
 			//alert(d);
 		});

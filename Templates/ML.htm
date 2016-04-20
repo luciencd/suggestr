@@ -38,7 +38,7 @@ $(document).ready(function(){
 
 		});*/
 	});
-	/*
+	
 	$(document).on('click', 'button#td-idf', function(){
 		//alert('test');
 		$course_id = $(this).siblings('input.class_name').val();
@@ -49,7 +49,16 @@ $(document).ready(function(){
 			alert(getAjaxData(d));
 			$("div.SQLdump").html(getAjaxData(d));
 		});
-	});*/
+	});
+
+	$(document).on('click', 'div.advisorysearch button#advisory', function(){
+		$course_id = $(this).siblings('input.class_name').val();
+		alert($course_id);
+		$.post('/a.php?p=AdvisoryQuery',{course_id:$course_id}, function(d){
+			alert(d);
+			$("div.SQLdump").html(getAjaxData(d));
+		});
+	});
 
 });
 
@@ -68,6 +77,13 @@ $(document).ready(function(){
 		<span>Enter Class for TD-IDF score:</span>
 		<input class = "class_name" type="text">
 		<button class="btn btn-default" id = "td-idf" type="submit">go</button>
+
+		<br>
+		<div class = "advisorysearch">
+			<span>Enter Class for Advisory score:</span>
+			<input class = "class_name" type="text">
+			<button class="btn btn-default" id = "advisory" type="submit">go</button>
+		</div>
 	</div>
 	<div class ="SQLdump">
 		{{SQL}}

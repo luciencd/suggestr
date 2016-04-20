@@ -50,11 +50,15 @@ $Ajaxrouter["GetMajors/"] = "GetMajors";
 $Ajaxrouter["CreateSession/"] = "CreateSession";
 $Ajaxrouter["SimilarSuggestions/"] = "SimilarSuggestions";
 $Ajaxrouter["ListCourses/"] = "ListCourses";
+$Ajaxrouter["AdvisoryQuery/"] = "AdvisoryQuery";
+
 // Is this an API method?
 $isAjax = (isset($_GET['SUGGESTR_PAGE']) && (strpos($_GET['SUGGESTR_PAGE'],'ajax/') === 0));
 
 // Are we authenticated?
 // Everything except the login page requires authentication
+
+//Shit's irrelevant.
 /*
 if(!isset($_GET['SUGGESTR_PAGE']) || $_GET['SUGGESTR_PAGE'] != "login/") {
 	if(!$_GET['AJAX']&&!$isAjax) // Only redirect to the login page if this is not an ajax call (inside an existing page, NOT through the API).

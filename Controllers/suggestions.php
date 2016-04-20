@@ -431,14 +431,15 @@ class Database {
                         //echo 'advised: '.$k.' '.$actualVote.'<br>';
 
 
-                        $weightedVoteSum += $weight*($actualVote);// .44(3/5)
+                        //$weightedVoteSum += $weight*($actualVote);// .44(3/5)
+                        $weightedVoteSum += $weight*($sumVotes);
                         $weightSum += $weight;// .44
                     }
 
                     if($weightSum == 0){
                         $target[0] = 0;
                     }else{
-                        $target[0] = $weightedVoteSum/$weightSum;
+                        $target[0] = $weightedVoteSum;//$weightedVoteSum/$weightSum;
                     }
                     //echo $target[0].'<br>';
                     //$target[0] = 1;
