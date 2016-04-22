@@ -302,10 +302,10 @@ $(document).ready(function(){
 	$(document).on('click', 'div#left-panel span.badge', function(){
 		$elem = $(this);
 		//add margin-top if no more courses.
-
+		$course_id = $elem.siblings("div.item-text").find("input#course_id").val().trim();
 		// Mark course as ignored in the model
 		//alert($elem.siblings("input#course_id").val().trim());
-		$.post('/a.php?p=RemoveCourse', {course_id: $elem.siblings("input#course_id").val().trim()}, function(d){
+		$.post('/a.php?p=RemoveCourse', {course_id: $course_id}, function(d){
 
 			if(!getAjaxStatus(d)){
 				alert('Sorry, there was an error.');
