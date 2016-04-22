@@ -1051,7 +1051,7 @@ class Database {
                 $target_id = $result->get('department_id');
 
                 //echo "source:".$source_id." ".$target_id;
-                if(is_numeric($target_id) && is_numeric($source_id) && $target_id>132 && $target_id<177 && $source_id>132 && $source_id<177){
+                if(is_numeric($target_id) && is_numeric($source_id) /*&& $target_id>132 && $target_id<177 && $source_id>132 && $source_id<177*/){
                     //echo "source(".$source_id.") target(".$target_id.")<br>";
                     $MajorRelation = new MajorRelations();
                     $MajorRelation->findByXs(array(array('source_id',$source_id),array('target_id',$target_id)));
