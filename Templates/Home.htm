@@ -344,7 +344,7 @@ $(document).ready(function(){
 	var $event;
 	//on keyup, start the countdown
 	$input1.on('keyup', function () {
-		alert('keyup');
+		//alert('keyup');
 		$event = $(this);
 		clearTimeout(typingTimer1);
 		typingTimer1 = setTimeout(doneTypingQuestion(), doneTypingInterval1);
@@ -354,7 +354,7 @@ $(document).ready(function(){
 
 	//on keydown, clear the countdown 
 	$input1.on('keydown', function () {
-	  alert('keydown');
+	  //alert('keydown');
 	  $event = $(this);
 	  clearTimeout(typingTimer1);
 	  typingTimer1 = setTimeout(doneTypingQuestion(), doneTypingInterval1);
@@ -363,7 +363,7 @@ $(document).ready(function(){
 
 
 	function doneTypingQuestion(){
-		alert('finished');
+		//alert('finished');
 		var table = $event.parents('div.single-question').find('input#table').val();
 		var id = $event.parents('div.single-question').find('input#id').val();
 		var column = $event.parents('div.single-question').find('input#column').val();
