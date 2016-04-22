@@ -104,8 +104,8 @@ class SimilarSuggestionsController extends AjaxController {
 												  'allTags' => array(array()),//$Data->courseTags($course->get('id')),//Should contain 5 tags.
 												  'ratings' => $Data->rating($course['id']),
 												  'stars' => $Data->requirement($course['id']),
-												  'stack' => $advisoryArray,
-												  'score' => $value
+												  'stack' => $advisoryArray//,
+												  //'score' => $value
 												  )
 								);
 				}
