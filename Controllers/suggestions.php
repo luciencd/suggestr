@@ -1010,7 +1010,9 @@ class Database {
     function updateMajorRelations(){
         //echo "<h4>updating</h4>";
         
-        /*$query = new Query('departments');
+        /*
+        //This generates the initial similarity graph between all departments.
+        $query = new Query('departments');
         $result = $query->select('*',true,'','',false);
 
         $result2 = $query->select('*',true,'','',false);
@@ -1036,33 +1038,34 @@ class Database {
         $query->update(array(array('count',0)),array(array('id','!=',0)));
         $count = 0;
         $studentsExamined = 0;
-        
+        //echo "fuck";
         foreach($this->StudentList as $student){
             $source_id = $student->getMajor();
 
             
             $classes = $student->getTaken();
             $studentsExamined +=1;
+            
             foreach($classes as $course){
 
 
                 $result = new Course();
                 $result->findById($course);// 35555 in courses has dept id 134 for exmple
                 $target_id = $result->get('department_id');
-
+                
                 //echo "source:".$source_id." ".$target_id;
-                if(is_numeric($target_id) && is_numeric($source_id) /*&& $target_id>132 && $target_id<177 && $source_id>132 && $source_id<177*/){
-                    //echo "source(".$source_id.") target(".$target_id.")<br>";
+                //figure out better filtering mechanism, like try catch block.
+
+                if(is_numeric($target_id) && is_numeric($source_id) && $target_id>64 && $target_id<129 &&$source_id>64 && $source_id<129){
+
                     $MajorRelation = new MajorRelations();
                     $MajorRelation->findByXs(array(array('source_id',$source_id),array('target_id',$target_id)));
+                    
                     $amount = $MajorRelation->get('count');
-                    //echo "count: ".$amount."<br>";
                     $MajorRelation->set('count',$amount+1);
                     $MajorRelation->save();
-                    //$query = new Query('majorrelations');
-                    //$result = $query->select('*',array(array('source_id','=',$source_id),array('target_id','=',$target_id)),'',1,false);
                     $count+=1;
-                    //$result
+
 
                 }
                         
@@ -1070,11 +1073,13 @@ class Database {
                        
                 
             }
+
         }
 
         // now get similarity ratings. simple. If 1/15 classes people take in cs is economics,
         // the rating is 1/15.
         //echo "start";
+
         $statement =  "UPDATE ";
         $statement .= "MajorRelations m1 ";
         $statement .= "INNER JOIN ";

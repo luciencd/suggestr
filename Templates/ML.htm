@@ -8,7 +8,7 @@ $(document).ready(function(){
 		// Hide/remove elements
 		//alert('major relations1');
 		$.post('/a.php?p=MajorRelations', {test:'1'}, function(d){
-			//alert(d);
+			alert(d);
 			var obj = jQuery.parseJSON(d);
 			//alert(getAjaxData(d));
 			$("div.SQLdump").html(getAjaxData(d));
