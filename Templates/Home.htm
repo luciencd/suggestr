@@ -446,7 +446,7 @@ $(document).ready(function(){
 		
 		//alert('Course'+$course_id);
 		$elem.css({backgroundColor:"Gold"});
-		$elem.animate({backgroundColor: "#e5ffe5" });
+		$elem.animate({backgroundColor: $elem.parent("li.list-group-item").css("backgroundColor")});
 		$.post('/a.php?p=SimilarSuggestions', {course_id:$course_id}, function(d){
 			//alert(d);
 			//alert(getAjaxData(d));
