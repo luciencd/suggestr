@@ -77,6 +77,7 @@ class HomeController extends PageController {
 			try{
 				$cArray = $Data->getReturnArray($courseId,'course');
 				array_push($usersCourses, array('id' => $cArray['id'],
+											  'code' => $cArray['department_code'],
 											  'name' => $cArray['name'],
 											  'department_id' => $cArray['department_id'],
 											  'number' => $cArray['number']));
@@ -94,6 +95,7 @@ class HomeController extends PageController {
 			try{
 				$cArray = $Data->getReturnArray($courseId,'course');
 				array_push($usersCourses, array('id' => $cArray['id'],
+											  //'code' => $cArray['department_code'],
 											  'name' => $cArray['name'],
 											  'department_id' => $cArray['department_id'],
 											  'number' => $cArray['number']));

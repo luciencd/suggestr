@@ -146,6 +146,7 @@ $(document).ready(function(){
 		var id = $course.find('input#course_id').val();
 		var number = $course.find('input#number').val();
 		var name = $course.find('input#name').val();
+		var code = $course.find('input#department_code').val();
 
 		// Mark course as ignored in the model
 		
@@ -165,7 +166,7 @@ $(document).ready(function(){
 				//Adding class css/html to left-hand
 
 				$("div#left-panel div.tookList")
-					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;"><div class = "item-text">'+'<input type="hidden" id="course_id" value="'+id+'" />'+number+" | "+name+'</div><span class ="badge"><span>x</span></span>'+'</li>');
+					.append('<li class="list-group-item" style="display: none;background-color:#e5ffe5;"><div class = "item-text">'+'<input type="hidden" id="course_id" value="'+id+'" />'+ code+" "+number+" | "+name+'</div><span class ="badge"><span>x</span></span>'+'</li>');
 				
 				
 				$("div#left-panel div.tookList li.list-group-item:last").slideDown(400);
@@ -188,6 +189,7 @@ $(document).ready(function(){
 		var id = $course.find('input#course_id').val();
 		var number = $course.find('input#number').val();
 		var name = $course.find('input#name').val();
+		var code = $course.find('input#department_code').val();
 		//alert('start');
 		$.post('/a.php?p=AddCourse', {course_id:id}, function(d){
 			var obj = jQuery.parseJSON(d);
@@ -204,7 +206,7 @@ $(document).ready(function(){
 		
 					//Adding class css/html to left-hand
 					
-					$("div#left-panel div.addList").append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;"><div class = "item-text">'+'<input type="hidden" id="course_id" value="'+id+'" />'+number+" | "+name+'</div><span class ="badge"><span>x</span></span>'+'</li>');
+					$("div#left-panel div.addList").append('<li class="list-group-item" style="display: none;background-color:#e5f2ff;"><div class = "item-text">'+'<input type="hidden" id="course_id" value="'+id+'" />'+code+" "+number+" | "+name+'</div><span class ="badge"><span>x</span></span>'+'</li>');
 					
 					
 					$("div#left-panel div.addList li.list-group-item:last").slideDown(400);
@@ -375,7 +377,7 @@ $(document).ready(function(){
 	// **************** SEARCH ****************
 	//setup before functions
 	var typingTimer2;                //timer identifier
-	var doneTypingInterval2 = 100;  //time in ms, 5 second for example
+	var doneTypingInterval2 = 300;  //time in ms, 5 second for example
 	var $input2 = $('input#classSearchField');
 
 	//on keyup, start the countdown
@@ -453,8 +455,9 @@ $(document).ready(function(){
 			
 		});
 	}
-	$(document).on('click', 'div.single-course div.panel-title', function(){
-		$course_id = $(this).parent("div.col-md-4").parent('div.row').parent('panel-heading').find('input#course_id').val();
+	$(document).on('click', 'div.single-course h3.panel-title', function(){
+		$course_id = $(this).parent("div.col-md-4").parent('div.row').parent('div.panel-heading').find('input#course_id').val();
+		
 		similaritySuggest($(this),$course_id);
 
 	});
@@ -819,8 +822,8 @@ $(document).ready(function(){
 				  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="department_id" placeholder="Input Major" value="{{major_name}}">
 				</div>
 			</div>
-
-			<div class = "single-question" id = "year" style="display:table-cell;width:50%;">
+			<!--
+			<div class = "single-question" id = "year" style="display:table-cell;width:50%;visibility:hidden;">
 				<input type="hidden" id = "table" value = "session">
 				<input type="hidden" id = "id"  value = "{{session}}">
 				<input type="hidden" id = "column" value = "year_id">
@@ -832,7 +835,7 @@ $(document).ready(function(){
 				  <input type="text"  style = "border-radius: 0px 0px 5px 5px;" class="form-control" id="year_id" placeholder="Input Year" value="{{year_id}}">
 				</div>
 
-			</div>
+			</div>-->
 		</li>
 	</ul>
 	
@@ -859,7 +862,7 @@ $(document).ready(function(){
 				<li class="list-group-item" style="background-color:#e5ffe5;">
 					<div class = "item-text">
 						<input type="hidden" id="course_id" value="{{id}}" />
-						{{number}}&nbsp;|&nbsp;{{name}}
+						{{code}}&nbsp;{{number}}&nbsp;|&nbsp;{{name}}
 					</div>
 					<span class ="badge">
 						<span>
@@ -893,7 +896,7 @@ $(document).ready(function(){
 			<li class="list-group-item" style="background-color:#e5f2ff;">
 				<div class = "item-text">
 					<input type="hidden" id="course_id" value="{{id}}" />
-					{{number}}&nbsp;|&nbsp;{{name}}
+					{{code}}&nbsp;{{number}}&nbsp;|&nbsp;{{name}}
 				</div>
 
 				<span class ="badge">

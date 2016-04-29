@@ -17,8 +17,7 @@ class SimilarSuggestionsController extends AjaxController {
 		$course_id = $post['course_id'];
 		$Data = new Database();
 
-		$course = new Course();
-		$course->findById($course_id);
+		
 
 		
 
@@ -95,10 +94,13 @@ class SimilarSuggestionsController extends AjaxController {
 			try{
 				$course = $Data->getReturnArray($id,'course');
 				if(!in_array($course['id'], $idsAlreadyAdded)){ // Check that this course has not been added by the user yet
-					
+					$dept = new department();
+					$dept->findById($course['department_id']);
 					array_push($allNewCourses, array('id' => $course['id'],
 												  'name' => $course['name'],
 												  'department_id' => $course['department_id'],
+												  'department_name' => $dept->get('name'),
+												  'department_code' => $dept->get('code'),
 												  'number' => $course['number'],
 												  'description' => $course['description'],//((strlen($course['description']==0)?'No description':$course['description'])),
 												  'allTags' => array(array()),//$Data->courseTags($course->get('id')),//Should contain 5 tags.
@@ -111,7 +113,8 @@ class SimilarSuggestionsController extends AjaxController {
 				}
 			}catch(Exception $e){}
 		}
-		
+		$course = new Course();
+		$course->findById($course_id);
 		//Populate webpage with all the different courses that were predicted.
 		if(!$Data->testConnection('courses')){
 			$this->pageData['numResults'] = 0;
@@ -121,11 +124,11 @@ class SimilarSuggestionsController extends AjaxController {
 		}
 		if(count($studentCoursesTaken) === 0){
 			$this->pageData['numResults'] = (String)count($allCourses);
-			$this->pageData['description'] = "Here are popular courses to get started!";
+			$this->pageData['description'] = "Here are courses similar to ".$course->get('name')."!";
 			$this->pageData['allCourses'] = $allNewCourses;
 		}else{
 			$this->pageData['numResults'] = (String)count($allNewCourses);
-			$this->pageData['description'] = "Here are suggestions based on your course history!";
+			$this->pageData['description'] = "Here are courses similar to ".$course->get('name')."!";
 			$this->pageData['allCourses'] = $allNewCourses;
 		}
 		return true;

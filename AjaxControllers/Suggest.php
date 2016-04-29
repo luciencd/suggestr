@@ -83,18 +83,25 @@ class SuggestController extends AjaxController {
 		//in a format that will be taken in by the view.
 		$allNewCourses = array();
 		
+
 		foreach($allCourses as $course){
 			try{
+				//$course = $Data->getReturnArray($id,'course');
 				if(!in_array($course['id'], $idsAlreadyAdded)){ // Check that this course has not been added by the user yet
+					$dept = new department();
+					$dept->findById($course['department_id']);
 					array_push($allNewCourses, array('id' => $course['id'],
 												  'name' => $course['name'],
 												  'department_id' => $course['department_id'],
+												  'department_name' => $dept->get('name'),
+												  'department_code' => $dept->get('code'),
 												  'number' => $course['number'],
 												  'description' => $course['description'],//((strlen($course['description']==0)?'No description':$course['description'])),
 												  'allTags' => array(array()),//$Data->courseTags($course->get('id')),//Should contain 5 tags.
 												  'ratings' => $Data->rating($course['id']),
 												  'stars' => $Data->requirement($course['id']),
-												  'stack' => $advisoryArray
+												  'stack' => $advisoryArray//,
+												  //'score' => $value
 												  )
 								);
 				}

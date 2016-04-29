@@ -74,13 +74,17 @@ class CourseObject {
     public $number = "";
     public $description = "";
     public $department_id = "";
+    public $department_code = "";
+    public $department_name = "";
     public $blob;
-    function __construct($id_,$name_,$number_,$description_,$department_id_){
+    function __construct($id_,$name_,$number_,$description_,$department_id_,$department_name_,$department_code_){
         $this->id = $id_;
         $this->name = $name_;
         $this->number = $number_;
         $this->description = $description_;
         $this->department_id = $department_id_;
+        $this->department_name = $department_name_;
+        $this->department_code = $department_code_;
         $this->setBlob($this->description,$this->name);
     }
     function setBlob($array,$name){
@@ -95,6 +99,8 @@ class CourseObject {
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            'department_name' => $this->department_name,
+            'department_code' => $this->department_code,
             'department_id' => $this->department_id,
             'number' => $this->number
             );
@@ -183,9 +189,10 @@ class Database {
     }
     function load(){
         //$StudentList = array();
+        $this->loadAllMajors();
         $this->loadAllClasses();
         $this->loadAllStudents();
-        $this->loadAllMajors();
+        
         $this->loadAllRelations();
         $this->loadAllRatings();
         //echo "loaded";
@@ -211,16 +218,32 @@ class Database {
         $query = new Query('courses');
         $queryActions = $query->select('*',true,'','',false);//Need to return ordered by session_id
         
+
+
+        //$dept = new Department();
         foreach($queryActions as $course){
             $id = $course['id'];
             $department_id = $course['department_id'];
             $courseName = $course['name'];
             $courseNumber = $course['number'];
             $courseDescription = $course['description'];
+            $department_name = $this->MajorList[$department_id]['name'];
+            
+            $department_code = $this->MajorList[$department_id]['code'];
+            /*try{
+                
+                $dept->findById($department_id);
+                $department_name = $dept->get('name');
+                $department_code = $dept->get('code');
+            }catch(Exception $e){
 
+            }*/
+            
+            //$dept->get('code');
+            //echo $department_code;
 
             //$this->courseList[$id] = array('name' => $courseName,'number'=> $courseNumber,'description' => $courseDescription,'department_id'=>$department_id);
-            $courseObj = new CourseObject($id,$courseName,$courseNumber,$courseDescription,$department_id);
+            $courseObj = new CourseObject($id,$courseName,$courseNumber,$courseDescription,$department_id,$department_name,$department_code);
             //$courseObj->setBlob($course['description']);
             $this->courseList[$id] = $courseObj;
             
@@ -528,7 +551,8 @@ class Database {
             $id = $row['id'];
             $name = $row['name'];
             $amount = $row['amount'];
-            $this->MajorList[$id] = array('id'=>$id,'name'=>$name,'amount'=>$amount);
+            $code = $row['code'];
+            $this->MajorList[$id] = array('id'=>$id,'name'=>$name,'amount'=>$amount,'code' =>$code);
         }
     }
 

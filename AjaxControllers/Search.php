@@ -43,15 +43,18 @@ class SearchController extends AjaxController {
 		$courses = array();
 
 
-		
-		
+
 		foreach($result as $course){
 
 			$c = $Data->getReturnArray($course->get('id'),'course');
 			if(!in_array($c['id'], $idsAlreadyAdded)){ // Check that this course has not been added by the user yet
+				$dept = new department();
+				$dept->findById($c['department_id']);
 				array_push($courses, array('id' => $c['id'],
 											  'name' => ucwords($c['name']),
 											  'department_id' => $c['department_id'],
+											  'department_name' => $dept->get('name'),
+										      'department_code' => $dept->get('code'),
 											  'number' => $c['number'],
 											  'description' => $c['description'],
 											  'allTags' => array(array()),//$Data->courseTags($course->get('id')) //Should contain 5 tags.

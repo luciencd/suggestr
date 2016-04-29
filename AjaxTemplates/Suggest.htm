@@ -22,6 +22,9 @@
 			<input type="hidden" id="course_id" value="{{id}}" />
 			<input type="hidden" id="number" value="{{number}}" />
 			<input type="hidden" id="name" value="{{name}}"/>
+			<input type="hidden" id="department_id" value="{{department_id}}"/>
+			<input type="hidden" id="department_name" value="{{department_name}}"/>
+			<input type="hidden" id="department_code" value="{{department_code}}"/>
 			<div class="row">
 				<div class="col-md-4">
 					<h3 class="panel-title"><!--<span>{{number}}</span> --><span>{{name}}</span></h3>
@@ -70,7 +73,7 @@
 
 
 		<div class="panel-body">
-			<div class="row"><span>{{description}}</span></div>
+			<div class="row"><span>{{department_code}}</span><span> {{number}}&nbsp; : &nbsp;<span>{{description}}</span></div>
 		</div>
 
 
