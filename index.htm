@@ -13,7 +13,7 @@
 	</head>
 
 	<body>
-        <!--Dropdown structure for major-->
+        <!--Dropdown structure for choose major-->
         <ul id="dropdown1" class="dropdown-content">
           <li><a href="#!">Administration</a></li>
           <li><a href="#!">Aerospace Studies (Air Force ROTC)</a></li>
@@ -68,27 +68,111 @@
             <li><a href="#!">Senior</a></li>
         </ul>
         
+        <!--Dropdown structure for sidenav choose major-->
+        <ul id="dropdown3" class="dropdown-content">
+          <li><a href="#!">Administration</a></li>
+          <li><a href="#!">Aerospace Studies (Air Force ROTC)</a></li>
+          <li><a href="#!">Architecture</a></li>
+          <li><a href="#!">Arts</a></li>
+          <li><a href="#!">Astronomy</a></li>
+          <li><a href="#!">Biochemistry and Biophysics</a></li>
+          <li><a href="#!">Biology</a></li>
+          <li><a href="#!">Biomedical Engineering</a></li>
+          <li><a href="#!">Chemical Engineering</a></li>
+          <li><a href="#!">Chemistry</a></li>
+          <li><a href="#!">Civil Engineering</a></li>
+          <li><a href="#!">Cognitive Science</a></li>
+          <li><a href="#!">Communication</a></li>
+          <li><a href="#!">Computer Science</a></li>
+          <li><a href="#!">Cooperative Education</a></li>
+          <li><a href="#!">Earth and Environmental Sciences</a></li>
+          <li><a href="#!">Earth and Environmental Sciences</a></li>
+          <li><a href="#!">Electrical Computer and Systems Engineering</a></li>
+          <li><a href="#!">Electrical Engineering</a></li>
+          <li><a href="#!">Engineering Science</a></li>
+          <li><a href="#!">Environmental Engineering</a></li>
+          <li><a href="#!">Foreign Languages</a></li>
+          <li><a href="#!">General Engineering</a></li>
+          <li><a href="#!">Industrial and Systems Engineering</a></li>
+          <li><a href="#!">Information Technology and Web Science</a></li>
+          <li><a href="#!">Interdisciplinary Environmental</a></li>
+          <li><a href="#!">Interdisciplinary Science</a></li>
+          <li><a href="#!">Interdisciplinary Studies</a></li>
+          <li><a href="#!">Lighting</a></li>
+          <li><a href="#!">Literature</a></li>
+          <li><a href="#!">Management</a></li>
+          <li><a href="#!">Materials Science and Engineering</a></li>
+          <li><a href="#!">Mathematical Programming Probability and Statistics</a></li>
+          <li><a href="#!">Mathematics</a></li>
+          <li><a href="#!">Mechanical Aerospace and Nuclear Engineering</a></li>
+          <li><a href="#!">Military Science (Army ROTC)</a></li>
+          <li><a href="#!">Naval Science (Navy ROTC)</a></li>
+          <li><a href="#!">Philosophy</a></li>
+          <li><a href="#!">Physics</a></li>
+          <li><a href="#!">Psychology</a></li>
+          <li><a href="#!">Science and Technology Studies (Humanities)</a></li>
+          <li><a href="#!">Science and Technology Studies (Social Sciences)</a></li>
+          <li><a href="#!">Writing</a></li>
+        </ul>
+        
+        <!--Dropdown structure for sidenav choose year-->
+        <ul class="dropdown-content" id="dropdown4">
+            <li><a href="#!">Freshman</a></li>
+            <li><a href="#!">Sophomore</a></li>
+            <li><a href="#!">Junior</a></li>
+            <li><a href="#!">Senior</a></li>
+        </ul>
+        
 		<!-- Navigation Bar-->
 		<nav class="light-blue" role="navigation">
-			<div class="nav-wrapper container">
+			<div class="nav-wrapper">
                 <!-- Logo -->
-				<a class="site-logo" href="index.htm"><img class="responsive-img" src="/images/Drawing.png" alt="Suggestr Logo"></a>
+				<a class="brand-logo center" href="index.htm"><img class="responsive-img" src="/images/Drawing.png" alt="Suggestr Logo"></a>
 				
                 <!--Rest of NavBar-->
                 <ul class="left hide-on-med-and-down" id="left side">
                     <!--Choose major button-->
-                    <li><a href="#" class="dropdown-button btn" data-activates="dropdown1">Choose Major<i class="material-icons right" font-size="20px">arrow_drop_down</i></a></li>
+                    <li><a href="#" class="dropdown-button btn" data-activates="dropdown1">Enter Major</a></li>
                     
                     <!--Choose year button-->
                     <li>
                         <a href="#" class="dropdown-button btn" data-activates="dropdown2">
 <!--                        <div style="overflow:hidden;white-space:nowrap;">-->
-                            <span>Choose Year
-                            <i class="material-icons">arrow_drop_down</i></span>
+                            <span>Enter Year
+                            <i class="material-icons">arrow_drop_down</i>
+                            </span>
 <!--                        </div>-->
                         </a>
                     </li>
                 </ul>
+                
+                <!--Search Bar right of the logo-->
+                <ul class="right hide-on-med-and-down" id="right side">
+                    <form>
+                        <div class="input-field">
+                            <i class="material-icons prefix">search</i>
+                            <input id="icon_prefix" type="text" class="search">
+                            <label for="icon_prefix">Search</label>
+                        </div>
+                    </form>
+                </ul>
+                <!-- Only shows on med and smaller screens-->
+                <ul class="side-nav" id="slide-out">
+                    <!--Choose major button-->
+                    <li><a href="#" class="dropdown-button btn" data-activates="dropdown3">Enter Major</a></li>
+                    
+                    <!--Choose year button-->
+                    <li>
+                        <a href="#" class="dropdown-button btn" data-activates="dropdown4">
+<!--                        <div style="overflow:hidden;white-space:nowrap;">-->
+                            <span>Enter Year
+                            <i class="material-icons">arrow_drop_down</i>
+                            </span>
+<!--                        </div>-->
+                        </a>
+                    </li>
+                </ul>
+                <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
 			</div>
 		</nav>
 
@@ -97,8 +181,7 @@
 		<!-- Left Section of the Page-->
 		<div class="row">
 			<div class="col s5" id="Left-Panel">
-
-
+                
 				<!-- Second card where user adds classes already taken-->
 				<div id="Classes-Taken">
 					<div class="card small">
@@ -137,9 +220,10 @@
                         <!-- Easiness slider-->
                         <div class="col s4">
                             <form action="#">
-							<p class="range-field">
-                                <input type="range" id="Easiness" min="0" max="100">
-                            </p>
+                                <p class="range-field">
+                                    Easiness
+                                    <input type="range" id="Easiness" min="0" max="100">
+                                </p>
 						  </form>
                         </div>
                         <!--End of Easiness Slider-->
@@ -148,6 +232,7 @@
                         <div class="col s4">
                             <form action="#">
                                 <p class="range-field">
+                                    Relevance
                                     <input id="Relevance" type="range" min="0" max="100">
                                 </p>
 				            </form>
@@ -158,10 +243,12 @@
 						<div class="col s4">
 							<form action="#">
                                 <p class="range-field">
+                                    Quality
                                     <input id="Quality" type="range" min="0" max="100">
                                 </p>
 				            </form>
 						</div>
+                        <!--End of Quality Slider-->
 					</div>
 
 					<!-- This replaces the card when .activator element is clicked -->
@@ -169,7 +256,7 @@
 						<!-- Revealed stuff goes here -->
 						<div class="col s7">
 							<div class="row">
-                                <i class="material-icons activator center-align" font-size="50px">play_for_work</i>
+                                <i class="material-icons activator center-align" >play_for_work</i>
                             </div>
                             <div class="row">
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
@@ -183,5 +270,10 @@
 		<!--Import jQuery before materialize.js-->
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="stylesheets/css/vendor/js/bin/materialize.min.js"></script>
+        <script>
+         $(document).ready(function(){
+           $('.button-collapse').sideNav();
+          });
+        </script>
 	</body>
 </html>
