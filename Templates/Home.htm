@@ -49,7 +49,8 @@ $(document).ready(function(){
 		$("div#courseResultsArea").html("");
 		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
-		$.post('/a.php?p=customAlgorithm',function(d){
+		$sql_file = "/model/ranking_scripts/alphabetize_course.sql";
+		$.post('/a.php?p=CustomAlgorithm',{sql_file:$sql_file}function(d){
 			//alert(d);
 			
 			if(getAjaxStatus(d)){
@@ -66,10 +67,6 @@ $(document).ready(function(){
 
 
 	/*Take in list, display courses in right panel.*/
-
-
-
-
 
 	//resetStatistics();
 	function decodeHTML(html){
