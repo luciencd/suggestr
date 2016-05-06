@@ -7,11 +7,11 @@
   of the three based on how a user adjusts sliders for how important those aspects
   are to him/her
   
-  
+  #<variable_name> is replaced by an appropriate value in php.  Here they are #user_id, #easiness, #relevance, and #quality
 */
 
 SELECT @user_id;
-SET @user_id = @@SPID;
+SET @user_id = #user_id;
 /*
 For testing, replace @@SPID with a known session_id
 good samples include 4996822, 4996862, 4996872, 4996982 for easiness only  */
@@ -298,4 +298,4 @@ FROM (
 
 
 SELECT * FROM output
-ORDER BY IFNULL(easiness, 0)*.1 + IFNULL(relevance, 0)*.2 + IFNULL(quality, 0)*.7 DESC; /*the decimals here are stand ins for slider values*/
+ORDER BY IFNULL(easiness, 0)*#easiness + IFNULL(relevance, 0)*#relevance + IFNULL(quality, 0)*#quality DESC; /*the decimals here are stand ins for slider values*/
