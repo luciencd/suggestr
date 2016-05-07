@@ -11,6 +11,17 @@ class CustomAlgorithmController extends AjaxController {
 	
 	public $template = "Suggest";
 
+	public function parseSQL($filename){
+
+		$lines = file($filename);
+		$statement = "";
+		// Loop through each line
+		foreach ($lines as $line){
+			$statement .= $line;
+		}
+		return $statement;
+	}
+
 	public function process($get,$post) {
 
 		//header('Content-Type: application/json');
@@ -18,28 +29,118 @@ class CustomAlgorithmController extends AjaxController {
 		$session_id = $_COOKIE['sessionId']; 
 		$sql_file = $post['sql_file'];
 
-		$lines = file($sql_file);
-		// Loop through each line
-		foreach ($lines as $line){
-			echo $line;
+		
+
+		/*
+		Changing individual variables from sql function to match post requests
+		from user choices (of array weights).
+		That or what user it is using cookie.
+		*/
+		//$statement = $oldstatement;
+		//Replacing user cookie
+		//$this->pageData['description'] = $oldstatement;
+		//return true;
+		//$session_id = 4996822;
+
+		/*
+		mysql queries take time to load.
+		*/
+
+		$statement2 = $this->parseSQL("model/ranking_scripts/final_collaborative.sql");
+		
+	    $result2 = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement2); 
+
+	    //if(Count(mysqli_fetch_array($result2)) == 0 || mysqli_fetch_array($result2)[0]['user_id']!= $session_id){
+	    	//echo "DO IT";
+    	$statement1 = $this->parseSQL("model/ranking_scripts/collaborative_filter_qualities.sql");
+		$statement1 = str_replace("user_id",$session_id,$statement1);
+
+    	$result1 = mysqli_multi_query($GLOBALS['CONFIG']['mysqli'], $statement1);
+	    //}
+	    //$this->pageData['description'] = $statement1;
+		//return true;
+		
+        
+		//$this->pageData['description'] = Count(mysqli_fetch_array($result));
+		//return true;
+
+        /*if(mysqli_fetch_array($result)==null){
+            return 1;
+        }*/
+        
+		//echo $result[0];
+		$allNewCourses = array();
+		//$this->pageData['description'] = Count(mysqli_fetch_array($result));
+		//return true;
+		$count = 0;
+		/*foreach($result as $course){
+			$count+=1;
+		}*/
+        foreach($result2 as $course){
+			try{
+				$count +=1;
+				//$course = $Data->getReturnArray($id,'course');
+				$ratings = array();
+				array_push($ratings,array('percentage' => 100*$course['easiness'],
+				                                                'slider_id' => 1,
+				                                                'slider_name' => 'easiness',
+				                                                'slider_type' => 'preference'
+				                                                	));
+
+				array_push($ratings,array('percentage' => 100*$course['relevance'],
+				                                                'slider_id' => 2,
+				                                                'slider_name' => 'relevance',
+				                                                'slider_type' => 'preference'
+				                                                	));
+
+				array_push($ratings,array('percentage' => 100*$course['quality'],
+				                                                'slider_id' => 3,
+				                                                'slider_name' => 'quality',
+				                                                'slider_type' => 'preference'
+				                                                	));
+
+				array_push($allNewCourses, array('id' => $course['course_id'],
+											  'name' => $course['course_name'],
+											  'description' =>$course['description'],
+											  'department_code' => $course['department_code'],
+											  'number' => $course['level'],
+											  'ratings' => $ratings
+											  )
+							);
+				
+			}catch(Exception $e){}
 		}
 
-		$statement = //Read in from file.;
-        
-        $result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement);
-
-        if(mysqli_fetch_array($result)==null){
-            return 1;
-        }
-        echo mysqli_fetch_array($result)[0];
-		//echo $result[0];
-
-        $allNewCourses = array();
+		//$allNewCourses = array();
+		/* Alphabetize
+        foreach($result as $course){
+			try{
+				//$course = $Data->getReturnArray($id,'course');
+				
+				array_push($allNewCourses, array('id' => $course['course_id'],
+											  'name' => $course['course_name'],
+											  'department_id' => $course['department_id'],
+											  
+											  'number' => $course['number'],
+											  'description' => $course['description']//((strlen($course['description']==0)?'No description':$course['description'])),
+											  )
+							);
+				
+			}catch(Exception $e){}
+		}*/
+        //
         
 		//Populate webpage with all the different courses that were predicted.
 		
-		$this->pageData['numResults'] = 0;
-		$this->pageData['description'] = "Custom Suggestion Algorithm";
+		$this->pageData['numResults'] = Count($allNewCourses);
+		$this->pageData['numResults'] = $count;
+		//$count = 2;
+		//$this->pageData['numResults'] = $count;
+		//$this->pageData['description'] = "Custom Suggestion Algorithm";
+		//$this->pageData['description'] = $sql_file;
+		$this->pageData['numResults'] = Count(mysqli_fetch_array($result));
+		$this->pageData['description'] = $statement2;
+		//$this->pageData['description'] = "Custom Suggestion Algorithm";
 		$this->pageData['allCourses'] = $allNewCourses;
 
 		

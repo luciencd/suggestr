@@ -14,7 +14,9 @@ $(document).ready(function(){
 	startupSetup();
 	/*Display a list of courses here*/
 	function startupSetup(){
-		suggest();//Put all the classes on home page.
+		//suggest();//Put all the classes on home page.
+		customAlgorithm();
+
 		//Using rank function to return list here::::
 		//then send it to displayList here:
 		/*
@@ -33,6 +35,7 @@ $(document).ready(function(){
 		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
 		$.post('/a.php?p=ListCourses',{courses:$list},function(d){
+
 			if(getAjaxStatus(d)){
 				$("div#courseResultsArea").html(getAjaxData(d));
 				resetSliderColors();
@@ -49,10 +52,13 @@ $(document).ready(function(){
 		$("div#courseResultsArea").html("");
 		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
-		$sql_file = "/model/ranking_scripts/alphabetize_course.sql";
-		$.post('/a.php?p=CustomAlgorithm',{sql_file:$sql_file}function(d){
+		$sql_file = "model/ranking_scripts/alphabetize_course.sql";
+		$sql_file = "model/ranking_scripts/collaborative_filter_qualities.sql";
+		//$sql_file = "model/ranking_scripts/collabtest.sql";
+
+		$.post('/a.php?p=CustomAlgorithm',{sql_file:$sql_file},function(d){
 			//alert(d);
-			
+			alert(d);
 			if(getAjaxStatus(d)){
 				$("div#courseResultsArea").html(getAjaxData(d));
 				resetSliderColors();
