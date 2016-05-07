@@ -59,8 +59,13 @@ $(document).ready(function(){
 		$.post('/a.php?p=CustomAlgorithm',{sql_file:$sql_file},function(d){
 			//alert(d);
 			alert(d);
+			
+
+			data = getAjaxData(d);
+			data = JSON.stringify(data);
 			if(getAjaxStatus(d)){
-				$("div#courseResultsArea").html(getAjaxData(d));
+				//$("div#courseResultsArea").html(data);//will print json array
+				$("div#courseResultsArea").html(getAjaxData(d));//will print html
 				resetSliderColors();
 			}else{
 				//alert(getAjaxFailureReason(d));

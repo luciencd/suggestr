@@ -76,6 +76,7 @@ class CustomAlgorithmController extends AjaxController {
 		/*foreach($result as $course){
 			$count+=1;
 		}*/
+		/*
         foreach($result2 as $course){
 			try{
 				$count +=1;
@@ -98,15 +99,52 @@ class CustomAlgorithmController extends AjaxController {
 				                                                'slider_name' => 'quality',
 				                                                'slider_type' => 'preference'
 				                                                	));
+				//setting JSON object array.
+				$allNewCourses[$course['course_id']] = array('id' => $course['course_id'],
+											  'name' => $course['course_name'],
+											  'description' =>$course['description'],
+											  'department_code' => $course['department_code'],
+											  'number' => $course['level'],
+											  'ratings' => $ratings
+											  );
+							
+				
+			}catch(Exception $e){}
+		}*/
+		$displayArray = array();
+		$count = 0;
+		foreach($result2 as $course){
+			try{
+				$count +=1;
+				//$course = $Data->getReturnArray($id,'course');
+				$ratings = array();
+				array_push($ratings,array('percentage' => 100*$course['easiness'],
+				                                                'slider_id' => 1,
+				                                                'slider_name' => 'easiness',
+				                                                'slider_type' => 'preference'
+				                                                	));
 
-				array_push($allNewCourses, array('id' => $course['course_id'],
+				array_push($ratings,array('percentage' => 100*$course['relevance'],
+				                                                'slider_id' => 2,
+				                                                'slider_name' => 'relevance',
+				                                                'slider_type' => 'preference'
+				                                                	));
+
+				array_push($ratings,array('percentage' => 100*$course['quality'],
+				                                                'slider_id' => 3,
+				                                                'slider_name' => 'quality',
+				                                                'slider_type' => 'preference'
+				                                                	));
+				//setting JSON object array.
+				array_push($displayArray, array('id' => $course['course_id'],
 											  'name' => $course['course_name'],
 											  'description' =>$course['description'],
 											  'department_code' => $course['department_code'],
 											  'number' => $course['level'],
 											  'ratings' => $ratings
 											  )
-							);
+				);
+							
 				
 			}catch(Exception $e){}
 		}
@@ -132,16 +170,20 @@ class CustomAlgorithmController extends AjaxController {
         
 		//Populate webpage with all the different courses that were predicted.
 		
-		$this->pageData['numResults'] = Count($allNewCourses);
+		/*$this->pageData['numResults'] = Count($allNewCourses);
 		$this->pageData['numResults'] = $count;
 		//$count = 2;
 		//$this->pageData['numResults'] = $count;
 		//$this->pageData['description'] = "Custom Suggestion Algorithm";
 		//$this->pageData['description'] = $sql_file;
 		$this->pageData['numResults'] = Count(mysqli_fetch_array($result));
-		$this->pageData['description'] = $statement2;
+		$this->pageData['description'] = $statement2;*/
 		//$this->pageData['description'] = "Custom Suggestion Algorithm";
-		$this->pageData['allCourses'] = $allNewCourses;
+
+		//Return just a JSON array of courses called allCourses
+		//$this->pageData['allCourses'] = $allNewCourses;
+		$this->pageData['allCourses'] = $displayArray;
+
 
 		
 		return true;
