@@ -78,8 +78,8 @@ for item in array:
 ##0th column is ylabel
 ##1st column is xlabel.
 ## idk why it just is
-ax.set_xlabel('easiness')
-ax.set_ylabel('relevance')
+ax.set_xlabel('eaainess')
+ax.set_ylabel('quality')
 
 #getting a tuple of the item vs item we want.
 #first item is on y-axis,
@@ -87,11 +87,11 @@ ax.set_ylabel('relevance')
 
 #item[2] = easiness, item[3] = relevance, item[4] = quality.
 
-g = lambda item: (item[2],item[3])
+g = lambda item: (item[2],item[4])
 subsetData = map(g,minArray)
 ## (.7,.98)
 
-g = lambda item: (item[0],item[1],item[2],item[3])
+g = lambda item: (item[0],item[1],item[2],item[4])
 subsetDisplay = map(g,minArray)
 ## (10101, Data Structures,.4,.7,.98)
 

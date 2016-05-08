@@ -42,6 +42,26 @@ class CustomAlgorithmController extends AjaxController {
 		//return true;
 		//$session_id = 4996822;
 
+		$query_easiness = "SELECT * FROM weights WHERE session_id = ".$session_id;
+		$result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $query_easiness); 
+		//echo $query_easiness, Count($result);
+		
+		$slider_easiness = .5;
+		$slider_relevance = .5;
+		$slider_quality = .5;
+		
+		foreach($result as $row){
+			//echo $row['slider_id'];
+			if($row['slider_id'] == 1){
+				$slider_easiness = $row['vote'];
+			}else if($row['slider_id'] == 2){
+				$slider_relevance = $row['vote'];
+			}else if($row['slider_id'] == 3){
+				$slider_quality = $row['vote'];
+			}
+
+		}
+		//echo "(",$slider_easiness,$slider_quality,$slider_relevance,")";
 		/*
 		mysql queries take time to load.
 		*/
@@ -54,6 +74,9 @@ class CustomAlgorithmController extends AjaxController {
 	    	//echo "DO IT";
     	$statement1 = $this->parseSQL("model/ranking_scripts/collaborative_filter_qualities.sql");
 		$statement1 = str_replace("user_id",$session_id,$statement1);
+		$statement1 = str_replace("slider_easiness",$slider_easiness,$statement1);
+		$statement1 = str_replace("slider_relevance",$slider_relevance,$statement1);
+		$statement1 = str_replace("slider_quality",$slider_quality,$statement1);
 
     	$result1 = mysqli_multi_query($GLOBALS['CONFIG']['mysqli'], $statement1);
 	    //}
