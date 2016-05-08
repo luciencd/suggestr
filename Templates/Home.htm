@@ -582,7 +582,7 @@ $(document).ready(function(){
 	});
 
 
-	$(document).on('click', 'div.panel-bottom div.slider', function(e){
+	$(document).on('click', 'div.slider', function(e){
 		var offset = $(this).offset();
 		var width = $(this).width();
 		var $course_id = $(this).parent('div.slider-base').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
@@ -776,8 +776,8 @@ $(document).ready(function(){
 		
 		//Passing by reference issues.d
 
-
-		$('div.panel-bottom div.slider div.slider-rating').each(function(){
+		
+		$('div.slider div.slider-rating').each(function(){
 
 			sliderColorizeUp($(this),$(this).siblings('input.percentage').val());
 		});
