@@ -31,8 +31,8 @@ $(document).ready(function(){
 		setMargins();
 	}
 	function displayList($list){
-		$("div#courseResultsArea").html("");
-		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
+		$("div.reload").html("");
+		$("div.reload").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
 		$.post('/a.php?p=ListCourses',{courses:$list},function(d){
 
@@ -44,13 +44,13 @@ $(document).ready(function(){
 			}
 		}).fail(function(jqXHR, textStatus, errorThrown) {
 
-		    $("div#courseResultsArea").html('<div class = "suggest-control" style="display: table;width:100%;"> <div class = "btn-container-suggestr" style="display: table-cell;"> <button type="button" class="btn btn-primary">Suggest</button> </div><div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;"><div class = "resultsInfo"><span>Database Failed!</span> (<span>0 Results</span>)</div></div></div>');
+		    $("div#reload").html('<div class = "suggest-control" style="display: table;width:100%;"> <div class = "btn-container-suggestr" style="display: table-cell;"> <button type="button" class="btn btn-primary">Suggest</button> </div><div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;"><div class = "resultsInfo"><span>Database Failed!</span> (<span>0 Results</span>)</div></div></div>');
 		    
 		});
 	}
 	function customAlgorithm(){
-		$("div#courseResultsArea").html("");
-		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
+		$("div.reload").html("");
+		$("div.reload").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
 		$sql_file = "model/ranking_scripts/alphabetize_course.sql";
 		$sql_file = "model/ranking_scripts/collaborative_filter_qualities.sql";
@@ -65,13 +65,13 @@ $(document).ready(function(){
 			data = JSON.stringify(data);
 			if(getAjaxStatus(d)){
 				//$("div#courseResultsArea").html(data);//will print json array
-				$("div#courseResultsArea").html(getAjaxData(d));//will print html
+				$("div.reload").html(getAjaxData(d));//will print html
 				resetSliderColors();
 			}else{
 				//alert(getAjaxFailureReason(d));
 			}
 		}).fail(function(jqXHR, textStatus, errorThrown) {
-		    $("div#courseResultsArea").html('<div class = "suggest-control" style="display: table;width:100%;"> <div class = "btn-container-suggestr" style="display: table-cell;"> <button type="button" class="btn btn-primary">Suggest</button> </div><div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;"><div class = "resultsInfo"><span>Database Failed!</span> (<span>0 Results</span>)</div></div></div>');
+		    $("div.reload").html('<div class = "suggest-control" style="display: table;width:100%;"> <div class = "btn-container-suggestr" style="display: table-cell;"> <button type="button" class="btn btn-primary">Suggest</button> </div><div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;"><div class = "resultsInfo"><span>Database Failed!</span> (<span>0 Results</span>)</div></div></div>');
 		});
 	}
 
@@ -418,8 +418,8 @@ $(document).ready(function(){
 
 	//user is "finished typing," do something
 	function doneTyping (){
-		$("div#courseResultsArea").html("");
-		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
+		$("div.reload").html("");
+		$("div.reload").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		$.post('/a.php?p=Search', {q: $input2.val()}, function(d){
 
 			if(getAjaxStatus(d)){
@@ -429,7 +429,7 @@ $(document).ready(function(){
 					//If search bar is empty, reset to original suggest() function.
 					//Perhaps cache this information.
 				}else{
-					$("div#courseResultsArea").html(getAjaxData(d));
+					$("div.reload").html(getAjaxData(d));
 					resetSliderColors();
 				}
 				
@@ -446,20 +446,20 @@ $(document).ready(function(){
 
 
 	function suggest(){
-		$("div#courseResultsArea").html("");
-		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
+		$("div.reload").html("");
+		$("div.reload").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
 		$.post('/a.php?p=Suggest',function(d){
 			//alert(d);
 			
 			if(getAjaxStatus(d)){
-				$("div#courseResultsArea").html(getAjaxData(d));
+				$("div.reload").html(getAjaxData(d));
 				resetSliderColors();
 			}else{
 				//alert(getAjaxFailureReason(d));
 			}
 		}).fail(function(jqXHR, textStatus, errorThrown) {
-		    $("div#courseResultsArea").html('<div class = "suggest-control" style="display: table;width:100%;"> <div class = "btn-container-suggestr" style="display: table-cell;"> <button type="button" class="btn btn-primary">Suggest</button> </div><div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;"><div class = "resultsInfo"><span>Database Failed!</span> (<span>0 Results</span>)</div></div></div>');
+		    $("div.reload").html('<div class = "suggest-control" style="display: table;width:100%;"> <div class = "btn-container-suggestr" style="display: table-cell;"> <button type="button" class="btn btn-primary">Suggest</button> </div><div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;"><div class = "resultsInfo"><span>Database Failed!</span> (<span>0 Results</span>)</div></div></div>');
 		});
 	}
 
@@ -467,7 +467,7 @@ $(document).ready(function(){
 
 	function similaritySuggest($elem,$course_id){
 		//alert('test');
-		$("div#courseResultsArea").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
+		$("div.reload").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
 		
 		//alert('Course'+$course_id);
 		$elem.css({backgroundColor:"Gold"});
@@ -475,7 +475,7 @@ $(document).ready(function(){
 		$.post('/a.php?p=SimilarSuggestions', {course_id:$course_id}, function(d){
 			//alert(d);
 			//alert(getAjaxData(d));
-			$("div#courseResultsArea").html(getAjaxData(d));
+			$("div.reload").html(getAjaxData(d));
 			resetSliderColors();
 			
 		});
@@ -546,7 +546,7 @@ $(document).ready(function(){
 
 	//RATINGS!!!!11one
 	//Visually showing what happens when you mess with sliders.
-	$(document).on('mousemove', 'div.slider', function(e){
+	$(document).on('mousemove', 'div.panel-bottom div.slider , div.slider-base div.slider', function(e){
 		
 		var offset = $(this).offset();
 		var width = $(this).width();
@@ -563,7 +563,7 @@ $(document).ready(function(){
 		sliderColorizeUp($slider_rating,$slider_num*100);
 	});
 
-	$(document).on('mouseleave', 'div.slider',function(e){
+	$(document).on('mouseleave', 'div.panel-bottom div.slider , div.slider-base div.slider',function(e){
 		var offset = $(this).offset();
 		var width = $(this).width();
 		var $slider_num = (e.pageX - offset.left)/(width);
@@ -582,7 +582,7 @@ $(document).ready(function(){
 	});
 
 
-	$(document).on('click', 'div.slider', function(e){
+	$(document).on('click', 'div.panel-bottom div.slider', function(e){
 		var offset = $(this).offset();
 		var width = $(this).width();
 		var $course_id = $(this).parent('div.slider-base').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
@@ -597,8 +597,34 @@ $(document).ready(function(){
 
 		$elem.children('.slider-rating').css({"width":(e.pageX - offset.left)+"px"});
 		sliderColorizeUp($elem);
+
 		//alert(slider_type);
 		$.post('/a.php?p=AddRating', {course_id: $course_id, slider_id: $slider_id, vote: vote,slider_type: $slider_type} ,function(d) { 
+			//alert(d);
+			//Sets input-wise the percentage to the one you set.
+			
+		});
+	});
+
+	$(document).on('click', 'div.ArrayWeights div.slider', function(e){
+		var offset = $(this).offset();
+		var width = $(this).width();
+		
+		//alert($course_id);
+		var $slider_id = $(this).children('input.slider_id').val();
+		var $slider_name = $(this).children('input.slider_id').val();
+		var vote = (e.pageX - offset.left)/(width);
+		var $slider_type = $(this).children('input.slider_type').val();
+
+		$elem = $(this);
+		$elem.children('input.percentage').val(vote*100);
+
+
+		$elem.children('.slider-rating').css({"width":(e.pageX - offset.left)+"px"});
+		sliderColorizeUp($elem);
+
+		//alert(slider_type);
+		$.post('/a.php?p=AddWeights', {slider_id: $slider_id, vote: vote,slider_type: $slider_type} ,function(d) { 
 			//alert(d);
 			//Sets input-wise the percentage to the one you set.
 			
@@ -776,11 +802,12 @@ $(document).ready(function(){
 		
 		//Passing by reference issues.d
 
-		
-		$('div.slider div.slider-rating').each(function(){
 
+		$('div.slider div.slider-rating').each(function(){
+			//alert('fuck');
 			sliderColorizeUp($(this),$(this).siblings('input.percentage').val());
 		});
+
 		$('ul.stats div.statistics li.list-group-item div.slider div.slider-rating').each(function(){
 
 
@@ -804,11 +831,8 @@ $(document).ready(function(){
 			var endColor = makeGradientColor(yellow, green, (val-50)*2).cssColor;
 			elem.css({"background-color":endColor});
 		}
-		
-
-		
-		
 	}
+
 	function sliderColorizeDown(elem,val){
 
 		if(val > 50){
@@ -992,8 +1016,8 @@ $(document).ready(function(){
 				<div class = "suggest-control" style="display: table;width:100%;">
 	
 					
-					<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;width:96%;">
-						<div class = "CustomiseWeightArray"><span>Customise Weight Array</span></div>
+					<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;width:100%;">
+						<div class = "CustomizeWeightArray"><span>What features do you want to emphasize?</span></div>
 						<div class = "ArrayWeights">
 							
 							<div class = "slider-base">
@@ -1010,7 +1034,7 @@ $(document).ready(function(){
 
 									<input type="hidden" class="slider_type" value="preference">
 									<input type="hidden" class="slider_id" value="1">
-									<input type="hidden" class="percentage" value="56%">
+									<input type="hidden" class="percentage" value="56">
 									<div class = "slider-label">easiness</div>
 								</div>
 							</div>
@@ -1028,7 +1052,7 @@ $(document).ready(function(){
 
 									<input type="hidden" class="slider_type" value="preference">
 									<input type="hidden" class="slider_id" value="2">
-									<input type="hidden" class="percentage" value="33%">
+									<input type="hidden" class="percentage" value="33">
 									<div class = "slider-label">relevance</div>
 								</div>
 							</div>
@@ -1046,7 +1070,7 @@ $(document).ready(function(){
 
 									<input type="hidden" class="slider_type" value="preference">
 									<input type="hidden" class="slider_id" value="3">
-									<input type="hidden" class="percentage" value="40%">
+									<input type="hidden" class="percentage" value="89">
 									<div class = "slider-label">quality</div>
 								</div>
 							</div>
@@ -1058,69 +1082,71 @@ $(document).ready(function(){
 				</div>
 				
 				<!---->
-
-				<div class = "suggest-control" style="display: table;width:100%;">
-	
-					<div class = "btn-container-suggestr" style="display: table-cell;">
-						<button type="button" class="btn btn-primary">Suggest</button>
-					</div>
-					<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;">
-						<div class = "resultsInfo">
-							<span>{{description}}</span> (<span>{{numResults}} Results</span>)
+				<div class ="reload">
+					<div class = "suggest-control" style="display: table;width:100%;">
+		
+						<div class = "btn-container-suggestr" style="display: table-cell;">
+							<button type="button" class="btn btn-primary">Suggest</button>
 						</div>
-					</div>
-
-				</div>
-				
-				
-				{{#allCourses}}
-					<div class="single-course">
-						<div class="panel-heading">
-							<!-- perhaps move course_id one position up -->
-							<input type="hidden" id="course_id" value="{{id}}" />
-							<input type="hidden" id="number" value="{{number}}" />
-							<input type="hidden" id="name" value="{{name}}"/>
-							
-
-								<div class="col-md-9">
-									<h3 class="panel-title"><!--<span>{{number}}</span>--> <span>{{name}}</span></h3>
-								</div>
-								<div class="col-md-3">
-									<div class="btn-group" role="group">
-										<button type="button" class="btn btn-success">Took</button>
-
-										<button type="button" class="btn btn-primary">Add</button>
-										<!--<button type="button" class="btn btn-danger">Ignore</button>-->
-									</div>
-								</div>
-							
-						</div>
-
-
-						<div class="panel-body">
-							<div class="row"><span>{{description}}</span></div>
-						</div>
-
-
-						<div class = "panel-bottom">
-							{{#ratings}}
-							<div class = "slider">
-								<!-- Working on making this look better-->
-								<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
-									<span>{{slider_name}}</span>
-								</div>-->
-								<!--<div class = ""-->
-								<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;">
-									<span>{{slider_name}}</span>
-								</div>
-								<input type="hidden" id="slider_id" value="{{slider_id}}">
-								<input type="hidden" class="percentage" value="{{percentage}}">
+						<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;">
+							<div class = "resultsInfo">
+								<span>{{description}}</span> (<span>{{numResults}} Results</span>)
 							</div>
-							{{/ratings}}
 						</div>
+
 					</div>
-					<!-- needs spacing here-->
-				{{/allCourses}}
+
+					
+					
+					{{#allCourses}}
+						<div class="single-course">
+							<div class="panel-heading">
+								<!-- perhaps move course_id one position up -->
+								<input type="hidden" id="course_id" value="{{id}}" />
+								<input type="hidden" id="number" value="{{number}}" />
+								<input type="hidden" id="name" value="{{name}}"/>
+								
+
+									<div class="col-md-9">
+										<h3 class="panel-title"><!--<span>{{number}}</span>--> <span>{{name}}</span></h3>
+									</div>
+									<div class="col-md-3">
+										<div class="btn-group" role="group">
+											<button type="button" class="btn btn-success">Took</button>
+
+											<button type="button" class="btn btn-primary">Add</button>
+											<!--<button type="button" class="btn btn-danger">Ignore</button>-->
+										</div>
+									</div>
+								
+							</div>
+
+
+							<div class="panel-body">
+								<div class="row"><span>{{description}}</span></div>
+							</div>
+
+
+							<div class = "panel-bottom">
+								{{#ratings}}
+								<div class = "slider">
+									<!-- Working on making this look better-->
+									<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
+										<span>{{slider_name}}</span>
+									</div>-->
+									<!--<div class = ""-->
+									<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;">
+										<span>{{slider_name}}</span>
+									</div>
+									<input type="hidden" id="slider_id" value="{{slider_id}}">
+									<input type="hidden" class="percentage" value="{{percentage}}">
+								</div>
+								{{/ratings}}
+							</div>
+						</div>
+						<!-- needs spacing here-->
+					{{/allCourses}}
+				</div>
 			</div>
 		</div>
 	</div>

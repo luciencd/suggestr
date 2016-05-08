@@ -23,7 +23,8 @@ class Query{
 'year',
 'sliders',
 'slideraction',
-'majorrelations')))
+'majorrelations',
+'weights')))
 			$this->table = ucfirst($table);
 		else
 			throw new Exception("Unable to create Query instance!");
@@ -183,7 +184,8 @@ class Query{
 'year',
 'sliders',
 'slideraction',
-'majorrelations'))){
+'majorrelations',
+'weights'))){
 					return false;
 				}
 			}

@@ -61,6 +61,14 @@ CUSTOM ALGORITHM DROPDOWNS AND SLIDERS
 **/
 div.CustomizeWeightArray{
 	text-align: center;
+	margin-top:6px;
+	margin-bottom:6px;
+	height:25px;
+	border-bottom:1px #D3D3D3 solid;
+}
+div.CustomizeWeightArray div.span {
+	text-align: center;
+	width:100%;
 }
 
 div.ArrayWeights{
@@ -130,6 +138,26 @@ div.star-slider div.confirm {
 	
 }
 
+.btn-success {
+	background-color:#e5ffe5;
+	background-image:none;
+	border-color:#ddd;
+	color:black;
+	text-shadow:none;
+	-webkit-box-shadow:none;
+	box-shadow:none;
+
+}
+
+.btn-primary {
+	background-color:#e5f2ff;
+	background-image:none;
+	border-color:#ddd;
+	color:black;
+	text-shadow:none;
+	-webkit-box-shadow:none;
+	box-shadow:none;
+}
 /*SCROLLING PANEL*/
 
 #left-panel, #right-panel {
