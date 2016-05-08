@@ -19,6 +19,20 @@ SET @user_id = 4996822;*/
 For testing, replace @@SPID with a known session_id
 good samples include 4996822, 4996862, 4996872, 4996982 for easiness only  */
 
+/*get the slider weights*/
+SELECT @slider_easiness;
+SET @slider_easiness =
+	IFNULL((SELECT vote FROM weights
+    WHERE slider_id = 1 AND session_id = user_id), 1);
+SELECT @slider_relevance;
+SET @slider_relevance =
+	IFNULL((SELECT vote FROM weights
+    WHERE slider_id = 2 AND session_id = user_id), 1);
+SELECT @slider_quality;
+SET @slider_quality =
+	IFNULL((SELECT vote FROM weights
+    WHERE slider_id = 3 AND session_id = user_id), 1);
+
 DROP TABLE output;
 CREATE TABLE output(user INT, course_id INT, course_name TEXT, description TEXT, department_id INT, department_code TEXT, department_name TEXT, level INT, easiness FLOAT, relevance FLOAT, quality FLOAT);
 
@@ -175,11 +189,11 @@ INSERT INTO pearson (user1, user2, similarity, n)
 SELECT
 	@user_id as user1,
     sessions.id as user2,
-    /*please replace the slider_vars with the slider values in php*/
-	(IFNULL(pearson1.similarity, 0)*slider_easiness +
-    IFNULL(pearson2.similarity, 0)*slider_relevance +
-    IFNULL(pearson3.similarity, 0)*slider_quality)/
-    slider_easiness + slider_relevance + slider_quality AS similarity,
+    /*slider values used here*/
+	(IFNULL(pearson1.similarity, 0)*@slider_easiness +
+    IFNULL(pearson2.similarity, 0)*@slider_relevance +
+    IFNULL(pearson3.similarity, 0)*@slider_quality)/
+    (@slider_easiness + @slider_relevance + @slider_quality) AS similarity,
 	
     /*
 	IFNULL(pearson1.similarity, 0)*.6 +
@@ -246,7 +260,7 @@ FROM
 		pearson_agg.user1 AS user,
         courses.name AS course_name,
         courses.id AS course_id,
-        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - averages.easy)) AS predicted_rating
+        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.easy, .5))) AS predicted_rating
 	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors1 as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
@@ -270,7 +284,7 @@ FROM
 		pearson_agg.user1 AS user,
         courses.name AS course_name,
         courses.id AS course_id,
-        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - averages.rele)) AS predicted_rating
+        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.rele, .5))) AS predicted_rating
 	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors1 as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
@@ -294,7 +308,7 @@ FROM
 		pearson_agg.user1 AS user,
         courses.name AS course_name,
         courses.id AS course_id,
-        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - averages.qual)) AS predicted_rating
+        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.qual, .5))) AS predicted_rating
 	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors1 as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
@@ -358,10 +372,13 @@ FROM (
 	GROUP BY
 		courses.name, slideraction.slider_id) AS step
 ;
+<<<<<<< HEAD
 
 /*
 SELECT * FROM output
 ORDER BY IFNULL(easiness, 0) DESC;*/
+=======
+>>>>>>> 6dc178d120a9e68974e9de74b14beb8ae600d2b3
 /*This is where the array of weights comes in.. not sure if similiarity score should be calculated at first with these in mind but they arent here*/
 #easiness + IFNULL(relevance, 0)*#relevance + IFNULL(quality, 0)*#quality DESC; /*the decimals here are stand ins for slider values*/
 
