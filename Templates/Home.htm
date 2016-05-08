@@ -15,7 +15,7 @@ $(document).ready(function(){
 	/*Display a list of courses here*/
 	function startupSetup(){
 		//suggest();//Put all the classes on home page.
-		customAlgorithm();
+		//customAlgorithm();
 
 		//Using rank function to return list here::::
 		//then send it to displayList here:
@@ -546,29 +546,36 @@ $(document).ready(function(){
 
 	//RATINGS!!!!11one
 	//Visually showing what happens when you mess with sliders.
-	$(document).on('mousemove', 'div.panel-bottom div.slider', function(e){
+	$(document).on('mousemove', 'div.slider', function(e){
 		
 		var offset = $(this).offset();
 		var width = $(this).width();
-		var $course_id = $(this).parent('div.slider-base').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
-		var $slider_id = $(this).children('input.slider_id').val();
 		var $slider_num = (e.pageX - offset.left)/(width);
 		var $slider_rating = $(this).children('.slider-rating');
+		/*
+		var $course_id = $(this).parent('div.slider-base').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
+		var $slider_id = $(this).children('input.slider_id').val();
+		
+		
 
-
+		*/
 		$slider_rating.css({"width":(e.pageX - offset.left)+"px"});
 		sliderColorizeUp($slider_rating,$slider_num*100);
 	});
 
-	$(document).on('mouseleave', 'div.panel-bottom div.slider',function(e){
+	$(document).on('mouseleave', 'div.slider',function(e){
 		var offset = $(this).offset();
 		var width = $(this).width();
+		var $slider_num = (e.pageX - offset.left)/(width);
+		var $slider_rating = $(this).children('.slider-rating');
+		var $percentage = $(this).children('input.percentage').val();
+		/*
 		var $course_id = $(this).parent('div.slider-base').parent('div.panel-bottom').siblings("div.panel-heading").children('input#course_id').val();
 		var $slider_id = $(this).children('input.slider_id').val();
-		var $slider_num = (e.pageX - offset.left)/(width);
-		var $percentage = $(this).children('input.percentage').val();
-		var $slider_rating = $(this).children('.slider-rating');
-
+		
+		
+		
+		*/
 
 		$slider_rating.css({"width":$percentage+"%"});
 		sliderColorizeUp($slider_rating,$percentage);
@@ -982,17 +989,78 @@ $(document).ready(function(){
 			<div class="panel-default" id="courseResultsArea">
 				<!--
 				make this shit appear-->
-				<div class = "suggest-control" style= "display: table;width:100%">
-					<div class = "btn-container-suggestr" style="display: table-cell;">
-						<button type="button" class="btn btn-primary">Suggest</button>
-					</div>
-					<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:100%;">
-						<div class = "Customise Weight Array"><span>Customise Weight Array</span></div>
-					</div>
-				</div>
-				<!---->
 				<div class = "suggest-control" style="display: table;width:100%;">
+	
 					
+					<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;width:96%;">
+						<div class = "CustomiseWeightArray"><span>Customise Weight Array</span></div>
+						<div class = "ArrayWeights">
+							
+							<div class = "slider-base">
+								<div class = "slider">
+									<!-- Working on making this look better-->
+									<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
+										<span>{{slider_name}}</span>
+									</div>-->
+									<!--<div class = ""-->
+									
+									<div class="slider-rating" style="width:56%;border-radius:5px;">
+									<!--<span>{{slider_name}}</span>-->
+									</div>
+
+									<input type="hidden" class="slider_type" value="preference">
+									<input type="hidden" class="slider_id" value="1">
+									<input type="hidden" class="percentage" value="56%">
+									<div class = "slider-label">easiness</div>
+								</div>
+							</div>
+							<div class = "slider-base">
+								<div class = "slider">
+									<!-- Working on making this look better-->
+									<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
+										<span>{{slider_name}}</span>
+									</div>-->
+									<!--<div class = ""-->
+									
+									<div class="slider-rating" style="width:33%;border-radius:5px;">
+									<!--<span>{{slider_name}}</span>-->
+									</div>
+
+									<input type="hidden" class="slider_type" value="preference">
+									<input type="hidden" class="slider_id" value="2">
+									<input type="hidden" class="percentage" value="33%">
+									<div class = "slider-label">relevance</div>
+								</div>
+							</div>
+							<div class = "slider-base">
+								<div class = "slider">
+									<!-- Working on making this look better-->
+									<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
+										<span>{{slider_name}}</span>
+									</div>-->
+									<!--<div class = ""-->
+									
+									<div class="slider-rating" style="width:89%;border-radius:5px;">
+									<!--<span>{{slider_name}}</span>-->
+									</div>
+
+									<input type="hidden" class="slider_type" value="preference">
+									<input type="hidden" class="slider_id" value="3">
+									<input type="hidden" class="percentage" value="40%">
+									<div class = "slider-label">quality</div>
+								</div>
+							</div>
+							
+							
+						</div>
+					</div>
+
+				</div>
+				
+				<!---->
+
+				<div class = "suggest-control" style="display: table;width:100%;">
+	
 					<div class = "btn-container-suggestr" style="display: table-cell;">
 						<button type="button" class="btn btn-primary">Suggest</button>
 					</div>

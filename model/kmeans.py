@@ -77,7 +77,7 @@ colors = ["blue","red","green"]
 for i in range(0,len(data)):
     print data[i]
     ax.scatter(data[i][0], data[i][1], data[i][2], zdir='y', c=colors[idx[i]],s=20)
-    ax.text(data[i][0], data[i][1], data[i][2], array[i][2],  color=colors[idx[i]],size=8,zorder=1,ha='center')
+    ax.text(data[i][0], data[i][1], data[i][2], array[i][2],  color=colors[idx[i]],size=6,zorder=1,ha='center')
 
 for i in range(len(tookCourses)):
     for k in range(len(array)):
@@ -98,7 +98,7 @@ for i in range(len(tookCourses)):
                 continue;
             print x,y,z
 #            ax.annotate(array[k][2][0:5], x,y,z, 
-            ax.text(x, y, z, array[k][2], size=10,zorder=1,ha='center',color='black')
+            ax.text(x, y, z, array[k][2], size=6,zorder=1,ha='center',color='black')
             ax.scatter(x,y,z, zdir='y', c="black")
             
 
