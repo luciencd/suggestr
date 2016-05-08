@@ -49,7 +49,7 @@ class AjaxController {
 			}else{ // All that matters is that there was success (there's no template for this ajax call)
 				echo json_encode(array(
 					"success" => true,
-					"data" => ""//RenderAjax($this->template,$this->pageData)  // I dont get what ajax templates have to do with this.//$this->template
+					"data" => $this->pageData  // I dont get what ajax templates have to do with this.//$this->template
 				));
 			}
 		}else{

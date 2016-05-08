@@ -54,6 +54,39 @@ div.panel-bottom {
 	padding: 15px;
 	height:52px;
 }
+/**
+
+CUSTOM ALGORITHM DROPDOWNS AND SLIDERS
+
+**/
+div.CustomizeWeightArray{
+	text-align: center;
+}
+
+div.ArrayWeights{
+	height:35px;
+}
+
+div.WeightSlider{
+	height:20px;
+	width:33%;
+	float:left;
+	
+	display: table-cell;
+	vertical-align: middle;
+}
+
+div.SliderBody{
+	background-color:lightgreen;
+	height:7px;
+	border-radius:5px;
+	vertical-align: middle;
+	border: 1px grey solid;
+	
+}
+
+
+
 
 /**STAR SLIDER FREE OPTION ELECTIVE!!!!
 */

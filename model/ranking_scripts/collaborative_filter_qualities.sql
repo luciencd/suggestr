@@ -10,14 +10,14 @@
   #<variable_name> is replaced by an appropriate value in php.  Here they are #user_id, #easiness, #relevance, and #quality
 */
 
-SELECT @user_id;
-SET @user_id = #user_id;
+/*SELECT @user_id;
+SET @user_id = 4996822;*/
 /*
 For testing, replace @@SPID with a known session_id
 good samples include 4996822, 4996862, 4996872, 4996982 for easiness only  */
 
 DROP TABLE output;
-CREATE TABLE output(user INT, course_id INT, course_name TEXT, easiness FLOAT, relevance FLOAT, quality FLOAT);
+CREATE TABLE output(user INT, course_id INT, course_name TEXT, description TEXT, department_id INT, department_code TEXT, department_name TEXT, level INT, easiness FLOAT, relevance FLOAT, quality FLOAT);
 
 DROP TABLE easy;
 DROP TABLE pearson1;
@@ -80,7 +80,7 @@ FROM
 			(NOT n1.session_id = n2.session_id) AND 
             n1.slider_id = 1 AND n2.slider_id = 1 AND /*change from 1 to any other slider_id(s) to rank by that.*/
             n1.slider_id = n2.slider_id AND
-            n1.session_id = @user_id
+            n1.session_id = user_id
 	GROUP BY
 		n1.session_id, n2.session_id) AS step1 
 	ORDER BY 
@@ -150,7 +150,7 @@ FROM
 			(NOT n1.session_id = n2.session_id) AND 
             n1.slider_id = 2 AND n2.slider_id = 2 AND /*change from 1 to any other slider_id(s) to rank by that.*/
             n1.slider_id = n2.slider_id AND
-            n1.session_id = @user_id
+            n1.session_id = user_id
 	GROUP BY
 		n1.session_id, n2.session_id) AS step1 
 	ORDER BY 
@@ -217,10 +217,11 @@ FROM
 	ON
 		n1.course_id = n2.course_id
         WHERE   
-			(NOT n1.session_id = n2.session_id) AND 
+			(NOT n1.session_id = n2.session_id) AND /*Don't observe your own ratings*/
             n1.slider_id = 3 AND n2.slider_id = 3 AND /*change from 1 to any other slider_id(s) to rank by that.*/
             n1.slider_id = n2.slider_id AND
-            n1.session_id = @user_id
+            n1.session_id = user_id /*make sure you are looking at your own ratings on left side
+            As in, comparing your rating of a given class for a given slider with someone else's ratings.*/
 	GROUP BY
 		n1.session_id, n2.session_id) AS step1 
 	ORDER BY 
@@ -264,17 +265,27 @@ SELECT * FROM easy;
 SELECT * FROM rele;
 SELECT * FROM qual;
 
-INSERT INTO output(user, course_id, course_name, easiness, relevance, quality)
-SELECT @user_id as user, courses.id as course_id, courses.name as course_name, easy.easiness, rele.relevance, qual.quality
+INSERT INTO output(user, course_id, course_name,description,department_id, department_code,department_name,level, easiness, relevance, quality)
+SELECT user_id as user, courses.id as course_id, courses.name as course_name, courses.description as description, courses.department_id as department_id, departments.code as department_code,departments.name as department_name,courses.number as level, easy.easiness, rele.relevance, qual.quality
 FROM (courses
 	LEFT JOIN
 		easy ON easy.course_id = courses.id
 	LEFT JOIN
 		rele ON rele.course_id = courses.id
 	LEFT JOIN
-		qual ON qual.course_id = courses.id)
+		qual ON qual.course_id = courses.id
+	LEFT JOIN 
+		departments ON departments.id = courses.department_id)
+
+
 WHERE (easy.course_id = courses.id OR rele.course_id = courses.id OR qual.course_id = courses.id)
 ;
+/*
+SELECT department_code as 
+FROM (departments
+	LEFT JOIN
+		department_code ON departments.id = courses.id)
+)*/
 
 SELECT name, id, rating, slider_id
 FROM (
@@ -286,7 +297,7 @@ FROM (
 	FROM action, courses, slideraction
 	WHERE 
 		action.choice = 1 AND
-		action.session_id = @user_id AND
+		action.session_id = user_id AND
         action.course_id = courses.id AND
         action.session_id = slideraction.session_id AND
         slideraction.course_id = action.course_id AND
@@ -298,4 +309,10 @@ FROM (
 
 
 SELECT * FROM output
-ORDER BY IFNULL(easiness, 0)*#easiness + IFNULL(relevance, 0)*#relevance + IFNULL(quality, 0)*#quality DESC; /*the decimals here are stand ins for slider values*/
+ORDER BY IFNULL(easiness, 0) DESC;
+/*This is where the array of weights comes in.. not sure if similiarity score should be calculated at first with these in mind but they arent here*/
+#easiness + IFNULL(relevance, 0)*#relevance + IFNULL(quality, 0)*#quality DESC; /*the decimals here are stand ins for slider values*/
+
+
+/* after this, should add all relevant columns to this for json object returns
+Stuff like department id department code, shit we shouldn't need to look up in php*/
