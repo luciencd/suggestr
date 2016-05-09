@@ -61,6 +61,7 @@ class CustomAlgorithmController extends AjaxController {
 			}
 
 		}
+
 		//echo "(",$slider_easiness,$slider_quality,$slider_relevance,")";
 		/*
 		mysql queries take time to load.
@@ -74,13 +75,17 @@ class CustomAlgorithmController extends AjaxController {
 
 	    //if(Count(mysqli_fetch_array($result2)) == 0 || mysqli_fetch_array($result2)[0]['user_id']!= $session_id){
 	    	//echo "DO IT";
-    	$statement1 = $this->parseSQL("model/ranking_scripts/collaborative_filter_integrated_corrolation.sql");
+    	$statement1 = $this->parseSQL("model/ranking_scripts/collaborative_filter_integrated_correlation.sql");
+		//echo 'aaaa';
+		//echo $statement1;
 		$statement1 = str_replace("user_id",$session_id,$statement1);
-		
+		//echo $statement1;
 
     	$result1 = mysqli_multi_query($GLOBALS['CONFIG']['mysqli'], $statement1);
+		//$this->pageData['description'] = $statement1;
+		//return true;
 	    //}
-	    //$this->pageData['description'] = $statement1;
+	    
 		//return true;
 		
         

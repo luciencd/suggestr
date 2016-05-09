@@ -1,4 +1,3 @@
-
 /*eventually should change from completely rebuilding these stats to
   updating only those that have changed.
   
@@ -187,7 +186,7 @@ FROM
 /*aggragate correlations between users across all the qualities, weight by sliders*/
 INSERT INTO pearson (user1, user2, similarity, n)
 SELECT
-	@user_id as user1,
+	user_id as user1,
     sessions.id as user2,
     /*slider values used here*/
 	(IFNULL(pearson1.similarity, 0)*@slider_easiness +
@@ -261,7 +260,7 @@ FROM
         courses.name AS course_name,
         courses.id AS course_id,
         pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.easy, .5))) AS predicted_rating
-	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors1 as norm_factors, courses, averages
+	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
         pearson_axis.user1 = norm_factors.user1 AND
@@ -285,7 +284,7 @@ FROM
         courses.name AS course_name,
         courses.id AS course_id,
         pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.rele, .5))) AS predicted_rating
-	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors1 as norm_factors, courses, averages
+	FROM pearson2 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
         pearson_axis.user1 = norm_factors.user1 AND
@@ -309,7 +308,7 @@ FROM
         courses.name AS course_name,
         courses.id AS course_id,
         pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.qual, .5))) AS predicted_rating
-	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors1 as norm_factors, courses, averages
+	FROM pearson3 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
         pearson_axis.user1 = norm_factors.user1 AND
@@ -372,15 +371,3 @@ FROM (
 	GROUP BY
 		courses.name, slideraction.slider_id) AS step
 ;
-
-
-/*
-SELECT * FROM output
-ORDER BY IFNULL(easiness, 0) DESC;*/
-
-/*This is where the array of weights comes in.. not sure if similiarity score should be calculated at first with these in mind but they arent here*/
-#easiness + IFNULL(relevance, 0)*#relevance + IFNULL(quality, 0)*#quality DESC; /*the decimals here are stand ins for slider values*/
-
-
-/* after this, should add all relevant columns to this for json object returns
-Stuff like department id department code, shit we shouldn't need to look up in php*/
