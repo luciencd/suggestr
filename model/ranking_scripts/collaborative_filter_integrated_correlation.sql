@@ -261,7 +261,7 @@ FROM
         courses.name AS course_name,
         courses.id AS course_id,
         pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.easy, .5))) AS predicted_rating
-	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors1 as norm_factors, courses, averages
+	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
         pearson_axis.user1 = norm_factors.user1 AND
@@ -285,7 +285,7 @@ FROM
         courses.name AS course_name,
         courses.id AS course_id,
         pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.rele, .5))) AS predicted_rating
-	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors1 as norm_factors, courses, averages
+	FROM pearson2 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
         pearson_axis.user1 = norm_factors.user1 AND
@@ -309,7 +309,7 @@ FROM
         courses.name AS course_name,
         courses.id AS course_id,
         pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.qual, .5))) AS predicted_rating
-	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors1 as norm_factors, courses, averages
+	FROM pearson3 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
         pearson_axis.user1 = norm_factors.user1 AND
