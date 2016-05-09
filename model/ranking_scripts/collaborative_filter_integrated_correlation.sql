@@ -372,13 +372,12 @@ FROM (
 	GROUP BY
 		courses.name, slideraction.slider_id) AS step
 ;
-<<<<<<< HEAD
+
 
 /*
 SELECT * FROM output
 ORDER BY IFNULL(easiness, 0) DESC;*/
-=======
->>>>>>> 6dc178d120a9e68974e9de74b14beb8ae600d2b3
+
 /*This is where the array of weights comes in.. not sure if similiarity score should be calculated at first with these in mind but they arent here*/
 #easiness + IFNULL(relevance, 0)*#relevance + IFNULL(quality, 0)*#quality DESC; /*the decimals here are stand ins for slider values*/
 

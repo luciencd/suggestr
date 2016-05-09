@@ -15,7 +15,7 @@ $(document).ready(function(){
 	/*Display a list of courses here*/
 	function startupSetup(){
 		//suggest();//Put all the classes on home page.
-		customAlgorithm();
+		//customAlgorithm();
 
 		//Using rank function to return list here::::
 		//then send it to displayList here:
@@ -30,6 +30,17 @@ $(document).ready(function(){
 
 		setMargins();
 	}
+
+	//******************RESET SUGGESTIONS BUTTON******************/
+	$(document).on('click', 'div.btn-container-suggestr button.btn-primary', function(){
+		suggest();
+	});
+
+	//******************RESET SUGGESTIONS BUTTON******************/
+	$(document).on('click', 'div.btn-container-suggestr button.btn-danger', function(){
+		customAlgorithm();
+	});
+
 	function displayList($list){
 		$("div.reload").html("");
 		$("div.reload").html('<img src="/images/reload.gif" alt="loading" style="width:128px;height:128px;">');
@@ -58,7 +69,7 @@ $(document).ready(function(){
 
 		$.post('/a.php?p=CustomAlgorithm',{sql_file:$sql_file},function(d){
 			//alert(d);
-			alert(d);
+			//alert(d);
 			
 
 			data = getAjaxData(d);
@@ -438,11 +449,7 @@ $(document).ready(function(){
 			}
 		});
 	}
-	
-	//******************RESET SUGGESTIONS BUTTON******************/
-	$(document).on('click', 'div.btn-container-suggestr button.btn-primary', function(){
-		suggest();
-	});
+
 
 
 	function suggest(){
@@ -1019,56 +1026,19 @@ $(document).ready(function(){
 					<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;width:100%;">
 						<div class = "CustomizeWeightArray"><span>What features do you want to emphasize?</span></div>
 						<div class = "ArrayWeights">
-							
+							{{#ArrayWeights}}
 							<div class = "slider-base">
 								<div class = "slider">
 
-									<div class="slider-rating" style="width:56%;border-radius:5px;">
+									<div class="slider-rating" style="width:{{percentage}}%;border-radius:5px;">
 									</div>
-									<input type="hidden" class="slider_type" value="preference">
-									<input type="hidden" class="slider_id" value="1">
-									<input type="hidden" class="percentage" value="56">
-									<div class = "slider-label">easiness</div>
+									<input type="hidden" class="slider_type" value="{{type}}">
+									<input type="hidden" class="slider_id" value="{{id}}">
+									<input type="hidden" class="percentage" value="{{percentage}}">
+									<div class = "slider-label">{{name}}</div>
 								</div>
 							</div>
-							<div class = "slider-base">
-								<div class = "slider">
-									<!-- Working on making this look better-->
-									<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
-										<span>{{slider_name}}</span>
-									</div>-->
-									<!--<div class = ""-->
-									
-									<div class="slider-rating" style="width:33%;border-radius:5px;">
-									<!--<span>{{slider_name}}</span>-->
-									</div>
-
-									<input type="hidden" class="slider_type" value="preference">
-									<input type="hidden" class="slider_id" value="2">
-									<input type="hidden" class="percentage" value="33">
-									<div class = "slider-label">relevance</div>
-								</div>
-							</div>
-							<div class = "slider-base">
-								<div class = "slider">
-									<!-- Working on making this look better-->
-									<!--<div class = "slider-titles" style="border-radius: 5px 5px 0px 0px;border: 1px solid #ddd;">
-										<span>{{slider_name}}</span>
-									</div>-->
-									<!--<div class = ""-->
-									
-									<div class="slider-rating" style="width:89%;border-radius:5px;">
-									<!--<span>{{slider_name}}</span>-->
-									</div>
-
-									<input type="hidden" class="slider_type" value="preference">
-									<input type="hidden" class="slider_id" value="3">
-									<input type="hidden" class="percentage" value="89">
-									<div class = "slider-label">quality</div>
-								</div>
-							</div>
-							
-							
+							{{/ArrayWeights}}							
 						</div>
 					</div>
 
@@ -1077,12 +1047,18 @@ $(document).ready(function(){
 				<!---->
 				<div class ="reload">
 					<div class = "suggest-control" style="display: table;width:100%;">
-		
-						<div class = "btn-container-suggestr" style="display: table-cell;">
-							<button type="button" class="btn btn-primary">Suggest</button>
+						
+						<div class = "suggest-buttons" style="width:24%;float:left;">
+							<div class = "btn-container-suggestr" >
+								<button type="button" class="btn btn-primary">Suggest</button>
+							</div>
+							<div class = "btn-container-suggestr" >
+								<button type="button" class="btn btn-danger">New</button>
+							</div>
 						</div>
-						<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;">
-							<div class = "resultsInfo">
+
+						<div class="list-group-item" style="width:76%;float:right;height:34px;border-radius: 5px 5px 5px 5px;padding:6px;padding-left:12px;">
+							<div class = "results-info">
 								<span>{{description}}</span> (<span>{{numResults}} Results</span>)
 							</div>
 						</div>

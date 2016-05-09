@@ -12,7 +12,7 @@ from pylab import plot,show
 from numpy import vstack,array
 from numpy.random import rand
 from scipy.cluster.vq import kmeans,vq
-
+import random
 db = MySQLdb.connect(host="us-cdbr-iron-east-03.cleardb.net",    # your host, usually localhost
                      user="b5777848a3bae2",         # your username
                      passwd="89213f1b3bdd0ad",
@@ -64,6 +64,8 @@ for item in array:
     if(z == None):
         z = 0
         continue;
+
+
     array2.append((x,y,z))
     #print x,y,z
     

@@ -28,22 +28,27 @@ div.panel-heading div.row div.col-md-6{
 div.panel-heading div.row {
 
 }
-/*div.panel-heading [class*="col-"] {
-	border-right: 1px solid #ddd;
-	height:40px;
-}*/
+div.resultsInfo {
+	display:inline-block;
+}
 
 div.suggest-control {
 	margin-bottom:10px;
 	margin-top:10px;
+	
+	display:inline-block;
 }
-div.suggest-control button.btn-primary{
+div.btn-container-suggestr{
 	margin-right:10px;
+	float:left;
 }
+
+
+/*
 div.suggest-control div.list-group-item {
 	padding-top:0px;
 	padding-bottom:0px;
-}
+}*/
 
 div.panel-heading div.col-md-3::after{
 	border-right: 0px solid transparent;
@@ -151,6 +156,15 @@ div.star-slider div.confirm {
 
 .btn-primary {
 	background-color:#e5f2ff;
+	background-image:none;
+	border-color:#ddd;
+	color:black;
+	text-shadow:none;
+	-webkit-box-shadow:none;
+	box-shadow:none;
+}
+.btn-danger {
+	background-color:#ffe6e6;
 	background-image:none;
 	border-color:#ddd;
 	color:black;
@@ -389,7 +403,7 @@ div.tookList span.badge {
 span.badge span{
 
 }
-
+/*
 .btn-danger{
 	background-color:#FFD1D0;
 	height:20px;
@@ -401,7 +415,7 @@ span.badge span{
 	text-shadow:none;
 	-webkit-box-shadow:none;
 	box-shadow:none;
-}
+}*/
 div.item-text{
 	display:inline-block;
 	width:80%;
@@ -437,7 +451,10 @@ div.addList span.badge {
 
 /*custom buttons*/
 .btn-container-suggestr {
-
+	/*margin-right:1%;*/
+}
+.btn-container-new {
+	/*margin-right:1%;*/
 }
 /*custom buttons*/
 .btn-container-yacs {

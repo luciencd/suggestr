@@ -56,12 +56,68 @@ class HomeController extends PageController {
 		}
 		
 
-	
+		/**/
+
+
+
+
+
 		//FINAL INFO// GET COURSES
 	
 		
 		$student = $Data->getStudent($_COOKIE['sessionId']);
 		$studentCourses = $student->getTaken();
+
+		/*GETTING WEIGHT SLIDERS*/
+		/*GETTING WEIGHT SLIDERS*/
+		/*GETTING WEIGHT SLIDERS*/
+		$query_weights = "SELECT * FROM sliders WHERE type = 'preference'";
+		$weights = mysqli_query($GLOBALS['CONFIG']['mysqli'], $query_weights); 
+
+		$WEIGHTSARRAY = array();
+		foreach($weights as $row){
+			array_push($WEIGHTSARRAY,array('type' => $row['type'],'id' =>$row['id'],'name' =>$row['name']));
+			
+		}
+
+
+
+		$query_easiness = "SELECT * FROM weights WHERE session_id = ".$_COOKIE['sessionId'];
+		$result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $query_easiness); 
+		//echo $query_easiness, Count($result);
+		
+		$slider_easiness = .5;
+		$slider_relevance = .5;
+		$slider_quality = .5;
+		
+		foreach($result as $row){
+			if($row['slider_id'] == 1){
+				$slider_easiness = $row['vote'];
+			}else if($row['slider_id'] == 2){
+				$slider_relevance = $row['vote'];
+			}else if($row['slider_id'] == 3){
+				$slider_quality = $row['vote'];
+			}
+		}
+		$WEIGHTSARRAY[0]['percentage'] = 100*$slider_easiness;
+		$WEIGHTSARRAY[1]['percentage'] = 100*$slider_relevance;
+		$WEIGHTSARRAY[2]['percentage'] = 100*$slider_quality;
+
+		//type
+		//id
+		//percentage
+		//name
+
+		$this->pageData['ArrayWeights'] = $WEIGHTSARRAY;
+		/*GETTING WEIGHT SLIDERS*/
+		/*GETTING WEIGHT SLIDERS*/
+		/*GETTING WEIGHT SLIDERS*/
+
+
+
+
+
+
 
 
 		////////// LEFT SIDE /////////////////////

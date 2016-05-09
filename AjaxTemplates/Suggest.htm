@@ -4,13 +4,23 @@
 
 <div class = "suggest-control" style="display: table;width:100%;">
 	
-	<div class = "btn-container-suggestr" style="display: table-cell;">
-		<button type="button" class="btn btn-primary">Suggest</button>
-	</div>
-	<div class="list-group-item" style="border-radius: 5px 5px 5px 5px;display: table-cell;width:96%;">
-		<div class = "resultsInfo">
-			<span>{{description}}</span> (<span>{{numResults}} Results</span>)
+	<div class = "suggest-control" style="display: table;width:100%;">
+						
+		<div class = "suggest-buttons" style="width:24%;float:left;">
+			<div class = "btn-container-suggestr" >
+				<button type="button" class="btn btn-primary">Suggest</button>
+			</div>
+			<div class = "btn-container-suggestr" >
+				<button type="button" class="btn btn-danger">New</button>
+			</div>
 		</div>
+
+		<div class="list-group-item" style="width:76%;float:right;height:34px;border-radius: 5px 5px 5px 5px;padding:6px;padding-left:12px;">
+			<div class = "results-info">
+				<span>{{description}}</span> (<span>{{numResults}} Results</span>)
+			</div>
+		</div>
+
 	</div>
 
 </div>

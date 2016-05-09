@@ -1,2 +1,2 @@
 SELECT * FROM output
-ORDER BY (IFNULL(easiness, 0)*1+IFNULL(relevance, 0)*10+IFNULL(quality, 0)*1) DESC;
+ORDER BY (IFNULL(easiness, 0)*e_slider+IFNULL(relevance, 0)*r_slider+IFNULL(quality, 0)*q_slider) DESC;

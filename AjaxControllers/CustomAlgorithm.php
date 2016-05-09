@@ -41,7 +41,7 @@ class CustomAlgorithmController extends AjaxController {
 		//$this->pageData['description'] = $oldstatement;
 		//return true;
 		//$session_id = 4996822;
-
+		
 		$query_easiness = "SELECT * FROM weights WHERE session_id = ".$session_id;
 		$result = mysqli_query($GLOBALS['CONFIG']['mysqli'], $query_easiness); 
 		//echo $query_easiness, Count($result);
@@ -67,16 +67,16 @@ class CustomAlgorithmController extends AjaxController {
 		*/
 
 		$statement2 = $this->parseSQL("model/ranking_scripts/final_collaborative.sql");
-		
+		$statement2 = str_replace("e_slider",$slider_easiness,$statement2);
+		$statement2 = str_replace("r_slider",$slider_relevance,$statement2);
+		$statement2 = str_replace("q_slider",$slider_quality,$statement2);
 	    $result2 = mysqli_query($GLOBALS['CONFIG']['mysqli'], $statement2); 
 
 	    //if(Count(mysqli_fetch_array($result2)) == 0 || mysqli_fetch_array($result2)[0]['user_id']!= $session_id){
 	    	//echo "DO IT";
-    	$statement1 = $this->parseSQL("model/ranking_scripts/collaborative_filter_qualities.sql");
+    	$statement1 = $this->parseSQL("model/ranking_scripts/collaborative_filter_integrated_corrolation.sql");
 		$statement1 = str_replace("user_id",$session_id,$statement1);
-		$statement1 = str_replace("slider_easiness",$slider_easiness,$statement1);
-		$statement1 = str_replace("slider_relevance",$slider_relevance,$statement1);
-		$statement1 = str_replace("slider_quality",$slider_quality,$statement1);
+		
 
     	$result1 = mysqli_multi_query($GLOBALS['CONFIG']['mysqli'], $statement1);
 	    //}
@@ -199,9 +199,10 @@ class CustomAlgorithmController extends AjaxController {
 		//$this->pageData['numResults'] = $count;
 		//$this->pageData['description'] = "Custom Suggestion Algorithm";
 		//$this->pageData['description'] = $sql_file;
-		$this->pageData['numResults'] = Count(mysqli_fetch_array($result));
+		
 		$this->pageData['description'] = $statement2;*/
-		//$this->pageData['description'] = "Custom Suggestion Algorithm";
+		$this->pageData['numResults'] = Count($displayArray);
+		$this->pageData['description'] = "Custom Suggestion Algorithm";
 
 		//Return just a JSON array of courses called allCourses
 		//$this->pageData['allCourses'] = $allNewCourses;

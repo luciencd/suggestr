@@ -69,7 +69,9 @@ for item in array:
         y = 1
     if(z == None):
         z = 1
-
+    x += random.uniform(-.02,.02)
+    y += random.uniform(-.02,.02)
+    z += random.uniform(-.02,.02)
     minArray.append((item[1],item[2],x,y,z))
     print minArray[-1]
 ##(x,y,z) == (easiness, quality, relevance)
@@ -78,7 +80,7 @@ for item in array:
 ##0th column is ylabel
 ##1st column is xlabel.
 ## idk why it just is
-ax.set_xlabel('eaainess')
+ax.set_xlabel('easiness')
 ax.set_ylabel('quality')
 
 #getting a tuple of the item vs item we want.
@@ -98,14 +100,14 @@ subsetDisplay = map(g,minArray)
 
 data = np.array(subsetData)
 
-centroids,_ = kmeans(data,4)
+centroids,_ = kmeans(data,8)
 idx,_ = vq(data,centroids)
 
 for i in range(len(centroids)):
     ax.scatter(centroids[i][0],centroids[i][1], c='white',s=40)
     
     
-colors = ["blue","red","green","orange","purple"]
+colors = ["blue","red","green","orange","purple","gray","indigo","teal"]
 
 
 
