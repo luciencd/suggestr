@@ -187,7 +187,7 @@ FROM
 /*aggragate correlations between users across all the qualities, weight by sliders*/
 INSERT INTO pearson (user1, user2, similarity, n)
 SELECT
-	@user_id as user1,
+	user_id as user1,
     sessions.id as user2,
     /*slider values used here*/
 	(IFNULL(pearson1.similarity, 0)*@slider_easiness +
