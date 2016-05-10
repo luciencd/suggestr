@@ -260,8 +260,9 @@ FROM
 		pearson_agg.user1 AS user,
         courses.name AS course_name,
         courses.id AS course_id,
-        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.easy, .5))) AS predicted_rating
-	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors as norm_factors, courses, averages
+        IFNULL(s2.vote,
+        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.easy, .5)))) AS predicted_rating
+	FROM pearson1 as pearson_axis, pearson as pearson_agg, slideraction as slideraction, slideraction as s2, norm_factors as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
         pearson_axis.user1 = norm_factors.user1 AND
@@ -269,7 +270,10 @@ FROM
         courses.id = slideraction.course_id AND
         pearson_agg.user1 = norm_factors.user1 AND
         pearson_agg.user2 = slideraction.session_id AND
-        averages.user = pearson_agg.user2/*AND
+        averages.user = pearson_agg.user2 AND
+        s2.session_id = user_id AND
+        s2.slider_id = slideraction.slider_id AND
+        s2.course_id = courses.id/*AND
         pearson.similarity > 0 /*other cutoffs for similarity may improve performance*/
 	GROUP BY
 		pearson_agg.user1, slideraction.course_id
@@ -284,8 +288,9 @@ FROM
 		pearson_agg.user1 AS user,
         courses.name AS course_name,
         courses.id AS course_id,
-        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.rele, .5))) AS predicted_rating
-	FROM pearson2 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors as norm_factors, courses, averages
+        IFNULL(s2.vote,
+        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.rele, .5)))) AS predicted_rating
+	FROM pearson2 as pearson_axis, pearson as pearson_agg, slideraction as slideraction, slideractoin as s2, norm_factors as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
         pearson_axis.user1 = norm_factors.user1 AND
@@ -293,7 +298,10 @@ FROM
         courses.id = slideraction.course_id AND
         pearson_agg.user1 = norm_factors.user1 AND
         pearson_agg.user2 = slideraction.session_id AND
-        averages.user = pearson_agg.user2/*AND
+        averages.user = pearson_agg.user2 AND
+        s2.session_id = user_id AND
+        s2.slider_id = slideraction.slider_id AND
+        s2.course_id = courses.id/*AND
         pearson.similarity > 0 /*other cutoffs for similarity may improve performance*/
 	GROUP BY
 		pearson_agg.user1, slideraction.course_id
@@ -308,8 +316,9 @@ FROM
 		pearson_agg.user1 AS user,
         courses.name AS course_name,
         courses.id AS course_id,
-        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.qual, .5))) AS predicted_rating
-	FROM pearson3 as pearson_axis, pearson as pearson_agg, slideraction, norm_factors as norm_factors, courses, averages
+        IFNULL(s2.vote,
+        pearson_axis.user1_avg + norm_factors.k*SUM(pearson_agg.similarity * (slideraction.vote - IFNULL(averages.qual, .5)))) AS predicted_rating
+	FROM pearson3 as pearson_axis, pearson as pearson_agg, slideraction as slideraction, slideraction as s2, norm_factors as norm_factors, courses, averages
 	WHERE
 		pearson_axis.user2 = slideraction.session_id AND
         pearson_axis.user1 = norm_factors.user1 AND
@@ -317,7 +326,11 @@ FROM
         courses.id = slideraction.course_id AND
         pearson_agg.user1 = norm_factors.user1 AND
         pearson_agg.user2 = slideraction.session_id AND
-        averages.user = pearson_agg.user2/*AND
+        averages.user = pearson_agg.user2 AND
+        s2.session_id = user_id AND
+        s2.slider_id = slideraction.slider_id AND
+        s2.course_id = courses.id
+        /*AND
         pearson.similarity > 0 /*other cutoffs for similarity may improve performance*/
 	GROUP BY
 		pearson_agg.user1, slideraction.course_id
