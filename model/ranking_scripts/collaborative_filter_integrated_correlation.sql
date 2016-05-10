@@ -371,15 +371,3 @@ FROM (
 	GROUP BY
 		courses.name, slideraction.slider_id) AS step
 ;
-
-
-/*
-SELECT * FROM output
-ORDER BY IFNULL(easiness, 0) DESC;*/
-
-/*This is where the array of weights comes in.. not sure if similiarity score should be calculated at first with these in mind but they arent here*/
-#easiness + IFNULL(relevance, 0)*#relevance + IFNULL(quality, 0)*#quality DESC; /*the decimals here are stand ins for slider values*/
-
-
-/* after this, should add all relevant columns to this for json object returns
-Stuff like department id department code, shit we shouldn't need to look up in php*/
