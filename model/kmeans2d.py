@@ -113,6 +113,12 @@ colors = ["blue","red","green","orange","purple","gray","indigo","teal"]
 
 ##Printing the classes already taken.
 
+###
+###
+##DISPLAY ACTUAL RATING VALUES IF THE CLASS HAS ALREADY BEEN RATED.
+###
+###
+
 for i in range(0,len(subsetDisplay)):
     
     x = subsetDisplay[i][2]
