@@ -141,16 +141,16 @@ for i in range(0,len(subsetDisplay)):
     angle = math.atan(rel_y/rel_x)
     
     if(rel_x >0 and rel_y >0):#1st quarter
-        print angle
+        #print angle
         angle = angle
     if(rel_x <0 and rel_y >0):#2nd quarter
-        print angle
+        #print angle
         angle = 1.57*1+(1.57+angle)
     if(rel_x <0 and rel_y <0):#3rd quarter
-        print angle
+        #print angle
         angle = 1.57*2+angle
     if(rel_x >0 and rel_y <0):#4th quarter
-        print angle
+        #print angle
         angle = 1.57*3+(1.57+angle)
 
 
@@ -181,7 +181,7 @@ for i in range(0,len(subsetDisplay)):
         ax.annotate(note, xy=(x, y), xytext=annotation,
             arrowprops=dict(arrowstyle="->",color="black"),size=8)
         note = subsetDisplay[i][1]
-        ax.text(notation[0],notation[1],note, size=6,ha='center',color="black")
+        ax.text(notation[0],notation[1],note, size=14,ha='center',color="black")
     else:
         #print 'predict: ',array[i][2]
         c =colors[idx[i]]
@@ -194,11 +194,11 @@ for i in range(0,len(subsetDisplay)):
         ax.annotate(note, xy=(x, y), xytext=annotation,color=colors[idx[i]],
             arrowprops=dict(arrowstyle="->",color=colors[idx[i]]),size=8)
         note = subsetDisplay[i][1]
-        ax.text(notation[0],notation[1],note,ha='center', size=6,color=colors[idx[i]])
+        ax.text(notation[0],notation[1],note,ha='center', size=14,color=colors[idx[i]])
 
     
-print centroids
-print idx
+#print centroids
+#print idx
 '''
 for item in kmeansarray:
     ax.scatter(item.x, item.y, item.z, zdir='y', c=item.group)
