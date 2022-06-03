@@ -32,7 +32,7 @@ function Render($templ, $objects, $useMain=true) {
 	if(isset($_COOKIE['sessionId'])){
 		$query = new Query('sessions');
 		$cookieSessions = $query->select('*',array(array('id','=',$_COOKIE['sessionId'])),'','',false);
-		if(Count($cookieSessions) == 1){
+		if($cookieSessions->num_rows == 1){
 			$needNewSession = false;
 		}else{
 			$needNewSession = true;

@@ -10,14 +10,14 @@ class SuggestController extends AjaxController {
 	public $template = "Suggest";//Identical to search one.
 	public function process($get,$post) {
 		
-		
+		#echo "::suggestController";
 		//Global variables are clearly bad, but I don't know enough about the base AjaxController to extend it with 
 		//a reference to the model or something.
-		$Data = $GLOBALS['MODEL']['Data'];//Find a way to make this local to suggestr.php or something.
+		$Data = new Database();//$GLOBALS['MODEL']['Data'];//Find a way to make this local to suggestr.php or something.
 		
-
+		#echo $Data->testConnection('courses');
 		$Data->load();
-
+		#echo $Data->testConnection('courses');
 
 		//////////////
 
@@ -107,9 +107,11 @@ class SuggestController extends AjaxController {
 				}
 			}catch(Exception $e){}
 		}
-		
+		#echo var_dump($allNewCourses);
 		//Populate webpage with all the different courses that were predicted.
-		if(!$Data->testConnection('courses')){
+		$failingDatabase = !$Data->testConnection('courses');
+		#$failingDatabase = true;
+		if($failingDatabase){
 			$this->pageData['numResults'] = 0;
 			$this->pageData['description'] = "No suggestions, Database Failed!";
 			$this->pageData['allCourses'] = $allNewCourses;

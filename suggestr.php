@@ -1,9 +1,11 @@
 <?php
 
 /* Main Application - Request Router */
-
+#echo "bet";
 // Load our config and initialization
 require_once('config.php');
+#echo "configdie";
+#echo var_dump($GLOBALS['CONFIG']['mysqli']);
 
 //header('Content-Type: text/html; charset=utf-8');
 
@@ -11,8 +13,11 @@ require_once('config.php');
 // IIS should handle this for us through URL Rewriting.
 // This script should not be loaded directly by anyone.
 
-if(!isset($_GET['SUGGESTR_PAGE']))die();
-
+if(!isset($_GET['SUGGESTR_PAGE'])){
+	echo "die";
+	die();
+}
+#echo "dont die";
 // If this page load wasn't specified as an AJAX page load, mark it as such.
 if(!isset($_GET['AJAX']))
 	$_GET['AJAX'] = false;
@@ -73,31 +78,36 @@ if(!isset($_GET['SUGGESTR_PAGE']) || $_GET['SUGGESTR_PAGE'] != "login/") {
 // Redirect to the user's page if no page is specified (we already know that the user is logged in).
 //echo $_GET['SUGGESTR_PAGE'];
 
+//Cookie only set temporarily
+//setcookie('sessionId', 4996842, time()+315360000, '/');
 //***********HOW TO get to work this without default***/
 //$_GET['SUGGESTR_PAGE'] = '/ml';
 //$_GET['SUGGESTR_PAGE'] = '/landing';
-
 if($_GET['SUGGESTR_PAGE']=='/home'){
-	
+	#echo'home';
+	#echo 'cookie:'.$_COOKIE['sessionId'];
 	
 	$needNewSession = true;
 	//Make sure if database fails, catch that, don't create new session.
 	if(isset($_COOKIE['sessionId'])){
+		#echo "getting cookie";
 		$query = new Query('sessions');
 		$cookieSessions = $query->select('*',array(array('id','=',$_COOKIE['sessionId'])),'','',false);
-		if(Count($cookieSessions) == 1){
+		#echo var_dump($cookieSessions);
+		if($cookieSessions->num_rows == 1){
 			$needNewSession = false;
 		}else{
 			$needNewSession = true;
 		}
 	}
+	#echo $_COOKIE['sessionId'];
 	if(!$needNewSession){
 		$_GET['SUGGESTR_PAGE'] = '/home';
 	}else{
 		$_GET['SUGGESTR_PAGE'] = '/landing';
 	}
 }
-//echo $_GET['SUGGESTR_PAGE'];
+#echo "Page Selected:",$_GET['SUGGESTR_PAGE'];
 
 // Ensure the user is an administrator when accessing pages in /admin
 /*
@@ -110,7 +120,7 @@ if(isset($_GET['SUGGESTR_PAGE']) &&
 */
 
 // Ok. Now we render the appropriate controller.
-$Data = $GLOBALS['MODEL']['Data'];
+//$Data = $GLOBALS['MODEL']['Data'];
 //echo "<h4>does data exist?</h4>"."<h4>".$Data->courseCredits(34)."</h4>";
 $controller;
 ob_start();

@@ -29,6 +29,7 @@ class CreateSessionController extends AjaxController {
 			//If new user, we get the nextId from the table.
 			$query = new Query('sessions');
 			$id = $query->nextId();
+			echo "ID = ",$id;
 			//I suppose if database could not be accessed when we check for it
 			//in $session->findById($_COOKIE['sessionId']);
 			// it also won't work here, meaning the session_id won't actually change

@@ -14,9 +14,11 @@ class HomeController extends PageController {
 	public function process($get, $post) {
 		//$_COOKIE['sessionId'] = 1;
 		//$this->load();
-		$Data = $GLOBALS['MODEL']['Data'];
+
+		$Data = new Database();
 		$Data->load();
-		
+		$GLOBALS['MODEL']['Data'] = $Data;
+		#echo "testconnection:",$Data->testConnection('courses');
 		//$Data->getStudent($_COOKIE['sessionId'])->getMajor();
 		//$this->pageData['year_id'] = $Data->getStudent($_COOKIE['sessionId'])->getMajor();
 		//$Data->loadAllClasses();
@@ -59,7 +61,7 @@ class HomeController extends PageController {
 	
 		//FINAL INFO// GET COURSES
 	
-		
+		#echo $_COOKIE['sessionId'];
 		$student = $Data->getStudent($_COOKIE['sessionId']);
 		$studentCourses = $student->getTaken();
 
@@ -148,7 +150,7 @@ class HomeController extends PageController {
 				$this->pageData['allCourses'] = $allNewCourses;
 			}
 		}
-		$GLOBALS['MODEL']['Data'] = $Data;
+		
 	}
 }
 
