@@ -1,11 +1,9 @@
 <?php
 
 /* Main Application - Request Router */
-#echo "bet";
 // Load our config and initialization
 require_once('config.php');
-#echo "configdie";
-#echo var_dump($GLOBALS['CONFIG']['mysqli']);
+require_once('./AjaxModels/SessionModel.php');
 
 //header('Content-Type: text/html; charset=utf-8');
 
@@ -14,10 +12,9 @@ require_once('config.php');
 // This script should not be loaded directly by anyone.
 
 if(!isset($_GET['SUGGESTR_PAGE'])){
-	echo "die";
 	die();
 }
-#echo "dont die";
+
 // If this page load wasn't specified as an AJAX page load, mark it as such.
 if(!isset($_GET['AJAX']))
 	$_GET['AJAX'] = false;
@@ -61,20 +58,6 @@ $Ajaxrouter["CustomAlgorithm/"] = "CustomAlgorithm";
 // Is this an API method?
 $isAjax = (isset($_GET['SUGGESTR_PAGE']) && (strpos($_GET['SUGGESTR_PAGE'],'ajax/') === 0));
 
-// Are we authenticated?
-// Everything except the login page requires authentication
-
-//Shit's irrelevant.
-/*
-if(!isset($_GET['SUGGESTR_PAGE']) || $_GET['SUGGESTR_PAGE'] != "login/") {
-	if(!$_GET['AJAX']&&!$isAjax) // Only redirect to the login page if this is not an ajax call (inside an existing page, NOT through the API).
-		user_login();
-	else{
-		if(!isset($_COOKIE['userid'])&&!$isAjax) // If they are not logged in but using AJAX to load page, redirect them to an ajax version of the login screen
-			$_GET['SUGGESTR_PAGE'] = 'login/';
-	}
-}
-*/
 // Redirect to the user's page if no page is specified (we already know that the user is logged in).
 //echo $_GET['SUGGESTR_PAGE'];
 
@@ -83,45 +66,26 @@ if(!isset($_GET['SUGGESTR_PAGE']) || $_GET['SUGGESTR_PAGE'] != "login/") {
 //***********HOW TO get to work this without default***/
 //$_GET['SUGGESTR_PAGE'] = '/ml';
 //$_GET['SUGGESTR_PAGE'] = '/landing';
+#echo "cookie:",$_COOKIE['sessionId'];
+
+$session_model = new SessionModel();
+#$session_model->handleSession();
+#echo "is in session_id:",var_dump($session_model->isInSession());
 if($_GET['SUGGESTR_PAGE']=='/home'){
-	#echo'home';
-	#echo 'cookie:'.$_COOKIE['sessionId'];
-	
-	$needNewSession = true;
-	//Make sure if database fails, catch that, don't create new session.
-	if(isset($_COOKIE['sessionId'])){
-		#echo "getting cookie";
-		$query = new Query('sessions');
-		$cookieSessions = $query->select('*',array(array('id','=',$_COOKIE['sessionId'])),'','',false);
-		#echo var_dump($cookieSessions);
-		if($cookieSessions->num_rows == 1){
-			$needNewSession = false;
-		}else{
-			$needNewSession = true;
-		}
-	}
-	#echo $_COOKIE['sessionId'];
-	if(!$needNewSession){
-		$_GET['SUGGESTR_PAGE'] = '/home';
-	}else{
+	if(!$session_model->isInSession()){
+	//echo "Clear everything";
+	//$_GET['SUGGESTR_PAGE'] = '/home'
 		$_GET['SUGGESTR_PAGE'] = '/landing';
+
+	}else{
+		$_GET['SUGGESTR_PAGE'] = '/home';
 	}
 }
-#echo "Page Selected:",$_GET['SUGGESTR_PAGE'];
+#echo "page:",$_GET['SUGGESTR_PAGE'];
 
-// Ensure the user is an administrator when accessing pages in /admin
-/*
-if(isset($_GET['SUGGESTR_PAGE']) && 
-   (($_GET['SUGGESTR_PAGE'] == "admin") || 
-	(strpos($_GET['SUGGESTR_PAGE'],'admin/') !== false)) && !user_isadmin()) {
-	// Uh oh... This user should not be here!
-	RenderError("You are not authorized to access the page requested.");
-}
-*/
+#echo "is in session_id:",var_dump($session_model->isInSession());
+ // Needs to reload since a cookie must be set at the start of the request.
 
-// Ok. Now we render the appropriate controller.
-//$Data = $GLOBALS['MODEL']['Data'];
-//echo "<h4>does data exist?</h4>"."<h4>".$Data->courseCredits(34)."</h4>";
 $controller;
 ob_start();
 if(!$isAjax){

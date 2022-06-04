@@ -14,6 +14,7 @@ class AddCourseController extends AjaxController {
 		
 		$session = new Session();
 		$session->findById($_COOKIE['sessionId']);
+		#echo $_COOKIE['sessionId'];
 		$major_id = $session->get('department_id');
 
 		$query = new Query('action');

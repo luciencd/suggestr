@@ -7,7 +7,7 @@ class SearchController extends AjaxController {
 	public function process($get,$post) {
 		//Remove this once we solved sessionId
 		
-		$Data = $GLOBALS['MODEL']['Data'];
+		$Data = new Database();
 
 		$Data->load();
 		//Again we have to load in the data so that the ratings are correct. 

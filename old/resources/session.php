@@ -4,7 +4,7 @@ require_once("config.php");
 
 $major = $_POST["major"];
 $year = $_POST["year"];
-
+echo "SESSION SCRIPT";
 
 $insert = "INSERT INTO Session (id,major,year,taken,keep,amount,department_id) VALUES (0,'NULL','NULL',0,0,0,0)";
 $result = $conn->query($insert);

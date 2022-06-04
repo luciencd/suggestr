@@ -10,10 +10,14 @@ Suggestr is a convenient, web-based course suggester centered around feature ric
 # Contributing
 We welcome any contributions. Feel free to open new issues for any concerns or pull requests for any added features.
 ## Setting up a local version
-1. Clone this repo to your local machine using `git clone https://github.com/luciencd/suggestr`
-2. Our development team currently uses MAMP to host the local server and SQL database it relies on. Download and install [MAMP](https://www.mamp.info/en/) and set your web server document root to point at the suggestr root folder.
+1. Our development team currently uses MAMP to host the local server and SQL database it relies on. Download and install [MAMP](https://www.mamp.info/en/) and set your web server document root to point at the suggestr root folder.
+2. Use the mlbackup.sql file to create all the database records 
 3. Then run the MAMP server and open [http://localhost:8888/](http://localhost:8888/) in your web browser.
 
+3. 
+# Versions supported
+PHP: 7.1.33
+MYSQL: 5.7.34
 
 ##SPECIAL THANKS TO:
 

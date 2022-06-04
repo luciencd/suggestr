@@ -3,7 +3,7 @@
 class TookCourseController extends AjaxController {
 	public function process($get,$post) {
 		
-
+		//return "fuck";
 
 		if(!isset($post['course_id'])||!is_numeric($post['course_id'])||
 		   !isset($_COOKIE['sessionId'])||!is_numeric($_COOKIE['sessionId'])){
@@ -27,9 +27,13 @@ class TookCourseController extends AjaxController {
 		$action = new Action();
 		$action->set('course_id', $post['course_id']);
 		$action->set('session_id', $_COOKIE['sessionId']);
-		$action->set('major_id',$major_id);
+		$action->set('major',"");
+		$action->set('year',"");
 		$action->set('choice', 1);
+		$action->set('POST',"");
 		$action->save();
+		//echo $action;
+		#$this->pageData = var_dump($action);
 		return true;
 	}
 }
