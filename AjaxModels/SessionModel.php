@@ -8,11 +8,9 @@ class SessionModel {
 	public function isInSession(){
 		
 		if(isset($_COOKIE['sessionId'])){
-			#echo "isInsession",$_COOKIE['sessionId'];
 			$query = new Query('sessions');
 			$cookieSessions = $query->select('*',array(array('id','=',$_COOKIE['sessionId'])),'','',true);
 			if(count($cookieSessions) > 0){
-				#echo var_dump($cookieSessions[0]);
 				return true;
 			}else{
 				return false;

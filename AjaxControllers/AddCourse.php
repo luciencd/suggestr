@@ -13,7 +13,7 @@ class AddCourseController extends AjaxController {
 		//No Duplicate Add Course
 		$query = new Query('action');
 		$result = $query->select('*', array(array('course_id', '=', $post['course_id']), 
-											array('session_id', '=', $this->session_id)), '', 0);// 0 or 1?
+											array('session_id', '=', $this->session_id)), '', 1);
 		if(count($result)!=0){
 			// Abort because this course is already in the user's model
 			$this->failureReason = 'Sorry, there was an error';

@@ -23,7 +23,7 @@ class TookCourseController extends AjaxController {
 		// Took course to DB
 		$action = new Action();
 		$action->set('course_id', $post['course_id']);
-		$action->set('session_id', $session_id);
+		$action->set('session_id', $this->session_id);
 		$action->set('choice', 1);
 		$action->save();
 		return true;
