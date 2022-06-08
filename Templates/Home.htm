@@ -206,17 +206,18 @@ $(document).ready(function(){
 		var number = $course.find('input#number').val();
 		var name = $course.find('input#name').val();
 		var code = $course.find('input#department_code').val();
-		//alert('start');
+		console.log(id,number,name,code);
 		$.post('/a.php?p=AddCourse', {course_id:id}, function(d){
 			var obj = jQuery.parseJSON(d);
-			//alert(obj.success);
+			console.log(obj);
 			if(!getAjaxStatus(d)){
-				//alert('fuckup');
+				alert('fuckup');
 			}else{
 				if(obj.success === false){
 				//Don't need to print it because its a physical error.
-				//alert('Sorry, there was an error.');
+					alert('Sorry, there was an error.');
 				}else{
+					alert("success");
 					// Hide/remove elements
 					// Add course to left-hand list of courses
 		
@@ -232,7 +233,7 @@ $(document).ready(function(){
 						$course.remove();
 					});
 					setMargins();
-					resetStatistics();
+					//resetStatistics();
 				}
 			}
 			

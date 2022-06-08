@@ -33,8 +33,18 @@ class AjaxController {
 	public $template = "";
 	public $pageData = array();
 	public $failureReason = "";
-	
+	public $session_id = "";
 	public function process($get, $post) {
+		$session = new SessionModel();
+		$session_id = $session->getCurrentSessionId();
+		if(!$session->isInSession()){
+			$this->failureReason = "Not in Session";
+			return false;
+		}else{
+			$this->session_id = $session_id;
+			$this->pageData = "ajaxcall";
+			return true;
+		}
 		// Must return if the opporations were successful
 	}
 	

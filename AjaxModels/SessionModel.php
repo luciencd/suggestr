@@ -22,7 +22,7 @@ class SessionModel {
 	}
 	public function getCurrentSessionId(){
 		if(isset($_COOKIE['sessionId'])){
-			return $_COOKIE['sessionId'];
+			return intval($_COOKIE['sessionId']);
 		} else{
 			return -1;
 		}
